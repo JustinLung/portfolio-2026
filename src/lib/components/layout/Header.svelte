@@ -145,56 +145,62 @@
 	</ul>
 {/snippet}
 
-<header class="header container">
-	<a href={resolve('/')} class="header__logo" data-uisfx-hover="hover" data-uisfx="back">
-		Portfolio
-	</a>
+<!-- Keep this wrapper unpositioned (no z-index/transform): a stacking context here would trap the blend. -->
+<header>
+	<!-- Fixed layers are stacking contexts, so the blended links and the unblended buttons are siblings. -->
+	<div class="header header--blend container">
+		<a href={resolve('/')} class="header__logo" data-uisfx-hover="hover" data-uisfx="back">
+			Portfolio
+		</a>
 
-	<div class="header__actions">
 		<nav class="header__nav">
 			{@render navigationLinks()}
 		</nav>
+	</div>
 
-		<button
-			bind:this={settingsButton}
-			type="button"
-			class="header__settings-button"
-			aria-expanded={sheetOpen}
-			aria-controls="header-sheet"
-			aria-label={sheetOpen ? 'Close settings' : 'Open settings'}
-			data-uisfx-hover="hover"
-			onclick={() => toggleSheet('settings')}
-		>
-			<svg
-				class="header__settings-icon"
-				viewBox="0 0 16 16"
-				fill="none"
-				stroke="currentColor"
-				aria-hidden="true"
+	<div class="header header__controls container">
+		<div class="header__actions">
+			<button
+				bind:this={settingsButton}
+				type="button"
+				class="header__settings-button"
+				aria-expanded={sheetOpen}
+				aria-controls="header-sheet"
+				aria-label={sheetOpen ? 'Close settings' : 'Open settings'}
+				data-uisfx-hover="hover"
+				onclick={() => toggleSheet('settings')}
 			>
-				<path d="M1 4.5h14M1 11.5h14" />
-				<circle cx="10.5" cy="4.5" r="1.75" fill="var(--color-secondary)" />
-				<circle cx="5.5" cy="11.5" r="1.75" fill="var(--color-secondary)" />
-			</svg>
-		</button>
+				<svg
+					class="header__settings-icon"
+					viewBox="0 0 16 16"
+					fill="none"
+					stroke="currentColor"
+					aria-hidden="true"
+				>
+					<path d="M1 4.5h14M1 11.5h14" />
+					<circle cx="10.5" cy="4.5" r="1.75" fill="var(--color-secondary)" />
+					<circle cx="5.5" cy="11.5" r="1.75" fill="var(--color-secondary)" />
+				</svg>
+			</button>
 
-		<button
-			bind:this={menuButton}
-			type="button"
-			class="header__menu-button"
-			class:header__menu-button--open={sheetOpen}
-			aria-expanded={sheetOpen}
-			aria-controls="header-sheet"
-			aria-label={sheetOpen ? 'Close menu' : 'Open menu'}
-			data-uisfx-hover="hover"
-			onclick={() => toggleSheet('menu')}
-		>
-			<span class="header__menu-icon">
-				<span class="header__menu-bar"></span>
-				<span class="header__menu-bar"></span>
-				<span class="header__menu-bar"></span>
-			</span>
-		</button>
+			<button
+				bind:this={menuButton}
+				type="button"
+				class="header__menu-button"
+				class:header__menu-button--open={sheetOpen}
+				aria-expanded={sheetOpen}
+				aria-controls="header-sheet"
+				aria-label={sheetOpen ? 'Close menu' : 'Open menu'}
+				data-uisfx-hover="hover"
+				onclick={() => toggleSheet('menu')}
+			>
+				<span class="header__menu-icon">
+					<span class="header__menu-bar"></span>
+					<span class="header__menu-bar"></span>
+					<span class="header__menu-bar"></span>
+				</span>
+			</button>
+		</div>
 	</div>
 </header>
 
@@ -351,11 +357,25 @@
 		align-items: center;
 		padding-block: 32px;
 
+		&.header--blend {
+			mix-blend-mode: difference;
+		}
+
+		&.header__controls {
+			justify-content: flex-end;
+			min-height: calc(64px + 1lh);
+			font-size: 0.875rem;
+			pointer-events: none;
+
+			.header__actions {
+				pointer-events: auto;
+			}
+		}
+
 		.header__logo {
 			color: var(--color-white) !important;
 			text-decoration: none !important;
 			font-size: 0.875rem;
-			mix-blend-mode: difference;
 		}
 
 		.header__actions {
@@ -468,6 +488,8 @@
 
 			.header__nav {
 				display: flex;
+				/* Leaves room for the settings button (32px) and its gap, which live in the controls layer. */
+				margin-right: 64px;
 			}
 
 			.header__links {
