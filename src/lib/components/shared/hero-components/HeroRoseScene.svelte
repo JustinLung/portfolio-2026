@@ -16,6 +16,7 @@
 	import CustomShaderMaterial from 'three-custom-shader-material/vanilla';
 	import wobbleVertexShader from './heroWobble.vert?raw';
 	import wobbleFragmentShader from './heroWobble.frag?raw';
+	import { createAsciiComposer } from './heroAscii';
 
 	type Props = {
 		pointerX?: number;
@@ -35,7 +36,7 @@
 		reveal = { scale: 1 }
 	}: Props = $props();
 
-	const { size } = useThrelte();
+	const { size, renderer, scene, autoRender, renderStage } = useThrelte();
 	const geometry = new SphereGeometry(1.82, 128, 96);
 	const sphereRadius = 1.82;
 	const raycaster = new Raycaster();
@@ -96,6 +97,32 @@
 	let elapsed = 0;
 	let wasPointerDown = false;
 	let dragEngaged = false;
+
+	let ascii = $state.raw<ReturnType<typeof createAsciiComposer>>();
+
+	// Replace Threlte's default render with the ASCII post-processing chain.
+	$effect(() => {
+		if (!camera) return;
+
+		const composer = createAsciiComposer(renderer, scene, camera);
+		ascii = composer;
+		autoRender.set(false);
+
+		return () => {
+			autoRender.set(true);
+			composer.dispose();
+			ascii = undefined;
+		};
+	});
+
+	$effect(() => {
+		ascii?.resize(size.current.width, size.current.height, renderer.getPixelRatio());
+	});
+
+	useTask((delta) => ascii?.render(delta), {
+		stage: renderStage,
+		autoInvalidate: false
+	});
 
 	useTask((delta) => {
 		const easing = 1 - Math.exp(-delta * 3);
