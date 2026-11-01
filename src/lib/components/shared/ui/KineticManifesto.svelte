@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { readReducedMotion } from '$lib/settings.svelte';
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
 	import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -15,7 +16,7 @@
 	];
 
 	onMount(() => {
-		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+		if (readReducedMotion()) return;
 
 		const context = gsap.context(() => {
 			const words = gsap.utils.toArray<HTMLElement>('.manifesto__word');

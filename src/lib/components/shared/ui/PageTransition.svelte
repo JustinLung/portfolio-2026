@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { readReducedMotion } from '$lib/settings.svelte';
 	import { onNavigate } from '$app/navigation';
 	import { appReady } from '$lib/stores/app-ready.svelte';
 	import { onMount } from 'svelte';
@@ -36,10 +37,7 @@
 	 * motion keep SvelteKit's default instant navigation.
 	 */
 	onNavigate((navigation) => {
-		if (
-			!document.startViewTransition ||
-			window.matchMedia('(prefers-reduced-motion: reduce)').matches
-		) {
+		if (!document.startViewTransition || readReducedMotion()) {
 			return;
 		}
 

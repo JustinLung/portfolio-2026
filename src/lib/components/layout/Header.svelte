@@ -2,172 +2,125 @@
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import gsap from 'gsap';
+	import { tick } from 'svelte';
 	import { links, socialLinks } from '../../../utils/links';
 	import { MediaQuery } from 'svelte/reactivity';
+	import {
+		finePointer,
+		onOffOptions,
+		motionOptions,
+		prefersReducedMotion,
+		qualityOptions,
+		settings,
+		updateSetting
+	} from '$lib/settings.svelte';
 	import { playSfx } from '$lib/sfx.svelte';
+	import BottomSheet from '../shared/ui/BottomSheet.svelte';
+	import { themes, themeState } from '$lib/theme.svelte';
+	import SegmentedControl from '../shared/ui/SegmentedControl.svelte';
+	import VolumeSlider from '../shared/ui/VolumeSlider.svelte';
 	import SoundToggle from '../shared/ui/SoundToggle.svelte';
+	import ThemePicker from '../shared/ui/ThemePicker.svelte';
 
-	const DRAG_THRESHOLD = 6;
-	const CLOSE_DISTANCE = 0.25;
-	const CLOSE_VELOCITY = 0.5;
+	type Tab = 'menu' | 'settings';
 
-	let menuOpen = $state(false);
-	let navigation: HTMLElement;
-	let backdrop: HTMLElement;
+	const tabs: { id: Tab; label: string }[] = [
+		{ id: 'menu', label: 'Menu' },
+		{ id: 'settings', label: 'Settings' }
+	];
+
+	let sheetOpen = $state(false);
+	let tab = $state<Tab>('menu');
+	let panels: HTMLElement;
 	let menuButton: HTMLButtonElement;
-	let initialized = false;
-
-	let drag: {
-		pointerId: number;
-		startY: number;
-		lastY: number;
-		lastTime: number;
-		velocity: number;
-		height: number;
-		active: boolean;
-	} | null = null;
-	let suppressClick = false;
-	let setSheetY: (value: number) => void;
-	let setBackdropOpacity: (value: number) => void;
+	let settingsButton: HTMLButtonElement;
 
 	// Mirrors --viewport-md-up in src/lib/css/media.css.
 	const desktop = new MediaQuery('min-width: 48em');
-	const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-	function toggleMenu() {
-		menuOpen = !menuOpen;
-		playSfx(menuOpen ? 'open' : 'close');
+	function toggleSheet(next: Tab) {
+		if (sheetOpen) {
+			closeSheet();
+			return;
+		}
+
+		tab = next;
+		sheetOpen = true;
+		playSfx('open');
 	}
 
-	function closeMenu() {
-		if (!menuOpen) return;
-		menuOpen = false;
+	function closeSheet() {
+		if (!sheetOpen) return;
+		sheetOpen = false;
 		playSfx('close');
 	}
 
 	function handleKeydown(event: KeyboardEvent) {
 		if (event.key !== 'Escape') return;
-		closeMenu();
+		closeSheet();
 	}
 
-	function handlePointerDown(event: PointerEvent) {
-		if (!menuOpen || event.button !== 0) return;
-		drag = {
-			pointerId: event.pointerId,
-			startY: event.clientY,
-			lastY: event.clientY,
-			lastTime: event.timeStamp,
-			velocity: 0,
-			height: 0,
-			active: false
-		};
+	// The panels differ in height; morph the sheet instead of letting it jump.
+	async function selectTab(next: Tab) {
+		if (next === tab) return;
+
+		gsap.killTweensOf(panels);
+		const from = panels.offsetHeight;
+
+		tab = next;
+		await tick();
+
+		gsap.set(panels, { height: 'auto' });
+		const to = panels.offsetHeight;
+
+		if (from === to || prefersReducedMotion()) return;
+
+		gsap.fromTo(
+			panels,
+			{ height: from, overflow: 'hidden' },
+			{
+				height: to,
+				duration: 0.6,
+				ease: 'expo.out',
+				onComplete: () => {
+					gsap.set(panels, { clearProps: 'height,overflow' });
+				}
+			}
+		);
 	}
 
-	function handlePointerMove(event: PointerEvent) {
-		if (!drag || event.pointerId !== drag.pointerId) return;
-
-		const offset = event.clientY - drag.startY;
-
-		if (!drag.active) {
-			if (Math.abs(offset) < DRAG_THRESHOLD) return;
-			drag.active = true;
-			drag.height = navigation.offsetHeight;
-			navigation.setPointerCapture(event.pointerId);
-			gsap.killTweensOf([navigation, backdrop]);
-		}
-
-		const elapsed = event.timeStamp - drag.lastTime;
-		if (elapsed > 0) drag.velocity = (event.clientY - drag.lastY) / elapsed;
-		drag.lastY = event.clientY;
-		drag.lastTime = event.timeStamp;
-
-		// Follow the finger downwards; resist dragging upwards like a native sheet.
-		const y = offset > 0 ? offset : offset * 0.2;
-		const progress = Math.max(0, y) / drag.height;
-
-		setSheetY(y);
-		setBackdropOpacity(1 - progress);
-	}
-
-	function handlePointerUp(event: PointerEvent) {
-		if (!drag || event.pointerId !== drag.pointerId) return;
-
-		const { active, startY, velocity, height } = drag;
-		drag = null;
-
-		if (!active) return;
-
-		// A drag ends with a click on whatever is under the finger; swallow it.
-		suppressClick = true;
-		setTimeout(() => (suppressClick = false));
-
-		const offset = event.clientY - startY;
-		const shouldClose = offset > height * CLOSE_DISTANCE || velocity > CLOSE_VELOCITY;
-
-		if (shouldClose && event.type === 'pointerup') {
-			closeMenu();
-			return;
-		}
-
-		const duration = reducedMotion() ? 0 : 0.35;
-		gsap.to(navigation, { y: 0, duration, ease: 'power3.out' });
-		gsap.to(backdrop, { opacity: 1, duration });
-	}
-
-	function handleClickCapture(event: MouseEvent) {
-		if (!suppressClick) return;
+	function handleTabKeydown(event: KeyboardEvent) {
+		if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
 		event.preventDefault();
-		event.stopPropagation();
+		const next = tab === 'menu' ? 'settings' : 'menu';
+		selectTab(next);
+
+		const buttons = (event.currentTarget as HTMLElement).parentElement?.children;
+		(buttons?.[tabs.findIndex(({ id }) => id === next)] as HTMLElement | undefined)?.focus();
 	}
+
+	let scrollLocked = false;
 
 	$effect(() => {
-		const open = menuOpen;
+		const locked = sheetOpen;
 
-		if (!navigation || !backdrop) return;
+		// Only react to the sheet opening or closing; on mount, leave other scroll locks alone.
+		if (locked === scrollLocked) return;
+		scrollLocked = locked;
 
-		if (!initialized) {
-			initialized = true;
-			gsap.set(navigation, { yPercent: 100 });
-			setSheetY = gsap.quickSetter(navigation, 'y', 'px') as (value: number) => void;
-			setBackdropOpacity = gsap.quickSetter(backdrop, 'opacity') as (value: number) => void;
-			return;
-		}
-
-		const duration = reducedMotion() ? 0 : open ? 0.5 : 0.35;
-
-		gsap.killTweensOf([navigation, backdrop]);
-
-		if (open) gsap.set(navigation, { visibility: 'visible' });
-
-		gsap.to(navigation, {
-			yPercent: open ? 0 : 100,
-			y: 0,
-			duration,
-			ease: open ? 'expo.out' : 'power3.in',
-			onComplete: () => {
-				if (!open) gsap.set(navigation, { visibility: 'hidden' });
-			}
-		});
-		gsap.to(backdrop, { autoAlpha: open ? 1 : 0, duration });
-
-		document.documentElement.style.overflow = open ? 'hidden' : '';
-		if (open) {
-			window.Lenis?.stop();
-			navigation.querySelector<HTMLElement>('a')?.focus({ preventScroll: true });
-		} else {
-			window.Lenis?.start();
-			if (navigation.contains(document.activeElement)) menuButton?.focus();
-		}
+		document.documentElement.style.overflow = locked ? 'hidden' : '';
+		if (locked) window.Lenis?.stop();
+		else window.Lenis?.start();
 	});
 
-	// The sheet is hidden from the md breakpoint up; don't leave the page scroll-locked.
+	// The menu tab is hidden from the md breakpoint up; don't leave the page scroll-locked.
 	$effect(() => {
-		if (desktop.current) menuOpen = false;
+		if (desktop.current && tab === 'menu') sheetOpen = false;
 	});
 
 	$effect(() => () => {
-		gsap.killTweensOf([navigation, backdrop]);
-		document.documentElement.style.overflow = '';
+		gsap.killTweensOf(panels);
+		if (scrollLocked) document.documentElement.style.overflow = '';
 	});
 </script>
 
@@ -185,7 +138,7 @@
 					aria-label={link.label}
 					data-uisfx-hover="hover"
 					data-uisfx="forward"
-					onclick={() => (menuOpen = false)}>{link.label}</a
+					onclick={() => (sheetOpen = false)}>{link.label}</a
 				>
 			</li>
 		{/each}
@@ -197,67 +150,193 @@
 		Portfolio
 	</a>
 
-	<button
-		bind:this={menuButton}
-		class="header__menu-button"
-		class:header__menu-button--open={menuOpen}
-		aria-expanded={menuOpen}
-		aria-controls="main-navigation"
-		aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-		data-uisfx-hover="hover"
-		onclick={toggleMenu}
-	>
-		<span class="header__menu-icon">
-			<span class="header__menu-bar"></span>
-			<span class="header__menu-bar"></span>
-			<span class="header__menu-bar"></span>
-		</span>
-	</button>
+	<div class="header__actions">
+		<nav class="header__nav">
+			{@render navigationLinks()}
+		</nav>
 
-	<nav class="header__nav">
-		{@render navigationLinks()}
-	</nav>
+		<button
+			bind:this={settingsButton}
+			type="button"
+			class="header__settings-button"
+			aria-expanded={sheetOpen}
+			aria-controls="header-sheet"
+			aria-label={sheetOpen ? 'Close settings' : 'Open settings'}
+			data-uisfx-hover="hover"
+			onclick={() => toggleSheet('settings')}
+		>
+			<svg
+				class="header__settings-icon"
+				viewBox="0 0 16 16"
+				fill="none"
+				stroke="currentColor"
+				aria-hidden="true"
+			>
+				<path d="M1 4.5h14M1 11.5h14" />
+				<circle cx="10.5" cy="4.5" r="1.75" fill="var(--color-secondary)" />
+				<circle cx="5.5" cy="11.5" r="1.75" fill="var(--color-secondary)" />
+			</svg>
+		</button>
+
+		<button
+			bind:this={menuButton}
+			type="button"
+			class="header__menu-button"
+			class:header__menu-button--open={sheetOpen}
+			aria-expanded={sheetOpen}
+			aria-controls="header-sheet"
+			aria-label={sheetOpen ? 'Close menu' : 'Open menu'}
+			data-uisfx-hover="hover"
+			onclick={() => toggleSheet('menu')}
+		>
+			<span class="header__menu-icon">
+				<span class="header__menu-bar"></span>
+				<span class="header__menu-bar"></span>
+				<span class="header__menu-bar"></span>
+			</span>
+		</button>
+	</div>
 </header>
 
-<div bind:this={backdrop} class="header__backdrop" aria-hidden="true" onclick={closeMenu}></div>
-
-<nav
-	id="main-navigation"
-	bind:this={navigation}
-	class="header__menu"
-	aria-label="Mobile navigation"
-	inert={!menuOpen}
-	onpointerdown={handlePointerDown}
-	onpointermove={handlePointerMove}
-	onpointerup={handlePointerUp}
-	onpointercancel={handlePointerUp}
-	onclickcapture={handleClickCapture}
+<BottomSheet
+	id="header-sheet"
+	open={sheetOpen}
+	onclose={closeSheet}
+	returnFocus={() => (desktop.current ? settingsButton : menuButton)}
 >
-	<span class="header__menu-handle" aria-hidden="true"></span>
-	{@render navigationLinks()}
-	<div class="header__menu-footer">
-		<!-- eslint-disable svelte/no-navigation-without-resolve -- external URLs -->
-		<ul class="header__socials" role="list" aria-label="Social links">
-			{#each socialLinks as link (link.href)}
-				<li>
-					<a
-						href={link.href}
-						target="_blank"
-						rel="noopener noreferrer"
-						class="link"
-						data-uisfx-hover="hover"
-						data-uisfx="forward">{link.label}</a
-					>
-				</li>
-			{/each}
-		</ul>
-		<!-- eslint-enable svelte/no-navigation-without-resolve -->
+	<div class="header__tabs" role="tablist" aria-label="Menu sections">
+		{#each tabs as { id, label } (id)}
+			<button
+				type="button"
+				role="tab"
+				id="header-tab-{id}"
+				class="header__tab"
+				aria-selected={tab === id}
+				aria-controls="header-panel-{id}"
+				tabindex={tab === id ? 0 : -1}
+				data-uisfx-hover="hover"
+				data-uisfx="forward"
+				onclick={() => selectTab(id)}
+				onkeydown={handleTabKeydown}>{label}</button
+			>
+		{/each}
+	</div>
 
-		<div class="header__sound">
-			<SoundToggle />
+	<div bind:this={panels}>
+		<div
+			id="header-panel-menu"
+			class="header__panel--menu"
+			role="tabpanel"
+			aria-labelledby="header-tab-menu"
+			hidden={tab !== 'menu'}
+		>
+			<nav class="header__menu" aria-label="Mobile navigation">
+				{@render navigationLinks()}
+				<!-- eslint-disable svelte/no-navigation-without-resolve -- external URLs -->
+				<ul class="header__socials" role="list" aria-label="Social links">
+					{#each socialLinks as link (link.href)}
+						<li>
+							<a
+								href={link.href}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="link"
+								data-uisfx-hover="hover"
+								data-uisfx="forward">{link.label}</a
+							>
+						</li>
+					{/each}
+				</ul>
+				<!-- eslint-enable svelte/no-navigation-without-resolve -->
+			</nav>
+		</div>
+
+		<div
+			id="header-panel-settings"
+			role="tabpanel"
+			aria-labelledby="header-tab-settings"
+			hidden={tab !== 'settings'}
+		>
+			<p class="header__settings-title">Settings</p>
+			<div class="header__setting">
+				<div>
+					<p class="header__setting-label">Sound</p>
+					<p class="header__setting-hint">Play interface sound effects</p>
+				</div>
+				<div class="header__sound">
+					<SoundToggle />
+				</div>
+			</div>
+			<div class="header__setting">
+				<label class="header__setting-label" for="setting-volume">Volume</label>
+				<VolumeSlider id="setting-volume" />
+			</div>
+			<div class="header__setting">
+				<div>
+					<p class="header__setting-label">ASCII effect</p>
+					<p class="header__setting-hint">Render the rose as text</p>
+				</div>
+				<SegmentedControl
+					name="setting-ascii"
+					label="ASCII effect"
+					options={onOffOptions}
+					value={settings.ascii ? 'on' : 'off'}
+					onchange={(value) => updateSetting('ascii', value === 'on')}
+				/>
+			</div>
+			{#if finePointer.current}
+				<div class="header__setting">
+					<div>
+						<p class="header__setting-label">Custom cursor</p>
+						<p class="header__setting-hint">Replace the mouse pointer</p>
+					</div>
+					<SegmentedControl
+						name="setting-cursor"
+						label="Custom cursor"
+						options={onOffOptions}
+						value={settings.cursor ? 'on' : 'off'}
+						onchange={(value) => updateSetting('cursor', value === 'on')}
+					/>
+				</div>
+			{/if}
+			<div class="header__setting">
+				<div>
+					<p class="header__setting-label">Motion</p>
+					<p class="header__setting-hint">System follows your device</p>
+				</div>
+				<SegmentedControl
+					name="setting-motion"
+					label="Motion"
+					options={motionOptions}
+					value={settings.motion}
+					onchange={(value) => updateSetting('motion', value)}
+				/>
+			</div>
+			<div class="header__setting">
+				<div>
+					<p class="header__setting-label">3D quality</p>
+					<p class="header__setting-hint">Lower it if the page feels slow</p>
+				</div>
+				<SegmentedControl
+					name="setting-quality"
+					label="3D quality"
+					options={qualityOptions}
+					value={settings.quality}
+					onchange={(value) => updateSetting('quality', value)}
+				/>
+			</div>
+			<div class="header__setting header__setting--stacked">
+				<div class="header__setting-heading">
+					<p class="header__setting-label">Theme</p>
+					<p class="header__setting-hint">
+						{themes.find(({ id }) => id === themeState.id)?.label}
+					</p>
+				</div>
+				<ThemePicker />
+			</div>
 		</div>
 	</div>
-</nav>
+</BottomSheet>
 
 <style>
 	.header {
@@ -279,7 +358,14 @@
 			mix-blend-mode: difference;
 		}
 
-		.header__menu-button {
+		.header__actions {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.header__menu-button,
+		.header__settings-button {
 			display: inline-flex;
 			width: 32px;
 			height: 32px;
@@ -298,9 +384,19 @@
 			border-radius: 4px;
 		}
 
-		.header__menu-button:focus-visible {
+		.header__settings-button {
+			display: none;
+		}
+
+		.header__menu-button:focus-visible,
+		.header__settings-button:focus-visible {
 			outline: 2px solid currentColor;
 			outline-offset: 2px;
+		}
+
+		.header__settings-icon {
+			width: 16px;
+			height: 16px;
 		}
 
 		.header__menu-icon {
@@ -362,6 +458,14 @@
 				display: none;
 			}
 
+			.header__settings-button {
+				display: inline-flex;
+			}
+
+			.header__actions {
+				gap: 32px;
+			}
+
 			.header__nav {
 				display: flex;
 			}
@@ -381,46 +485,7 @@
 		}
 	}
 
-	/* Sits below the header so the menu button stays usable as a close control. */
-	.header__backdrop {
-		position: fixed;
-		z-index: 9;
-		inset: 0;
-		background-color: rgb(0 0 0 / 50%);
-		visibility: hidden;
-		opacity: 0;
-
-		@media (--viewport-md-up) {
-			display: none;
-		}
-	}
-
 	.header__menu {
-		position: fixed;
-		z-index: 11;
-		inset-inline: 0;
-		bottom: 0;
-		padding: 12px 16px calc(32px + env(safe-area-inset-bottom));
-		background-color: var(--color-secondary);
-		border-radius: 16px 16px 0 0;
-		box-shadow: 0 -12px 32px rgb(0 0 0 / 20%);
-		visibility: hidden;
-		touch-action: none;
-		user-select: none;
-
-		&::after {
-			content: '';
-			position: absolute;
-			inset-inline: 0;
-			top: 100%;
-			height: 100px;
-			background-color: inherit;
-		}
-
-		@media (--viewport-md-up) {
-			display: none;
-		}
-
 		.header__links {
 			gap: 24px;
 			padding-bottom: 24px;
@@ -433,7 +498,8 @@
 		flex-wrap: wrap;
 		gap: 8px 24px;
 		list-style: none;
-		padding: 0;
+		margin: 0;
+		padding: 24px 0 0;
 
 		.link {
 			color: var(--color-quaternary);
@@ -441,28 +507,103 @@
 		}
 	}
 
-	.header__menu-footer {
+	.header__tabs {
+		display: flex;
+		gap: 24px;
+		margin-bottom: 24px;
+
+		@media (--viewport-md-up) {
+			display: none;
+		}
+	}
+
+	.header__tab {
+		padding: 0 0 4px;
+		color: var(--color-quaternary);
+		background: none;
+		border: 0;
+		border-bottom: 1px solid transparent;
+		font: inherit;
+		font-size: 0.875rem;
+		cursor: pointer;
+		transition:
+			color 200ms ease,
+			border-color 200ms ease;
+
+		&[aria-selected='true'] {
+			color: var(--color-white);
+			border-bottom-color: currentColor;
+		}
+
+		&:focus-visible {
+			outline: 2px solid currentColor;
+			outline-offset: 4px;
+		}
+	}
+
+	.header__panel--menu {
+		@media (--viewport-md-up) {
+			display: none;
+		}
+	}
+
+	/* The tab already names the panel on mobile. */
+	.header__settings-title {
+		display: none;
+		margin: 0 0 8px;
+		color: var(--color-white);
+		font-size: 1.25rem;
+
+		@media (--viewport-md-up) {
+			display: block;
+		}
+	}
+
+	.header__setting {
 		display: flex;
 		justify-content: space-between;
-		flex-wrap: wrap;
-		padding-top: 24px;
+		align-items: center;
 		gap: 16px;
+		padding-block: 12px;
+		border-top: 1px solid color-mix(in srgb, var(--color-quaternary) 40%, transparent);
+	}
+
+	.header__setting--stacked {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 12px;
+		padding-bottom: 0;
 	}
 
 	.header__sound {
-		color: var(--color-quaternary);
-		font-size: 0.875rem;
-		display: flex;
-		align-items: center;
+		color: var(--color-white);
+		font-size: 1rem;
 	}
 
-	.header__menu-handle {
-		display: block;
-		width: 40px;
-		height: 4px;
-		margin: 0 auto 24px;
-		background-color: var(--color-quaternary);
-		border-radius: 2px;
+	.header__setting-heading {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 16px;
+	}
+
+	.header__setting-label,
+	.header__setting-hint {
+		margin: 0;
+	}
+
+	.header__setting-label {
+		color: var(--color-white);
+		font-size: 1rem;
+	}
+
+	.header__setting-hint {
+		color: color-mix(in srgb, var(--color-white) 65%, transparent);
+		font-size: 0.875rem;
+	}
+
+	.header__setting-label + .header__setting-hint {
+		margin-top: 2px;
 	}
 
 	.header__links {

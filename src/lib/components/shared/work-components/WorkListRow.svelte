@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { readReducedMotion } from '$lib/settings.svelte';
 	import { resolve } from '$app/paths';
 	import previewPlaceholder from '$lib/assets/work-preview-placeholder.svg';
 	import gsap from 'gsap';
@@ -9,10 +10,6 @@
 	let previewRef = $state<HTMLElement | null>(null);
 	let previousPointer = { x: 0, y: 0, time: 0 };
 	let settleTween: gsap.core.Tween | null = null;
-
-	function prefersReducedMotion() {
-		return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-	}
 
 	function getPointerPreviewPosition(event: PointerEvent) {
 		if (!previewRef) return { x: event.clientX, y: event.clientY };
@@ -40,7 +37,7 @@
 			return;
 		}
 
-		const reduceMotion = prefersReducedMotion();
+		const reduceMotion = readReducedMotion();
 		const now = performance.now();
 		const elapsed = Math.max(now - previousPointer.time, 16);
 		const distanceX = event.clientX - previousPointer.x;
@@ -84,7 +81,7 @@
 	function showKeyboardPreview() {
 		if (!previewRef) return;
 
-		const reduceMotion = prefersReducedMotion();
+		const reduceMotion = readReducedMotion();
 		const { width, height } = previewRef.getBoundingClientRect();
 
 		gsap.to(previewRef, {
@@ -109,7 +106,7 @@
 			opacity: 0,
 			rotation: 0,
 			scale: 0.75,
-			duration: prefersReducedMotion() ? 0 : 0.3,
+			duration: readReducedMotion() ? 0 : 0.3,
 			ease: 'expo.out',
 			overwrite: 'auto'
 		});

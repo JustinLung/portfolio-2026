@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { readReducedMotion } from '$lib/settings.svelte';
 	import { tick } from 'svelte';
 	import gsap from 'gsap';
 	import { Flip } from 'gsap/Flip';
@@ -33,7 +34,7 @@
 	}
 
 	function animateWritePage(section: HTMLElement) {
-		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+		if (readReducedMotion()) return;
 
 		const header = gsap.utils.toArray<HTMLElement>('.write-page__header > *', section);
 		const filter = gsap.utils.toArray<HTMLElement>('.write-page__filter', section);
@@ -109,7 +110,7 @@
 	}
 
 	async function animateLayout(update: () => void) {
-		const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		const reduceMotion = readReducedMotion();
 		const currentItems = gridRef?.querySelectorAll('.write-page__item');
 		finishEntranceAnimation();
 		layoutAnimation?.kill();

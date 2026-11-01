@@ -85,6 +85,10 @@ export async function playSfxIfUnlocked(cue: CueName, options?: PlayOptions): Pr
 /** Reactive mirror of the player's preference, shared by every sound toggle. */
 export const sfxState = $state({ enabled: true });
 
+export function setSfxVolume(volume: number): void {
+	player?.setVolume(volume);
+}
+
 export function setSfxEnabled(enabled: boolean): void {
 	if (!player) return;
 

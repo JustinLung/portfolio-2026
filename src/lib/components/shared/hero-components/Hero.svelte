@@ -2,6 +2,7 @@
 	import { Canvas } from '@threlte/core';
 	import { afterNavigate } from '$app/navigation';
 	import gsap from 'gsap';
+	import { prefersReducedMotion, readReducedMotion, settings } from '$lib/settings.svelte';
 	import { appReady } from '$lib/stores/app-ready.svelte';
 	import HeroRoseScene from './HeroRoseScene.svelte';
 
@@ -11,7 +12,7 @@
 	let pointerY = $state(0);
 	let pointerActive = $state(false);
 	let pointerDown = $state(false);
-	let reducedMotion = $state(false);
+	const reducedMotion = $derived(prefersReducedMotion());
 	let pixelRatio = $state(1);
 	const reveal = { scale: 0 };
 	let replayRequest = $state(0);
@@ -62,10 +63,7 @@
 	};
 
 	const cancelActiveDrag = (reset = false) => {
-		if (
-			activePointerId !== null &&
-			heroElement?.hasPointerCapture(activePointerId)
-		) {
+		if (activePointerId !== null && heroElement?.hasPointerCapture(activePointerId)) {
 			heroElement.releasePointerCapture(activePointerId);
 		}
 
@@ -87,22 +85,19 @@
 
 	function animateHero(section: HTMLElement) {
 		heroElement = section;
-		const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-		const updateMotionPreference = () => {
-			reducedMotion = motionQuery.matches;
-			if (reducedMotion) cancelActiveDrag();
-		};
 
 		pixelRatio = Math.min(window.devicePixelRatio, 1.75);
-		updateMotionPreference();
-		motionQuery.addEventListener('change', updateMotionPreference);
+
+		$effect(() => {
+			if (reducedMotion) cancelActiveDrag();
+		});
 
 		$effect(() => {
 			const replay = replayRequest;
 			if (!appReady.ready) return;
 
 			const context = gsap.context(() => {
-				if (motionQuery.matches) {
+				if (readReducedMotion()) {
 					reveal.scale = 1;
 					gsap.set(['.hero__subtitle', '.hero__title'], {
 						autoAlpha: 1,
@@ -132,7 +127,7 @@
 						{
 							autoAlpha: 1,
 							yPercent: 0,
-							duration: .35,
+							duration: 0.35,
 							ease: 'expo.out'
 						},
 						'-=0.35'
@@ -145,7 +140,6 @@
 		return () => {
 			cancelActiveDrag();
 			heroElement = null;
-			motionQuery.removeEventListener('change', updateMotionPreference);
 		};
 	}
 </script>
@@ -167,16 +161,18 @@
 		class="hero__scene"
 		aria-hidden="true"
 	>
-		<Canvas dpr={pixelRatio}>
-			<HeroRoseScene
-				{pointerX}
-				{pointerY}
-				{pointerActive}
-				{pointerDown}
-				{reducedMotion}
-				{reveal}
-			/>
-		</Canvas>
+		{#if settings.quality !== 'off'}
+			<Canvas dpr={settings.quality === 'low' ? 1 : pixelRatio}>
+				<HeroRoseScene
+					{pointerX}
+					{pointerY}
+					{pointerActive}
+					{pointerDown}
+					{reducedMotion}
+					{reveal}
+				/>
+			</Canvas>
+		{/if}
 	</div>
 	<div class="hero__content">
 		<span class="hero__subtitle">{subtitle}</span>

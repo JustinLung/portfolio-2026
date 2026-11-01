@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { readReducedMotion } from '$lib/settings.svelte';
 	import { resolve } from '$app/paths';
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
@@ -22,7 +23,7 @@
 	const cardAspectRatios = ['16 / 10', '4 / 3', '5 / 4', '16 / 9', '4 / 3', '16 / 10'] as const;
 
 	onMount(() => {
-		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+		if (readReducedMotion()) return;
 
 		const context = gsap.context(() => {
 			const cards = gsap.utils.toArray<HTMLElement>('.work-list-item');

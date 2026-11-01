@@ -1,5 +1,6 @@
 /* Color tokens */
-:root {
+:root,
+[data-theme='ember'] {
 	--color-primary: #2f2a24;
 	--color-secondary: #3b352e;
 	--color-tertiary: #241f1a;
@@ -13,4 +14,75 @@
 	--color-dark-green: #5f7a4a;
 	--color-light-red: #c48a7a;
 	--color-dark-red: #7a4a45;
+
+	/* Accent: the hero rose. `glow` is its rim light. */
+	--accent-deep: #57001f;
+	--accent: #ff2c78;
+	--accent-light: #ffc1d8;
+	--accent-glow: #ff0b64;
+}
+
+/*
+ * Themes override the tokens above. They match on any element, not just <html>,
+ * so a swatch can preview a theme with `data-theme` on itself.
+ * Selection lives in src/lib/theme.svelte.ts.
+ */
+[data-theme='midnight'] {
+	--color-primary: #24282f;
+	--color-secondary: #2e323b;
+	--color-tertiary: #1a1d24;
+	--color-quaternary: #777e8c;
+	--color-neutral-800: #111318;
+	--color-neutral-900: #0c0f14;
+	--color-neutral-950: #06080b;
+
+	--accent-deep: #0a2a6b;
+	--accent: #3d7bff;
+	--accent-light: #b7d0ff;
+	--accent-glow: #1f5cff;
+}
+
+[data-theme='forest'] {
+	--color-primary: #252e28;
+	--color-secondary: #2f3a33;
+	--color-tertiary: #1a241e;
+	--color-quaternary: #788b7e;
+	--color-neutral-800: #111813;
+	--color-neutral-900: #0c140f;
+	--color-neutral-950: #060b08;
+
+	--accent-deep: #0f3d22;
+	--accent: #3ddc84;
+	--accent-light: #c4f5d8;
+	--accent-glow: #12c26a;
+}
+
+[data-theme='dusk'] {
+	--color-primary: #29242f;
+	--color-secondary: #332e3b;
+	--color-tertiary: #1e1a24;
+	--color-quaternary: #80778c;
+	--color-neutral-800: #141118;
+	--color-neutral-900: #0f0c14;
+	--color-neutral-950: #08060b;
+
+	--accent-deep: #2a0f5c;
+	--accent: #9a5cff;
+	--accent-light: #dcc8ff;
+	--accent-glow: #7a2cff;
+}
+
+[data-theme='graphite'] {
+	--color-primary: #2a2a2a;
+	--color-secondary: #343434;
+	--color-tertiary: #1f1f1f;
+	--color-quaternary: #828282;
+	--color-neutral-800: #141414;
+	--color-neutral-900: #101010;
+	--color-neutral-950: #080808;
+
+	--accent-deep: #5a2a00;
+	--accent: #ffa31a;
+	--accent-light: #ffe0a8;
+	--accent-glow: #ff8a00;
 }

@@ -1,18 +1,27 @@
 <script lang="ts">
 	import Lenis from 'lenis';
+	import { prefersReducedMotion } from '$lib/settings.svelte';
 
 	$effect(() => {
-		// Initialize Lenis
+		// Native scrolling is the calmer option when motion is reduced.
+		if (prefersReducedMotion()) return;
+
 		const lenis = new Lenis();
+		let frame = 0;
 
 		window.Lenis = lenis;
 
-		// Use requestAnimationFrame to continuously update the scroll
 		function raf(time: number) {
 			lenis.raf(time);
-			requestAnimationFrame(raf);
+			frame = requestAnimationFrame(raf);
 		}
 
-		requestAnimationFrame(raf);
+		frame = requestAnimationFrame(raf);
+
+		return () => {
+			cancelAnimationFrame(frame);
+			lenis.destroy();
+			window.Lenis = undefined;
+		};
 	});
 </script>

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { readReducedMotion } from '$lib/settings.svelte';
 	import { tick } from 'svelte';
 	import gsap from 'gsap';
 	import { Flip } from 'gsap/Flip';
@@ -33,7 +34,7 @@
 	);
 
 	async function animateLayout(update: () => void) {
-		const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		const reduceMotion = readReducedMotion();
 		const currentItems = listRef?.querySelectorAll('.work-list-item');
 		layoutAnimation?.kill();
 

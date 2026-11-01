@@ -17,6 +17,8 @@
 	import wobbleVertexShader from './heroWobble.vert?raw';
 	import wobbleFragmentShader from './heroWobble.frag?raw';
 	import { createAsciiComposer } from './heroAscii';
+	import { settings } from '$lib/settings.svelte';
+	import { themeState } from '$lib/theme.svelte';
 
 	type Props = {
 		pointerX?: number;
@@ -86,6 +88,21 @@
 		clearcoatRoughness: 0.28
 	});
 
+	let glowColor = $state('#ff0b64');
+
+	// Follow the theme's accent, which lives in CSS custom properties.
+	$effect(() => {
+		void themeState.id;
+
+		const styles = getComputedStyle(document.documentElement);
+		const read = (name: string) => styles.getPropertyValue(name).trim();
+
+		uniforms.uColorA.value.set(read('--accent-deep'));
+		uniforms.uColorB.value.set(read('--accent'));
+		uniforms.uHoverColor.value.set(read('--accent-light'));
+		glowColor = read('--accent-glow');
+	});
+
 	let rotationX = $state(-0.12);
 	let rotationY = $state(-0.3);
 	let breath = $state(1);
@@ -102,7 +119,7 @@
 
 	// Replace Threlte's default render with the ASCII post-processing chain.
 	$effect(() => {
-		if (!camera) return;
+		if (!camera || !settings.ascii) return;
 
 		const composer = createAsciiComposer(renderer, scene, camera);
 		ascii = composer;
@@ -238,7 +255,7 @@
 
 <T.HemisphereLight args={['#ffe6f0', '#130006', 1.3]} />
 <T.PointLight color="#fff8fb" intensity={52} distance={10} decay={2} position={[-3.2, 3.1, 4]} />
-<T.PointLight color="#ff0b64" intensity={42} distance={9} decay={2} position={[3, -1.4, 2.8]} />
+<T.PointLight color={glowColor} intensity={42} distance={9} decay={2} position={[3, -1.4, 2.8]} />
 <T.PointLight color="#6438ff" intensity={28} distance={8} decay={2} position={[-2.4, 0, -2.6]} />
 
 <T.Group bind:ref={revealGroup} scale={reveal.scale}>

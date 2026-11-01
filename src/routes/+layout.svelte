@@ -13,13 +13,18 @@
 	import Lenis from '$lib/components/shared/ui/Lenis.svelte';
 	import PageTransition from '$lib/components/shared/ui/PageTransition.svelte';
 	import SiteLoader from '$lib/components/shared/ui/SiteLoader.svelte';
-	import { initializeSfx, unlockSfx } from '$lib/sfx.svelte';
+	import { initializeSettings, settings } from '$lib/settings.svelte';
+	import { initializeSfx, setSfxVolume, unlockSfx } from '$lib/sfx.svelte';
+	import { initializeTheme } from '$lib/theme.svelte';
 	import { onMount } from 'svelte';
 	import SkipMainContent from '$lib/components/shared/ui/SkipMainContent.svelte';
 
 	let { children } = $props();
 
 	onMount(() => {
+		initializeTheme();
+		initializeSettings();
+
 		const destroySfx = initializeSfx(document);
 
 		const unlock = () => {
@@ -37,6 +42,8 @@
 			void destroySfx();
 		};
 	});
+
+	$effect(() => setSfxVolume(settings.volume));
 </script>
 
 <svelte:head>

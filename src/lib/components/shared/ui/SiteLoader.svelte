@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { readReducedMotion } from '$lib/settings.svelte';
 	import { playSfxIfUnlocked } from '$lib/sfx.svelte';
 	import { appReady } from '$lib/stores/app-ready.svelte';
 	import gsap from 'gsap';
@@ -71,7 +72,7 @@
 	 * smooths each completed resource into the visible ring percentage.
 	 */
 	onMount(() => {
-		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+		if (readReducedMotion()) {
 			visible = false;
 			appReady.completeLoader();
 			return;

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { readReducedMotion } from '$lib/settings.svelte';
 	import { resolve } from '$app/paths';
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
@@ -12,7 +13,7 @@
 	let sectionRef: HTMLElement;
 
 	onMount(() => {
-		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+		if (readReducedMotion()) return;
 
 		const context = gsap.context(() => {
 			const timeline = gsap.timeline({

@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, untrack } from 'svelte';
+	import { finePointer, prefersReducedMotion, settings } from '$lib/settings.svelte';
 
 	type CursorMode = 'default' | 'link';
 
 	let cursor: HTMLDivElement;
-	let enabled = $state(false);
+	const enabled = $derived(finePointer.current && !prefersReducedMotion() && settings.cursor);
 	let visible = $state(false);
 	let pressed = $state(false);
 	let mode = $state<CursorMode>('default');
@@ -161,26 +162,17 @@
 		resetMagneticTarget();
 	}
 
+	$effect(() => {
+		document.documentElement.classList.toggle('custom-cursor-active', enabled);
+		if (!enabled) untrack(hideCursor);
+
+		return () => document.documentElement.classList.remove('custom-cursor-active');
+	});
+
 	onMount(() => {
-		const cursorQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
-		const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-		const updateAvailability = () => {
-			enabled = cursorQuery.matches && !motionQuery.matches;
-			document.documentElement.classList.toggle('custom-cursor-active', enabled);
-			if (!enabled) hideCursor();
-		};
-
-		updateAvailability();
-		cursorQuery.addEventListener('change', updateAvailability);
-		motionQuery.addEventListener('change', updateAvailability);
-
 		return () => {
 			cancelAnimationFrame(frame);
 			restoreMagneticTarget();
-			document.documentElement.classList.remove('custom-cursor-active');
-			cursorQuery.removeEventListener('change', updateAvailability);
-			motionQuery.removeEventListener('change', updateAvailability);
 		};
 	});
 </script>
@@ -291,7 +283,7 @@
 		cursor: pointer;
 	}
 
-	@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+	@media (hover: none), (pointer: coarse) {
 		.cursor {
 			display: none;
 		}

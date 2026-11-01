@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { readReducedMotion } from '$lib/settings.svelte';
 	import gsap from 'gsap';
 	import Seo from '$lib/components/shared/misc/Seo.svelte';
 	import WorkList from '$lib/components/shared/work-components/WorkList.svelte';
@@ -8,7 +9,7 @@
 	let { data }: PageProps = $props();
 
 	function animateWorkPage(section: HTMLElement) {
-		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+		if (readReducedMotion()) return;
 
 		const header = gsap.utils.toArray<HTMLElement>('.work-page__header > *', section);
 		const filters = gsap.utils.toArray<HTMLElement>('.work-list-filter-container button', section);
@@ -38,7 +39,7 @@
 						{
 							opacity: 1,
 							y: 0,
-							duration: .35,
+							duration: 0.35,
 							stagger: 0.04
 						},
 						'-=0.15'
@@ -51,7 +52,7 @@
 						{
 							opacity: 1,
 							y: 0,
-							duration: .35,
+							duration: 0.35,
 							stagger: 0.06,
 							onComplete() {
 								gsap.set(items, { clearProps: 'opacity,transform' });
