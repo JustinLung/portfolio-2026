@@ -2,25 +2,45 @@
 	import { resolve } from '$app/paths';
 	import { links, policyLinks, socialLinks } from '../../../utils/links';
 	import SoundToggle from '../shared/ui/SoundToggle.svelte';
+	import { getAmsterdamStatus, type AmsterdamStatus } from '../../../utils/amsterdam-status';
 
 	const year = new Date().getFullYear();
 
 	/** Toggle this to flip the availability badge between green and red. */
 	const availableForProjects = true;
+
+	let amsterdam = $state<AmsterdamStatus | null>(null);
+
+	$effect(() => {
+		let timeout: ReturnType<typeof setTimeout>;
+
+		function tick() {
+			amsterdam = getAmsterdamStatus();
+			timeout = setTimeout(tick, 60_000 - (Date.now() % 60_000));
+		}
+
+		tick();
+		return () => clearTimeout(timeout);
+	});
 </script>
 
 <footer class="footer">
 	<div class="footer__inner container">
 		<div class="footer__cta">
-			<span
-				class="footer__eyebrow font-small"
-				class:footer__eyebrow--available={availableForProjects}
-				class:footer__eyebrow--unavailable={!availableForProjects}
-			>
-				{availableForProjects
-					? 'Open to select projects'
-					: 'Currently unavailable for projects'}
-			</span>
+			<div class="footer__status">
+				<span
+					class="footer__eyebrow font-small"
+					class:footer__eyebrow--available={availableForProjects}
+					class:footer__eyebrow--unavailable={!availableForProjects}
+				>
+					{availableForProjects ? 'Open to select projects' : 'Currently unavailable for projects'}
+				</span>
+				{#if amsterdam}
+					<span class="footer__local-time font-small">
+						Currently {amsterdam.time} in Amsterdam, {amsterdam.status}
+					</span>
+				{/if}
+			</div>
 			<p class="font-heading-4 font__heading font-heading">
 				Have a project in mind?<br />I promise only 3% of my time is spent Googling.
 			</p>
@@ -96,8 +116,20 @@
 			margin-bottom: 64px;
 		}
 
-		.footer__eyebrow {
+		.footer__status {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			gap: 8px 12px;
 			margin-bottom: 12px;
+		}
+
+		.footer__local-time {
+			color: var(--color-quaternary);
+			font-variant-numeric: tabular-nums;
+		}
+
+		.footer__eyebrow {
 			padding: 4px 8px;
 			border-radius: 16px;
 			font-weight: 500;
