@@ -211,6 +211,8 @@
 		opacity: 0;
 		transition: opacity 160ms ease;
 		will-change: transform;
+		/* This is a stacking context, so the blend must sit here (not on the children) to reach the page. */
+		mix-blend-mode: difference;
 	}
 
 	.cursor--visible {
@@ -231,7 +233,6 @@
 		height: 28px;
 		border: 1px solid rgb(255 255 255 / 70%);
 		background-color: rgb(255 255 255 / 4%);
-		mix-blend-mode: difference;
 		transition:
 			width 220ms var(--easeOutExpo),
 			height 220ms var(--easeOutExpo),
@@ -244,15 +245,9 @@
 		width: 4px;
 		height: 4px;
 		background-color: var(--color-white);
-		mix-blend-mode: difference;
 		transition:
 			opacity 160ms ease,
 			transform 140ms ease;
-	}
-
-	.cursor--link .cursor__dot {
-		background-color: var(--color-white);
-		mix-blend-mode: normal;
 	}
 
 	.cursor--pressed .cursor__ring {
