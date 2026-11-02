@@ -14,8 +14,12 @@
 		settings,
 		updateSetting
 	} from '$lib/settings.svelte';
+	import { lockScroll } from '$lib/scroll-lock';
 	import { playSfx } from '$lib/sfx.svelte';
+	import TerminalIcon from '$lib/assets/icons/terminal.svg?component';
+	import SettingsIcon from '$lib/assets/icons/settings.svg?component';
 	import BottomSheet from '../shared/ui/BottomSheet.svelte';
+	import CommandPalette from '../shared/ui/CommandPalette.svelte';
 	import { themes, themeState } from '$lib/theme.svelte';
 	import SegmentedControl from '../shared/ui/SegmentedControl.svelte';
 	import VolumeSlider from '../shared/ui/VolumeSlider.svelte';
@@ -30,6 +34,7 @@
 	];
 
 	let sheetOpen = $state(false);
+	let paletteOpen = $state(false);
 	let tab = $state<Tab>('menu');
 	let panels: HTMLElement;
 	let menuButton: HTMLButtonElement;
@@ -99,18 +104,8 @@
 		(buttons?.[tabs.findIndex(({ id }) => id === next)] as HTMLElement | undefined)?.focus();
 	}
 
-	let scrollLocked = false;
-
 	$effect(() => {
-		const locked = sheetOpen;
-
-		// Only react to the sheet opening or closing; on mount, leave other scroll locks alone.
-		if (locked === scrollLocked) return;
-		scrollLocked = locked;
-
-		document.documentElement.style.overflow = locked ? 'hidden' : '';
-		if (locked) window.Lenis?.stop();
-		else window.Lenis?.start();
+		if (sheetOpen) return lockScroll();
 	});
 
 	// The menu tab is hidden from the md breakpoint up; don't leave the page scroll-locked.
@@ -118,10 +113,7 @@
 		if (desktop.current && tab === 'menu') sheetOpen = false;
 	});
 
-	$effect(() => () => {
-		gsap.killTweensOf(panels);
-		if (scrollLocked) document.documentElement.style.overflow = '';
-	});
+	$effect(() => () => gsap.killTweensOf(panels));
 </script>
 
 <svelte:window onkeydown={handleKeydown} />
@@ -161,6 +153,19 @@
 	<div class="header header__controls container">
 		<div class="header__actions">
 			<button
+				type="button"
+				class="header__palette-button"
+				aria-haspopup="dialog"
+				aria-keyshortcuts="Control+K Meta+K"
+				aria-label="Open command palette"
+				title="Command palette (⌘K or Ctrl+K)"
+				data-uisfx-hover="hover"
+				onclick={() => (paletteOpen = true)}
+			>
+				<TerminalIcon aria-hidden="true" />
+			</button>
+
+			<button
 				bind:this={settingsButton}
 				type="button"
 				class="header__settings-button"
@@ -170,17 +175,7 @@
 				data-uisfx-hover="hover"
 				onclick={() => toggleSheet('settings')}
 			>
-				<svg
-					class="header__settings-icon"
-					viewBox="0 0 16 16"
-					fill="none"
-					stroke="currentColor"
-					aria-hidden="true"
-				>
-					<path d="M1 4.5h14M1 11.5h14" />
-					<circle cx="10.5" cy="4.5" r="1.75" fill="var(--color-secondary)" />
-					<circle cx="5.5" cy="11.5" r="1.75" fill="var(--color-secondary)" />
-				</svg>
+				<SettingsIcon aria-hidden="true" />
 			</button>
 
 			<button
@@ -344,6 +339,8 @@
 	</div>
 </BottomSheet>
 
+<CommandPalette bind:open={paletteOpen} />
+
 <style>
 	.header {
 		position: fixed;
@@ -385,6 +382,7 @@
 		}
 
 		.header__menu-button,
+		.header__palette-button,
 		.header__settings-button {
 			display: inline-flex;
 			width: 32px;
@@ -404,19 +402,16 @@
 			border-radius: 4px;
 		}
 
+		.header__palette-button,
 		.header__settings-button {
 			display: none;
 		}
 
 		.header__menu-button:focus-visible,
+		.header__palette-button:focus-visible,
 		.header__settings-button:focus-visible {
 			outline: 2px solid currentColor;
 			outline-offset: 2px;
-		}
-
-		.header__settings-icon {
-			width: 16px;
-			height: 16px;
 		}
 
 		.header__menu-icon {
@@ -478,18 +473,14 @@
 				display: none;
 			}
 
+			.header__palette-button,
 			.header__settings-button {
 				display: inline-flex;
 			}
 
-			.header__actions {
-				gap: 32px;
-			}
-
 			.header__nav {
 				display: flex;
-				/* Leaves room for the settings button (32px) and its gap, which live in the controls layer. */
-				margin-right: 64px;
+				margin-right: 104px;
 			}
 
 			.header__links {

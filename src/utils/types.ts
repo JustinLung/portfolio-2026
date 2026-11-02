@@ -1,3 +1,5 @@
+import type { ThemeId } from '$lib/theme.svelte';
+
 export type WorkItem = {
 	id: number | string;
 	slug: string;
@@ -97,4 +99,31 @@ export type HomePage = {
 		image: string;
 		imageAlt: string;
 	};
+};
+
+export type Command = {
+	id: string;
+	group: string;
+	label: string;
+	/** Secondary text that is part of the option's accessible name, e.g. "Current page". */
+	hint?: string;
+	/** Extra search terms that are not shown. */
+	keywords: string;
+	current?: boolean;
+	swatch?: ThemeId;
+	/** Performs the command and returns what to announce to screen readers, if anything. */
+	run: () => string | void;
+};
+
+export type SearchEntry = {
+	slug: string;
+	title: string;
+	category: string;
+	year?: number;
+};
+
+/** The content the command palette can jump to, beyond the fixed pages. */
+export type SearchIndex = {
+	works: SearchEntry[];
+	posts: SearchEntry[];
 };

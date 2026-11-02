@@ -5,10 +5,7 @@
 	let { data }: PageProps = $props();
 </script>
 
-<Seo
-	title={data.page.title ?? 'Privacy Policy'}
-	description={data.page.content ?? undefined}
-/>
+<Seo title={data.page.title ?? 'Privacy Policy'} description={data.page.content ?? undefined} />
 
 <article class="privacy-policy">
 	<h1>{data.page.title}</h1>

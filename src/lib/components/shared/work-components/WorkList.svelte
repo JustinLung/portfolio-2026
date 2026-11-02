@@ -7,6 +7,8 @@
 	import WorkListRow from './WorkListRow.svelte';
 	import type { WorkItem } from '../../../../utils/types';
 	import { playSfx } from '$lib/sfx.svelte';
+	import ListViewIcon from '$lib/assets/icons/list-view.svg?component';
+	import GridViewIcon from '$lib/assets/icons/grid-view.svg?component';
 
 	gsap.registerPlugin(Flip);
 
@@ -142,12 +144,7 @@
 			onclick={() => selectViewMode('list')}
 		>
 			<span class="visually-hidden">List view</span>
-			<svg viewBox="0 0 16 16" aria-hidden="true">
-				<circle cx="2.5" cy="3.5" r="0.75" fill="currentColor" stroke="none" />
-				<circle cx="2.5" cy="8" r="0.75" fill="currentColor" stroke="none" />
-				<circle cx="2.5" cy="12.5" r="0.75" fill="currentColor" stroke="none" />
-				<path d="M5 3.5h8.5M5 8h8.5M5 12.5h8.5" />
-			</svg>
+			<ListViewIcon aria-hidden="true" />
 		</button>
 		<button
 			type="button"
@@ -158,12 +155,7 @@
 			onclick={() => selectViewMode('grid')}
 		>
 			<span class="visually-hidden">Grid view</span>
-			<svg viewBox="0 0 16 16" aria-hidden="true">
-				<rect x="1.5" y="1.5" width="5" height="5" rx="0.5" />
-				<rect x="9.5" y="1.5" width="5" height="5" rx="0.5" />
-				<rect x="1.5" y="9.5" width="5" height="5" rx="0.5" />
-				<rect x="9.5" y="9.5" width="5" height="5" rx="0.5" />
-			</svg>
+			<GridViewIcon aria-hidden="true" />
 		</button>
 	</div>
 </div>
@@ -198,16 +190,6 @@
 		.work-list-view-button {
 			width: 32px;
 			padding-inline: 0;
-
-			svg {
-				width: 16px;
-				height: 16px;
-				fill: none;
-				stroke: currentColor;
-				stroke-linecap: round;
-				stroke-linejoin: round;
-				stroke-width: 1.25;
-			}
 		}
 	}
 

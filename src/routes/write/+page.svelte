@@ -6,6 +6,7 @@
 	import BlogCard from '$lib/components/shared/post-components/BlogCard.svelte';
 	import Seo from '$lib/components/shared/misc/Seo.svelte';
 	import { playSfx } from '$lib/sfx.svelte';
+	import ChevronDownIcon from '$lib/assets/icons/chevron-down.svg?component';
 	import { appReady } from '$lib/stores/app-ready.svelte';
 	import type { PageProps } from './$types';
 
@@ -195,9 +196,7 @@
 						<option value={category}>{category}</option>
 					{/each}
 				</select>
-				<svg viewBox="0 0 16 16" aria-hidden="true">
-					<path d="M4 6.5 8 10.5 12 6.5" />
-				</svg>
+				<ChevronDownIcon aria-hidden="true" />
 			</div>
 		</div>
 	{/if}
@@ -269,16 +268,9 @@
 			color: var(--color-primary);
 		}
 
-		svg {
+		:global(svg) {
 			position: absolute;
 			right: 12px;
-			width: 16px;
-			height: 16px;
-			fill: none;
-			stroke: currentColor;
-			stroke-linecap: round;
-			stroke-linejoin: round;
-			stroke-width: 1.25;
 			pointer-events: none;
 		}
 

@@ -1,18 +1,7 @@
 <script lang="ts">
-	import { playSfx, setSfxEnabled, sfxState } from '$lib/sfx.svelte';
+	import { sfxState, toggleSfx } from '$lib/sfx.svelte';
 
 	const enabled = $derived(sfxState.enabled);
-
-	function toggleSound() {
-		if (!enabled) {
-			setSfxEnabled(true);
-			playSfx('toggle-on');
-			return;
-		}
-
-		playSfx('toggle-off');
-		setSfxEnabled(false);
-	}
 </script>
 
 <button
@@ -21,7 +10,7 @@
 	aria-label={enabled ? 'Turn interface sounds off' : 'Turn interface sounds on'}
 	aria-pressed={enabled}
 	data-uisfx-hover="hover"
-	onclick={toggleSound}
+	onclick={toggleSfx}
 >
 	<span class="sound-toggle__indicator" aria-hidden="true"></span>
 	Sound {enabled ? 'on' : 'off'}

@@ -1,10 +1,10 @@
 {
-  "plugins": {
-    "svelte": {
-      "enabled": true
-    },
-    "gsap-skills": {
-      "enabled": true
-    }
-  }
+	"plugins": {
+		"svelte": {
+			"enabled": true
+		},
+		"gsap-skills": {
+			"enabled": true
+		}
+	}
 }

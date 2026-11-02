@@ -58,19 +58,19 @@ PostCSS provides nesting and globally available custom media queries:
 
 ```css
 .card {
-  color: var(--color-white);
+	color: var(--color-white);
 
-  &:focus-visible {
-    outline: 2px solid var(--color-primary);
-  }
+	&:focus-visible {
+		outline: 2px solid var(--color-primary);
+	}
 
-  @media (--viewport-md-up) {
-    display: grid;
-  }
+	@media (--viewport-md-up) {
+		display: grid;
+	}
 
-  @media (--motion-reduce) {
-    transition: none;
-  }
+	@media (--motion-reduce) {
+		transition: none;
+	}
 }
 ```
 

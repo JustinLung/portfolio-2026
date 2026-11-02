@@ -1,7 +1,7 @@
 import { browser } from '$app/environment';
 
 if (browser) {
-    console.log(`
+	console.log(`
     _.-''''-._
   .'  o    o  '.
  /    \\    /    \\

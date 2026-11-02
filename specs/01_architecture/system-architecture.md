@@ -26,18 +26,18 @@ Svelte components (presentation-ready props only)
 
 ### Routes
 
-| Path | Purpose | Data |
-| --- | --- | --- |
-| `/` | Hero, manifesto, latest work, latest posts, personal intro | Home page, works, posts |
-| `/work` | Filterable work index with list/grid views | Works |
-| `/work/[slug]` | Case study | One work |
-| `/write` | Filterable writing index | Posts |
-| `/write/[slug]` | Post, plus related posts | One post + other posts |
-| `/about` | Biography, experience, photo stack | About page + experiences |
-| `/contact` | Inquiry form and social links | None (client-only) |
-| `/privacy-policy` | Legal page from CMS | Privacy policy page |
-| `/terms-of-service` | Legal page from CMS | Terms of service page |
-| `/styleguide` | Internal visual reference | None |
+| Path                | Purpose                                                    | Data                     |
+| ------------------- | ---------------------------------------------------------- | ------------------------ |
+| `/`                 | Hero, manifesto, latest work, latest posts, personal intro | Home page, works, posts  |
+| `/work`             | Filterable work index with list/grid views                 | Works                    |
+| `/work/[slug]`      | Case study                                                 | One work                 |
+| `/write`            | Filterable writing index                                   | Posts                    |
+| `/write/[slug]`     | Post, plus related posts                                   | One post + other posts   |
+| `/about`            | Biography, experience, photo stack                         | About page + experiences |
+| `/contact`          | Inquiry form and social links                              | None (client-only)       |
+| `/privacy-policy`   | Legal page from CMS                                        | Privacy policy page      |
+| `/terms-of-service` | Legal page from CMS                                        | Terms of service page    |
+| `/styleguide`       | Internal visual reference                                  | None                     |
 
 Unknown public slugs return `404`. CMS or mapping failures return `5xx`. Use SvelteKit file-based routing and `resolve()` from `$app/paths` for internal route links.
 
@@ -64,14 +64,14 @@ Nav, social, and policy links live in `src/utils/links.ts`.
 - Route `+page.server.ts` loaders orchestrate requests and map results into application types.
 - Each content type is one contract that must evolve together:
 
-| Content | Fragment / query | Mapper | Application type |
-| --- | --- | --- | --- |
-| Work | `WorkFields` | `toWorkItem()` | `WorkItem` |
-| Post | `PostFields` | `toPostItem()` | `PostItem` |
-| Experience | `ExperienceFields` | `toExperienceItem()` | `ExperienceItem` |
-| Home | `HomePageFields` | `toHomePage()` | `HomePage` |
-| About | `GetAboutPage` | `toAboutPage()` | `AboutPage` |
-| Legal pages | page queries | none today | CMS page fields |
+| Content     | Fragment / query   | Mapper               | Application type |
+| ----------- | ------------------ | -------------------- | ---------------- |
+| Work        | `WorkFields`       | `toWorkItem()`       | `WorkItem`       |
+| Post        | `PostFields`       | `toPostItem()`       | `PostItem`       |
+| Experience  | `ExperienceFields` | `toExperienceItem()` | `ExperienceItem` |
+| Home        | `HomePageFields`   | `toHomePage()`       | `HomePage`       |
+| About       | `GetAboutPage`     | `toAboutPage()`      | `AboutPage`      |
+| Legal pages | page queries       | none today           | CMS page fields  |
 
 Legal pages currently pass CMS title/content through without a dedicated application type. New content types should follow the work/post mapper pattern rather than expanding that exception.
 

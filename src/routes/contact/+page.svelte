@@ -43,7 +43,11 @@
 			<dl>
 				<div>
 					<dt class="font-small">Email</dt>
-					<dd><a class="link" href={`mailto:${email}`} data-uisfx="focus" data-uisfx-hover="hover">{email}</a></dd>
+					<dd>
+						<a class="link" href={`mailto:${email}`} data-uisfx="focus" data-uisfx-hover="hover"
+							>{email}</a
+						>
+					</dd>
 				</div>
 				<div>
 					<dt class="font-small">Based in</dt>

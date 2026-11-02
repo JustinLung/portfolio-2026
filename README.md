@@ -31,29 +31,29 @@ Upstream GraphQL shapes stay behind the server boundary. Missing optional fields
 
 ## Stack
 
-| Layer | Choice |
-| --- | --- |
-| UI | Svelte 5 (runes), SvelteKit 2, TypeScript |
-| CMS | WordPress + WPGraphQL |
-| Data | Apollo Client (server-only), GraphQL Code Generator |
-| Motion | GSAP, Lenis, Threlte / Three.js (hero), Embla (carousels) |
-| Audio | uisfx |
-| Styles | Component-scoped CSS + global PostCSS tokens |
-| Package manager | pnpm |
+| Layer           | Choice                                                    |
+| --------------- | --------------------------------------------------------- |
+| UI              | Svelte 5 (runes), SvelteKit 2, TypeScript                 |
+| CMS             | WordPress + WPGraphQL                                     |
+| Data            | Apollo Client (server-only), GraphQL Code Generator       |
+| Motion          | GSAP, Lenis, Threlte / Three.js (hero), Embla (carousels) |
+| Audio           | uisfx                                                     |
+| Styles          | Component-scoped CSS + global PostCSS tokens              |
+| Package manager | pnpm                                                      |
 
 ## Routes
 
-| Path | Purpose |
-| --- | --- |
-| `/` | Hero, manifesto, latest work, latest posts, personal intro |
-| `/work` | Filterable work index (list / grid) |
-| `/work/[slug]` | Case study |
-| `/write` | Filterable writing index |
-| `/write/[slug]` | Post |
-| `/about` | Bio, experience, photo stack |
-| `/contact` | Mailto inquiry form + socials |
-| `/privacy-policy`, `/terms-of-service` | Legal pages from CMS |
-| `/styleguide` | Internal visual reference |
+| Path                                   | Purpose                                                    |
+| -------------------------------------- | ---------------------------------------------------------- |
+| `/`                                    | Hero, manifesto, latest work, latest posts, personal intro |
+| `/work`                                | Filterable work index (list / grid)                        |
+| `/work/[slug]`                         | Case study                                                 |
+| `/write`                               | Filterable writing index                                   |
+| `/write/[slug]`                        | Post                                                       |
+| `/about`                               | Bio, experience, photo stack                               |
+| `/contact`                             | Mailto inquiry form + socials                              |
+| `/privacy-policy`, `/terms-of-service` | Legal pages from CMS                                       |
+| `/styleguide`                          | Internal visual reference                                  |
 
 Nav, social, and policy links live in `src/utils/links.ts`.
 
@@ -92,13 +92,13 @@ For each content type, keep these in sync:
 - Mapper in `src/lib/server/` (e.g. `toWorkItem`)
 - Application type in `src/utils/types.ts`
 
-| Content | Mapper | Type |
-| --- | --- | --- |
-| Work | `toWorkItem()` | `WorkItem` |
-| Post | `toPostItem()` | `PostItem` |
+| Content    | Mapper               | Type             |
+| ---------- | -------------------- | ---------------- |
+| Work       | `toWorkItem()`       | `WorkItem`       |
+| Post       | `toPostItem()`       | `PostItem`       |
 | Experience | `toExperienceItem()` | `ExperienceItem` |
-| Home | `toHomePage()` | `HomePage` |
-| About | `toAboutPage()` | `AboutPage` |
+| Home       | `toHomePage()`       | `HomePage`       |
+| About      | `toAboutPage()`      | `AboutPage`      |
 
 Legal pages currently pass CMS title/content through without a dedicated mapper.
 
@@ -126,16 +126,16 @@ pnpm dev       # http://localhost:5173
 
 ## Scripts
 
-| Command | What it does |
-| --- | --- |
-| `pnpm dev` | Vite / SvelteKit dev server |
-| `pnpm build` | Production build |
-| `pnpm preview` | Preview the production build |
-| `pnpm codegen` | Regenerate GraphQL types + introspection |
-| `pnpm codegen:watch` | Codegen in watch mode |
-| `pnpm check` | `svelte-check` + type sync |
-| `pnpm lint` | Prettier check + ESLint |
-| `pnpm format` | Prettier write |
+| Command              | What it does                             |
+| -------------------- | ---------------------------------------- |
+| `pnpm dev`           | Vite / SvelteKit dev server              |
+| `pnpm build`         | Production build                         |
+| `pnpm preview`       | Preview the production build             |
+| `pnpm codegen`       | Regenerate GraphQL types + introspection |
+| `pnpm codegen:watch` | Codegen in watch mode                    |
+| `pnpm check`         | `svelte-check` + type sync               |
+| `pnpm lint`          | Prettier check + ESLint                  |
+| `pnpm format`        | Prettier write                           |
 
 Quality gate before shipping: `pnpm check`, `pnpm lint`, and `pnpm build`. Re-run `pnpm codegen` whenever queries or the WordPress schema change.
 

@@ -53,7 +53,7 @@
 			</span>
 		</span>
 		<figure class="work-pager__media">
-			<img src={work.image ?? previewPlaceholder} alt="{work.imageAlt}" />
+			<img src={work.image ?? previewPlaceholder} alt={work.imageAlt} />
 		</figure>
 	</a>
 {/snippet}

@@ -96,3 +96,16 @@ export function setSfxEnabled(enabled: boolean): void {
 	player.setEnabled(enabled);
 	sfxState.enabled = enabled;
 }
+
+/** Flips interface sound and returns the new state. The off cue plays before muting so it is heard. */
+export function toggleSfx(): boolean {
+	if (!sfxState.enabled) {
+		setSfxEnabled(true);
+		playSfx('toggle-on');
+		return true;
+	}
+
+	playSfx('toggle-off');
+	setSfxEnabled(false);
+	return false;
+}
