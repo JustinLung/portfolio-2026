@@ -2,14 +2,18 @@
 	import RelatedPostsCarousel from '$lib/components/shared/post-components/RelatedPostsCarousel.svelte';
 	import Seo from '$lib/components/shared/misc/Seo.svelte';
 	import WriteHero from '$lib/components/shared/post-components/WriteHero.svelte';
+	import ReadProgress from '$lib/components/shared/ui/ReadProgress.svelte';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
+	let article = $state<HTMLElement>();
 </script>
 
 <Seo title={data.post.title} description={data.post.excerpt ?? data.post.title} />
 
-<article class="post" aria-labelledby="post-title">
+<ReadProgress target={article} />
+
+<article bind:this={article} class="post" aria-labelledby="post-title">
 	<WriteHero
 		image={data.post.image}
 		imageAlt={data.post.imageAlt}

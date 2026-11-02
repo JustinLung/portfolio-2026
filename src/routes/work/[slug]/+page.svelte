@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import Seo from '$lib/components/shared/misc/Seo.svelte';
+	import ReadProgress from '$lib/components/shared/ui/ReadProgress.svelte';
 	import WorkPager from '$lib/components/shared/work-components/WorkPager.svelte';
 	import { onMount } from 'svelte';
 	import { observeHeaderHeight } from '../../../utils/header-height';
@@ -8,13 +9,17 @@
 
 	let { data }: PageProps = $props();
 	let headerHeight = $state(0);
+	let article = $state<HTMLElement>();
 
 	onMount(() => observeHeaderHeight((height) => (headerHeight = height)));
 </script>
 
 <Seo title={data.work.title} description={data.work.excerpt ?? data.work.title} />
 
+<ReadProgress target={article} />
+
 <article
+	bind:this={article}
 	class="work-detail"
 	aria-labelledby="work-title"
 	style={`--header-height: ${headerHeight}px`}
