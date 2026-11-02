@@ -81,6 +81,10 @@ export type SeoProps = {
 	keywords?: string;
 	author?: string;
 	robots?: string;
+	/** Path (`/og/work/x.png`) or absolute URL of a generated social preview. Defaults to the portrait. */
+	ogImage?: string;
+	ogImageAlt?: string;
+	ogType?: 'website' | 'article';
 };
 
 export type HomePage = {

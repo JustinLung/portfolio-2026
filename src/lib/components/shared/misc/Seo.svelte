@@ -1,4 +1,7 @@
 <script lang="ts">
+	import { page } from '$app/state';
+	import { SITE_URL } from '../../../../utils/site';
+	import { decodeEntities } from '../../../../utils/text';
 	import type { SeoProps } from '../../../../utils/types';
 
 	const DEFAULT_KEYWORDS =
@@ -9,17 +12,29 @@
 		description,
 		keywords = DEFAULT_KEYWORDS,
 		author = 'Justin',
-		robots = 'index, follow'
+		robots = 'index, follow',
+		ogImage,
+		ogImageAlt,
+		ogType = 'website'
 	}: SeoProps = $props();
+
+	// A PNG: LinkedIn and X don't render AVIF, which the portrait is.
+	const DEFAULT_IMAGE = '/og/default.png';
+
+	// Social scrapers need absolute URLs, and the canonical origin rather than a preview deployment's.
+	const absolute = (path: string) => new URL(path, SITE_URL).href;
+	const pageUrl = $derived(absolute(page.url.pathname));
+	const imageUrl = $derived(absolute(ogImage ?? DEFAULT_IMAGE));
 
 	const documentTitle = $derived(`Portfolio | ${title}`);
 
+	// WordPress excerpts are HTML with entities (`&#8217;`) and a `[&hellip;]` read-more marker.
 	const plainDescription = $derived(
 		description
-			? description
-					.replace(/<[^>]*>/g, ' ')
+			? decodeEntities(description.replace(/<[^>]*>/g, ' '))
 					.replace(/\s+/g, ' ')
 					.trim()
+					.replace(/\s*\[…\]$/, '…')
 			: undefined
 	);
 </script>
@@ -39,11 +54,12 @@
 	<meta name="robots" content={robots} />
 	<meta property="og:title" content={documentTitle} />
 	<meta property="og:description" content={plainDescription} />
-	<meta property="og:type" content="website" />
-	<meta property="og:url" content="https://justinlung.com" />
-	<meta property="og:image" content="/images/justin.avif" />
-	<meta property="og:image:alt" content="Justin Lung" />
+	<meta property="og:type" content={ogType} />
+	<meta property="og:url" content={pageUrl} />
+	<meta property="og:image" content={imageUrl} />
+	<meta property="og:image:alt" content={ogImageAlt ?? documentTitle} />
 	<meta property="og:image:width" content="1200" />
 	<meta property="og:image:height" content="630" />
-	<meta property="og:image:type" content="image/avif" />
+	<meta property="og:image:type" content="image/png" />
+	<meta name="twitter:card" content="summary_large_image" />
 </svelte:head>

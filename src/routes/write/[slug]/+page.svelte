@@ -3,13 +3,20 @@
 	import Seo from '$lib/components/shared/misc/Seo.svelte';
 	import WriteHero from '$lib/components/shared/post-components/WriteHero.svelte';
 	import ReadProgress from '$lib/components/shared/ui/ReadProgress.svelte';
+	import ShareButtons from '$lib/components/shared/ui/ShareButtons.svelte';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
 	let article = $state<HTMLElement>();
 </script>
 
-<Seo title={data.post.title} description={data.post.excerpt ?? data.post.title} />
+<Seo
+	title={data.post.title}
+	description={data.post.excerpt ?? data.post.title}
+	ogType="article"
+	ogImage={`/og/write/${data.post.slug}.png`}
+	ogImageAlt={data.post.title}
+/>
 
 <ReadProgress target={article} />
 
@@ -28,6 +35,10 @@
 			{@html data.post.content}
 		</div>
 	{/if}
+
+	<footer class="post__share">
+		<ShareButtons title={data.post.title} />
+	</footer>
 </article>
 
 <RelatedPostsCarousel posts={data.relatedPosts} title="Related posts" />
@@ -40,6 +51,13 @@
 	.post__content {
 		max-width: 44rem;
 		margin-inline: auto;
+	}
+
+	.post__share {
+		max-width: 44rem;
+		margin: 48px auto 0;
+		padding-top: 24px;
+		border-top: 1px solid var(--color-primary);
 	}
 
 	.post__content :global(p) {

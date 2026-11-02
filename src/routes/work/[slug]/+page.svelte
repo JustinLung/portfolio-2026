@@ -2,6 +2,7 @@
 	import { resolve } from '$app/paths';
 	import Seo from '$lib/components/shared/misc/Seo.svelte';
 	import ReadProgress from '$lib/components/shared/ui/ReadProgress.svelte';
+	import ShareButtons from '$lib/components/shared/ui/ShareButtons.svelte';
 	import WorkPager from '$lib/components/shared/work-components/WorkPager.svelte';
 	import { onMount } from 'svelte';
 	import { observeHeaderHeight } from '../../../utils/header-height';
@@ -14,7 +15,12 @@
 	onMount(() => observeHeaderHeight((height) => (headerHeight = height)));
 </script>
 
-<Seo title={data.work.title} description={data.work.excerpt ?? data.work.title} />
+<Seo
+	title={data.work.title}
+	description={data.work.excerpt ?? data.work.title}
+	ogImage={`/og/work/${data.work.slug}.png`}
+	ogImageAlt={data.work.title}
+/>
 
 <ReadProgress target={article} />
 
@@ -97,6 +103,10 @@
 				{/if}
 			</dl>
 		{/if}
+
+		<div class="work-detail__share">
+			<ShareButtons title={data.work.title} />
+		</div>
 	</header>
 
 	<section class="work-detail__main" aria-labelledby="project-content-title">
@@ -124,6 +134,10 @@
 
 		.work-detail__back {
 			margin-bottom: 24px;
+		}
+
+		.work-detail__share {
+			margin-top: 32px;
 		}
 
 		.work-detail__meta {
