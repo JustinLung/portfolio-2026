@@ -410,8 +410,8 @@
 		.header__menu-button:focus-visible,
 		.header__palette-button:focus-visible,
 		.header__settings-button:focus-visible {
-			outline: 2px solid currentColor;
-			outline-offset: 2px;
+			outline: 2px solid var(--color-primary) !important;
+			outline-offset: 0.25em !important;
 		}
 
 		.header__menu-icon {
