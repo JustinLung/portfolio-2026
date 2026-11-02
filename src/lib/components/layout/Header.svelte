@@ -54,6 +54,15 @@
 		playSfx('open');
 	}
 
+	function openSettings() {
+		if (sheetOpen) {
+			selectTab('settings');
+			return;
+		}
+
+		toggleSheet('settings');
+	}
+
 	function closeSheet() {
 		if (!sheetOpen) return;
 		sheetOpen = false;
@@ -108,12 +117,16 @@
 		if (sheetOpen) return lockScroll();
 	});
 
-	// The menu tab is hidden from the md breakpoint up; don't leave the page scroll-locked.
 	$effect(() => {
 		if (desktop.current && tab === 'menu') sheetOpen = false;
 	});
 
 	$effect(() => () => gsap.killTweensOf(panels));
+
+	$effect(() => {
+		window.addEventListener('opensettings', openSettings);
+		return () => window.removeEventListener('opensettings', openSettings);
+	});
 </script>
 
 <svelte:window onkeydown={handleKeydown} />

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import { links, policyLinks, socialLinks } from '../../../utils/links';
-	import SoundToggle from '../shared/ui/SoundToggle.svelte';
+	import SettingsIcon from '$lib/assets/icons/settings.svg?component';
 	import { getAmsterdamStatus, type AmsterdamStatus } from '../../../utils/amsterdam-status';
 
 	const year = new Date().getFullYear();
@@ -85,7 +85,16 @@
 		<div class="footer__meta font-small">
 			<p>© {year} Portfolio</p>
 			<div class="footer__controls">
-				<SoundToggle />
+				<button
+					type="button"
+					class="footer__settings-button"
+					aria-haspopup="dialog"
+					data-uisfx-hover="hover"
+					onclick={() => window.dispatchEvent(new CustomEvent('opensettings'))}
+				>
+					<SettingsIcon aria-hidden="true" />
+					<span class="link">Settings</span>
+				</button>
 				<div class="footer__policy-links">
 					{#each policyLinks as link (link.href)}
 						<a href={link.href} class="link" data-uisfx-hover="hover" data-uisfx="forward"
@@ -220,6 +229,35 @@
 			a {
 				text-decoration: underline;
 				text-underline-offset: 4px;
+			}
+		}
+
+		.footer__settings-button {
+			display: inline-flex;
+			gap: 8px;
+			align-items: center;
+			padding: 0;
+			border: 0;
+			color: inherit;
+			background: transparent;
+			font: inherit;
+			font-size: 0.875rem;
+			cursor: pointer;
+
+			/* The icon's dots default to the header's background; match the footer's. */
+			& :global(circle) {
+				fill: var(--color-tertiary);
+			}
+
+			@media (hover: hover) {
+				&:hover .link {
+					background-size: 100% 1px;
+				}
+			}
+
+			&:focus-visible {
+				outline: 2px solid currentColor;
+				outline-offset: 4px;
 			}
 		}
 
