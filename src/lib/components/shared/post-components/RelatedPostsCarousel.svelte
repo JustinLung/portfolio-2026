@@ -159,6 +159,11 @@
 	.related-posts__carousel {
 		overflow: hidden;
 		cursor: grab;
+		margin-right: -16px;
+
+		@media (--viewport-md-up) {
+			margin-right: 0;
+		}
 	}
 
 	.related-posts__carousel:active {
