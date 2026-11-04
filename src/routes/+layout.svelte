@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { RSS_TITLE } from '../utils/site';
 	import '../lib/css/app.css';
 	import '../lib/css/normalize.css';
 	import '../lib/css/colors.css';
@@ -48,6 +49,7 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
+	<link rel="alternate" type="application/rss+xml" title={RSS_TITLE} href="/rss.xml" />
 </svelte:head>
 
 <SiteLoader />

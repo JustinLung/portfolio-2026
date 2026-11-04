@@ -7,13 +7,15 @@
 		imageAlt,
 		title,
 		category,
-		date
+		date,
+		readingMinutes
 	}: {
 		image?: string;
 		imageAlt: string;
 		title: string;
 		category: string;
 		date: string;
+		readingMinutes?: number;
 	} = $props();
 
 	const formattedDate = $derived(formatShortDate(date));
@@ -45,6 +47,10 @@
 			<span>{category}</span>
 			<span class="write-hero__divider" aria-hidden="true"></span>
 			<time datetime={date}>{formattedDate}</time>
+			{#if readingMinutes}
+				<span class="write-hero__divider" aria-hidden="true"></span>
+				<span>{readingMinutes} min read</span>
+			{/if}
 		</div>
 	</div>
 </header>

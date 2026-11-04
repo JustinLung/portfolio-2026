@@ -6,6 +6,7 @@ import {
 } from '$lib/graphql/generated/graphql';
 import { createApolloClient } from '$lib/server/apollo';
 import { toPostItem } from '$lib/server/post';
+import { addHeadingAnchors, getReadingMinutes } from '../../../utils/post-content';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
@@ -48,8 +49,13 @@ export const load: PageServerLoad = async ({ fetch, params }) => {
 		error(404, 'Post not found');
 	}
 
+	const item = toPostItem(post);
+	const { html, toc } = addHeadingAnchors(item.content ?? '');
+
 	return {
-		post: toPostItem(post),
+		post: { ...item, content: html || undefined },
+		toc,
+		readingMinutes: getReadingMinutes(item.content ?? ''),
 		relatedPosts
 	};
 };
