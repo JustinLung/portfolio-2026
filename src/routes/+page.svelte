@@ -4,12 +4,15 @@
 	import LatestWork from '$lib/components/shared/work-components/LatestWork.svelte';
 	import PersonalIntro from '$lib/components/shared/misc/PersonalIntro.svelte';
 	import RelatedPostsCarousel from '$lib/components/shared/post-components/RelatedPostsCarousel.svelte';
+	import JsonLd from '$lib/components/shared/misc/JsonLd.svelte';
 	import Seo from '$lib/components/shared/misc/Seo.svelte';
+	import { personJsonLd } from '../utils/structured-data';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
 </script>
 
+<JsonLd data={personJsonLd()} />
 <Seo
 	title={data.page.hero.subtitle}
 	description="Justin Lung — creative frontend developer in Amsterdam building accessible, motion-led sites with GSAP, Framer Motion and Next.js."

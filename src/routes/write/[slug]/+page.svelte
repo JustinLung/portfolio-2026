@@ -1,14 +1,28 @@
 <script lang="ts">
 	import RelatedPostsCarousel from '$lib/components/shared/post-components/RelatedPostsCarousel.svelte';
+	import JsonLd from '$lib/components/shared/misc/JsonLd.svelte';
 	import Seo from '$lib/components/shared/misc/Seo.svelte';
 	import PostToc from '$lib/components/shared/post-components/PostToc.svelte';
 	import WriteHero from '$lib/components/shared/post-components/WriteHero.svelte';
 	import ReadProgress from '$lib/components/shared/ui/ReadProgress.svelte';
 	import ShareButtons from '$lib/components/shared/ui/ShareButtons.svelte';
+	import { htmlToText } from '../../../utils/text';
+	import { articleJsonLd } from '../../../utils/structured-data';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
 	let article = $state<HTMLElement>();
+
+	const jsonLd = $derived(
+		articleJsonLd({
+			slug: data.post.slug,
+			title: htmlToText(data.post.title),
+			description: data.post.excerpt
+				? htmlToText(data.post.excerpt).replace(/\s*\[…\]$/, '…')
+				: undefined,
+			date: data.post.date
+		})
+	);
 </script>
 
 <Seo
@@ -18,6 +32,8 @@
 	ogImage={`/og/write/${data.post.slug}.png`}
 	ogImageAlt={data.post.title}
 />
+
+<JsonLd data={jsonLd} />
 
 <ReadProgress target={article} />
 
