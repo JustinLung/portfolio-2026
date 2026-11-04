@@ -6,6 +6,7 @@
 	import WriteHero from '$lib/components/shared/post-components/WriteHero.svelte';
 	import ReadProgress from '$lib/components/shared/ui/ReadProgress.svelte';
 	import ShareButtons from '$lib/components/shared/ui/ShareButtons.svelte';
+	import { copyCode } from '$lib/actions/copy-code';
 	import { htmlToText } from '../../../utils/text';
 	import { articleJsonLd } from '../../../utils/structured-data';
 	import type { PageProps } from './$types';
@@ -53,7 +54,7 @@
 				<PostToc items={data.toc} />
 			</aside>
 
-			<div class="post__content">
+			<div class="post__content" use:copyCode={data.post.content}>
 				<!-- eslint-disable-next-line svelte/no-at-html-tags -- Content comes from the trusted WordPress CMS. -->
 				{@html data.post.content}
 			</div>
@@ -152,6 +153,37 @@
 		border-radius: 8px;
 		overflow-x: auto;
 		margin-block: 1.5rem;
+	}
+
+	.post__content :global(.code-block) {
+		position: relative;
+		margin-block: 1.5rem;
+	}
+
+	.post__content :global(.code-block pre) {
+		margin: 0;
+		padding-right: 5rem;
+	}
+
+	.post__content :global(.code-block__copy) {
+		position: absolute;
+		top: 0.5rem;
+		right: 0.5rem;
+		padding: 0.25rem 0.625rem;
+		font: inherit;
+		font-size: 0.75rem;
+		color: inherit;
+		background: var(--color-secondary);
+		border: 1px solid var(--color-primary);
+		border-radius: 4px;
+		cursor: pointer;
+		opacity: 0.7;
+		transition: opacity 0.15s;
+
+		&:hover,
+		&:focus-visible {
+			opacity: 1;
+		}
 	}
 
 	.post__content :global(pre code) {
