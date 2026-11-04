@@ -39,3 +39,12 @@ export function htmlToText(html: string): string {
 		.replace(/\s+/g, ' ')
 		.trim();
 }
+
+export function escapeXml(value: string): string {
+	return value
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&apos;');
+}

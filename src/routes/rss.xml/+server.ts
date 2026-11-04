@@ -4,17 +4,9 @@ import { createApolloClient } from '$lib/server/apollo';
 import { toPostItem } from '$lib/server/post';
 import { error } from '@sveltejs/kit';
 import { RSS_DESCRIPTION, RSS_TITLE, SITE_URL } from '../../utils/site';
-import { htmlToText } from '../../utils/text';
+import { escapeXml, htmlToText } from '../../utils/text';
 import type { PostItem } from '../../utils/types';
 import type { RequestHandler } from './$types';
-
-const escapeXml = (value: string) =>
-	value
-		.replace(/&/g, '&amp;')
-		.replace(/</g, '&lt;')
-		.replace(/>/g, '&gt;')
-		.replace(/"/g, '&quot;')
-		.replace(/'/g, '&apos;');
 
 /** WordPress excerpts end with a `[&hellip;]` read-more marker. */
 const toExcerpt = (html: string) => htmlToText(html).replace(/\s*\[…\]$/, '…');
