@@ -2,23 +2,45 @@
 	import Seo from '$lib/components/shared/misc/Seo.svelte';
 	import { socialLinks } from '../../utils/links';
 	import { playSfx } from '$lib/sfx.svelte';
+	import { enhance } from '$app/forms';
+	import type { SubmitFunction } from '@sveltejs/kit';
+	import {
+		CONTACT_LIMITS,
+		HONEYPOT_FIELD,
+		type ContactErrors,
+		type ContactField
+	} from '$lib/contact';
+	import type { PageProps } from './$types';
 
 	const email = 'justinlung77@gmail.com';
 
-	function sendEmail(event: SubmitEvent) {
-		event.preventDefault();
+	let { form }: PageProps = $props();
+	let sending = $state(false);
 
-		const form = event.currentTarget as HTMLFormElement;
-		const data = new FormData(form);
-		const name = String(data.get('name') ?? '');
-		const subject = String(data.get('subject') ?? 'New project inquiry');
-		const message = String(data.get('message') ?? '');
-		const replyTo = String(data.get('email') ?? '');
-		const body = `Hi Justin,\n\n${message}\n\nFrom: ${name}\nEmail: ${replyTo}`;
+	const errors: ContactErrors = $derived(form?.errors ?? {});
+	// `form` keeps its last result, so "send another" hides the confirmation locally.
+	let dismissed = $state(false);
+	const sent = $derived(form?.success === true && !dismissed);
 
+	const submit: SubmitFunction = () => {
+		sending = true;
+		dismissed = false;
 		playSfx('send');
-		window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-	}
+
+		return async ({ update }) => {
+			await update();
+			sending = false;
+		};
+	};
+
+	/** Moves focus to the confirmation so keyboard and screen-reader users land on it. */
+	const focusOnMount = (node: HTMLElement) => node.focus();
+
+	/** Props that tie a field to its error message for assistive tech. */
+	const invalid = (field: ContactField) =>
+		errors[field]
+			? { 'aria-invalid': 'true' as const, 'aria-describedby': `contact-${field}-error` }
+			: {};
 
 	function handleFieldFocus(event: FocusEvent) {
 		if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
@@ -26,6 +48,12 @@
 		}
 	}
 </script>
+
+{#snippet fieldError(field: ContactField)}
+	{#if errors[field]}
+		<span class="contact-form__field-error" id={`contact-${field}-error`}>{errors[field]}</span>
+	{/if}
+{/snippet}
 
 <Seo
 	title="Contact"
@@ -73,43 +101,109 @@
 			</dl>
 		</aside>
 
-		<form class="contact-form" onfocusin={handleFieldFocus} onsubmit={sendEmail}>
-			<div class="contact-form__row">
-				<label>
-					<span class="font-small">Name</span>
-					<input name="name" type="text" autocomplete="name" placeholder="Your name" required />
-				</label>
-				<label>
-					<span class="font-small">Email</span>
-					<input
-						name="email"
-						type="email"
-						autocomplete="email"
-						placeholder="you@example.com"
-						required
-					/>
-				</label>
+		{#if sent}
+			<div class="contact-form__status" role="status" tabindex="-1" {@attach focusOnMount}>
+				<span class="contact-form__status-icon" aria-hidden="true">✓</span>
+				<h2 class="contact-form__status-title">Message sent.</h2>
+				<p>Thanks for reaching out. I’ll get back to you as soon as I can.</p>
+				<button
+					class="contact-form__status-action link"
+					type="button"
+					data-uisfx-hover="hover"
+					onclick={() => (dismissed = true)}
+				>
+					Send another message
+				</button>
 			</div>
+		{:else}
+			<form
+				class="contact-form"
+				method="POST"
+				novalidate
+				use:enhance={submit}
+				onfocusin={handleFieldFocus}
+			>
+				{#if form?.message}
+					<p class="contact-form__error" role="alert">{form.message}</p>
+				{/if}
 
-			<label>
-				<span class="font-small">Subject</span>
-				<input name="subject" type="text" placeholder="What can I help you with?" required />
-			</label>
+				<div class="contact-form__row">
+					<label>
+						<span class="font-small">Name</span>
+						<input
+							name="name"
+							type="text"
+							autocomplete="name"
+							placeholder="Your name"
+							value={form?.values?.name ?? ''}
+							required
+							maxlength={CONTACT_LIMITS.name}
+							{...invalid('name')}
+						/>
+						{@render fieldError('name')}
+					</label>
+					<label>
+						<span class="font-small">Email</span>
+						<input
+							name="email"
+							type="email"
+							autocomplete="email"
+							placeholder="you@example.com"
+							value={form?.values?.email ?? ''}
+							required
+							maxlength={CONTACT_LIMITS.email}
+							{...invalid('email')}
+						/>
+						{@render fieldError('email')}
+					</label>
+				</div>
 
-			<label>
-				<span class="font-small">Message</span>
-				<textarea
-					name="message"
-					rows="6"
-					placeholder="Tell me about your project, timeline and budget."
-					required></textarea>
-			</label>
+				<label>
+					<span class="font-small">Subject</span>
+					<input
+						name="subject"
+						type="text"
+						placeholder="What can I help you with?"
+						value={form?.values?.subject ?? ''}
+						required
+						maxlength={CONTACT_LIMITS.subject}
+						{...invalid('subject')}
+					/>
+					{@render fieldError('subject')}
+				</label>
 
-			<button class="button contact-form__submit" type="submit" data-uisfx-hover="hover">
-				Send inquiry
-				<span aria-hidden="true">↗</span>
-			</button>
-		</form>
+				<label>
+					<span class="font-small">Message</span>
+					<textarea
+						name="message"
+						rows="6"
+						placeholder="Tell me about your project, timeline and budget."
+						required
+						maxlength={CONTACT_LIMITS.message}
+						{...invalid('message')}>{form?.values?.message ?? ''}</textarea
+					>
+					{@render fieldError('message')}
+				</label>
+
+				<!-- Honeypot: hidden from people and assistive tech; bots tend to fill it in. -->
+				<div class="contact-form__trap" aria-hidden="true">
+					<label>
+						Website
+						<input name={HONEYPOT_FIELD} type="text" tabindex="-1" autocomplete="off" />
+					</label>
+				</div>
+
+				<button
+					class="button contact-form__submit"
+					type="submit"
+					disabled={sending}
+					data-uisfx-hover="hover"
+				>
+					{sending ? 'Sending…' : 'Send inquiry'}
+					<span aria-hidden="true">↗</span>
+				</button>
+			</form>
+		{/if}
 	</div>
 </section>
 
@@ -207,6 +301,63 @@
 			min-height: 140px;
 			resize: vertical;
 		}
+	}
+
+	.contact-form__field-error,
+	.contact-form__error {
+		color: var(--color-light-red);
+		font-size: 0.8125rem;
+	}
+
+	.contact-form__status {
+		display: grid;
+		justify-items: start;
+		align-content: start;
+		gap: 12px;
+		padding: 24px;
+		border: 1px solid var(--color-dark-green);
+		border-radius: 8px;
+		background: color-mix(in srgb, var(--color-dark-green) 18%, transparent);
+
+		&:focus {
+			outline: none;
+		}
+
+		p {
+			margin: 0;
+		}
+	}
+
+	.contact-form__status-icon {
+		display: grid;
+		place-items: center;
+		width: 32px;
+		height: 32px;
+		border-radius: 50%;
+		background: var(--color-light-green);
+		color: var(--color-neutral-950);
+		font-weight: 700;
+	}
+
+	.contact-form__status-title {
+		color: var(--color-light-green);
+	}
+
+	.contact-form__status-action {
+		padding: 0;
+		border: 0;
+		background-color: transparent;
+		color: inherit;
+		font: inherit;
+		cursor: pointer;
+	}
+
+	.contact-form__trap {
+		position: absolute;
+		left: -9999px;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
 	}
 
 	.contact-form__row {
