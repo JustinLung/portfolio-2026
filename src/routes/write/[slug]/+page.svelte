@@ -1,6 +1,7 @@
 <script lang="ts">
 	import RelatedPostsCarousel from '$lib/components/shared/post-components/RelatedPostsCarousel.svelte';
 	import Seo from '$lib/components/shared/misc/Seo.svelte';
+	import PostToc from '$lib/components/shared/post-components/PostToc.svelte';
 	import WriteHero from '$lib/components/shared/post-components/WriteHero.svelte';
 	import ReadProgress from '$lib/components/shared/ui/ReadProgress.svelte';
 	import ShareButtons from '$lib/components/shared/ui/ShareButtons.svelte';
@@ -27,12 +28,19 @@
 		title={data.post.title}
 		category={data.post.category}
 		date={data.post.date}
+		readingMinutes={data.readingMinutes}
 	/>
 
 	{#if data.post.content}
-		<div class="post__content">
-			<!-- eslint-disable-next-line svelte/no-at-html-tags -- Content comes from the trusted WordPress CMS. -->
-			{@html data.post.content}
+		<div class="post__body">
+			<aside class="post__toc">
+				<PostToc items={data.toc} />
+			</aside>
+
+			<div class="post__content">
+				<!-- eslint-disable-next-line svelte/no-at-html-tags -- Content comes from the trusted WordPress CMS. -->
+				{@html data.post.content}
+			</div>
 		</div>
 	{/if}
 
@@ -48,9 +56,46 @@
 		margin-block: 64px 128px;
 	}
 
+	.post__body {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+
+		@media (--viewport-xl-up) {
+			grid-template-columns: 1fr minmax(0, 44rem) 1fr;
+			column-gap: 48px;
+		}
+	}
+
+	.post__toc {
+		max-width: 44rem;
+		margin: 0 auto 32px;
+		width: 100%;
+
+		@media (--viewport-xl-up) {
+			grid-column: 3;
+			grid-row: 1;
+			max-width: 14rem;
+			margin: 0;
+			align-self: start;
+			position: sticky;
+			top: 96px;
+		}
+	}
+
 	.post__content {
+		width: 100%;
 		max-width: 44rem;
 		margin-inline: auto;
+
+		@media (--viewport-xl-up) {
+			grid-column: 2;
+			grid-row: 1;
+		}
+	}
+
+	.post__content :global(h2),
+	.post__content :global(h3) {
+		scroll-margin-top: 96px;
 	}
 
 	.post__share {

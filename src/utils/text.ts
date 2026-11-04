@@ -32,3 +32,10 @@ export function decodeEntities(value: string): string {
 		}
 	);
 }
+
+/** Plain text from WordPress HTML: tags stripped, entities decoded, whitespace collapsed. */
+export function htmlToText(html: string): string {
+	return decodeEntities(html.replace(/<[^>]*>/g, ' '))
+		.replace(/\s+/g, ' ')
+		.trim();
+}

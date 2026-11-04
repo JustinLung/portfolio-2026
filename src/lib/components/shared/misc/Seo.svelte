@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { SITE_URL } from '../../../../utils/site';
-	import { decodeEntities } from '../../../../utils/text';
+	import { htmlToText } from '../../../../utils/text';
 	import type { SeoProps } from '../../../../utils/types';
 
 	const DEFAULT_KEYWORDS =
@@ -30,12 +30,7 @@
 
 	// WordPress excerpts are HTML with entities (`&#8217;`) and a `[&hellip;]` read-more marker.
 	const plainDescription = $derived(
-		description
-			? decodeEntities(description.replace(/<[^>]*>/g, ' '))
-					.replace(/\s+/g, ' ')
-					.trim()
-					.replace(/\s*\[…\]$/, '…')
-			: undefined
+		description ? htmlToText(description).replace(/\s*\[…\]$/, '…') : undefined
 	);
 </script>
 
