@@ -14,6 +14,12 @@
 
 	const resourceTimeout = 10000;
 
+	/**
+	 * The loader is theatre, so it must never hold content hostage to a slow network: past this, it
+	 * reveals the site whatever is still loading.
+	 */
+	const maxWaitMs = 2500;
+
 	function waitForResource(target: EventTarget, isReady: () => boolean, events: string[]) {
 		if (isReady()) return Promise.resolve();
 
@@ -49,8 +55,12 @@
 	}
 
 	function getLoadingTasks() {
+		// Only what is near the first screen: images further down load as they are scrolled to.
 		const images = Array.from(document.images)
-			.filter((image) => image.loading !== 'lazy')
+			.filter(
+				(image) =>
+					image.loading !== 'lazy' && image.getBoundingClientRect().top < window.innerHeight * 1.5
+			)
 			.map((image) => waitForResource(image, () => image.complete, ['load', 'error', 'abort']));
 
 		const videos = Array.from(document.querySelectorAll('video')).map((video) =>
@@ -62,13 +72,14 @@
 		);
 
 		const fonts = waitWithTimeout(document.fonts.ready);
-		const page = waitForResource(window, () => document.readyState === 'complete', ['load']);
+		const deadline = new Promise<void>((resolve) => window.setTimeout(resolve, maxWaitMs));
 
-		return [...images, ...videos, fonts, page];
+		// Racing each task against the deadline lets the ring finish smoothly instead of jumping.
+		return [...images, ...videos, fonts].map((task) => Promise.race([task, deadline]));
 	}
 
 	/**
-	 * Tracks eager images, videos, fonts, and the window load event. GSAP
+	 * Tracks first-screen images, videos, and fonts, for at most `maxWaitMs`. GSAP
 	 * smooths each completed resource into the visible ring percentage.
 	 */
 	onMount(() => {

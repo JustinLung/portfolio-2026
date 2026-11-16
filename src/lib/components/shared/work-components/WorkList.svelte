@@ -161,9 +161,9 @@
 </div>
 
 <ul bind:this={listRef} class={viewMode === 'grid' ? 'work-list work-list--grid' : 'work-list'}>
-	{#each filteredItems as item (item.id)}
+	{#each filteredItems as item, index (item.id)}
 		{#if viewMode === 'grid'}
-			<WorkListCard {item} />
+			<WorkListCard {item} loading={index < 2 ? 'eager' : 'lazy'} />
 		{:else}
 			<WorkListRow {item} />
 		{/if}

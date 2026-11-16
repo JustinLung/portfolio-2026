@@ -7,8 +7,15 @@
 	let {
 		item,
 		imageAspectRatio = '16 / 9',
-		mobileImageAspectRatio = imageAspectRatio
-	}: { item: WorkItem; imageAspectRatio?: string; mobileImageAspectRatio?: string } = $props();
+		mobileImageAspectRatio = imageAspectRatio,
+		loading = 'lazy'
+	}: {
+		item: WorkItem;
+		imageAspectRatio?: string;
+		mobileImageAspectRatio?: string;
+		/** Eager only for cards that start in the first viewport, since eager images hold up the site loader. */
+		loading?: 'lazy' | 'eager';
+	} = $props();
 </script>
 
 <!--
@@ -29,6 +36,7 @@
 			<img
 				src={item.image ?? previewPlaceholder}
 				alt={item.imageAlt ?? item.title}
+				{loading}
 				{...imageAttrs(item.imageMeta, '(min-width: 1024px) 50vw, 100vw')}
 			/>
 		</figure>

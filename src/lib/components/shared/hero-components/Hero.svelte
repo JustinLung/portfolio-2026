@@ -1,12 +1,32 @@
 <script lang="ts">
-	import { Canvas } from '@threlte/core';
 	import { afterNavigate } from '$app/navigation';
 	import gsap from 'gsap';
 	import { prefersReducedMotion, readReducedMotion, settings } from '$lib/settings.svelte';
 	import { appReady } from '$lib/stores/app-ready.svelte';
-	import HeroRoseScene from './HeroRoseScene.svelte';
 
 	let { title, subtitle }: { title: string; subtitle: string } = $props();
+
+	// Three.js and the scene are the heaviest code on the site and the title doesn't need them,
+	// so they load after the page is interactive instead of blocking hydration.
+	type Scene = {
+		Canvas: typeof import('@threlte/core').Canvas;
+		Rose: typeof import('./HeroRoseScene.svelte').default;
+	};
+	let scene = $state.raw<Scene | null>(null);
+
+	$effect(() => {
+		if (settings.quality === 'off' || scene) return;
+
+		let cancelled = false;
+
+		void Promise.all([import('@threlte/core'), import('./HeroRoseScene.svelte')]).then(
+			([core, rose]) => {
+				if (!cancelled) scene = { Canvas: core.Canvas, Rose: rose.default };
+			}
+		);
+
+		return () => (cancelled = true);
+	});
 
 	let pointerX = $state(0);
 	let pointerY = $state(0);
@@ -161,17 +181,10 @@
 		class="hero__scene"
 		aria-hidden="true"
 	>
-		{#if settings.quality !== 'off'}
-			<Canvas dpr={settings.quality === 'low' ? 1 : pixelRatio}>
-				<HeroRoseScene
-					{pointerX}
-					{pointerY}
-					{pointerActive}
-					{pointerDown}
-					{reducedMotion}
-					{reveal}
-				/>
-			</Canvas>
+		{#if settings.quality !== 'off' && scene}
+			<scene.Canvas dpr={settings.quality === 'low' ? 1 : pixelRatio}>
+				<scene.Rose {pointerX} {pointerY} {pointerActive} {pointerDown} {reducedMotion} {reveal} />
+			</scene.Canvas>
 		{/if}
 	</div>
 	<div class="hero__content">

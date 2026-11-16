@@ -157,6 +157,7 @@
 		<img
 			src={item.image ?? previewPlaceholder}
 			alt=""
+			loading="lazy"
 			{...imageAttrs(item.imageMeta, '(min-width: 600px) 420px, 70vw')}
 		/>
 	</figure>
