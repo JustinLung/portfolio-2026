@@ -58,6 +58,7 @@
 								data-uisfx="forward"
 								class="link">{link.label}</a
 							>
+							<!-- eslint-enable svelte/no-navigation-without-resolve -->
 						</li>
 					{/each}
 				</ul>
@@ -68,6 +69,7 @@
 				<ul class="footer__links" role="list">
 					{#each socialLinks as link (link.href)}
 						<li>
+							<!-- eslint-disable svelte/no-navigation-without-resolve -- external social URLs -->
 							<a
 								href={link.href}
 								target="_blank"
@@ -97,6 +99,7 @@
 				</button>
 				<div class="footer__policy-links">
 					{#each policyLinks as link (link.href)}
+						<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -- internal paths from links.ts -->
 						<a href={link.href} class="link" data-uisfx-hover="hover" data-uisfx="forward"
 							>{link.label}</a
 						>

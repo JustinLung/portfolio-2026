@@ -15,6 +15,7 @@
 			<Experience {item} />
 		{/each}
 	</ul>
+	<!-- eslint-disable svelte/no-navigation-without-resolve -- static asset, not a route -->
 	<a
 		href="/justinlung-cv.pdf"
 		class="button button--secondary button--download"
@@ -23,6 +24,7 @@
 		data-uisfx-hover="hover"
 		data-uisfx="forward">My full work history</a
 	>
+	<!-- eslint-enable svelte/no-navigation-without-resolve -->
 </section>
 
 <style>

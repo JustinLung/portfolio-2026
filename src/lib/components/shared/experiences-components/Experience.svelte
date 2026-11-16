@@ -9,6 +9,7 @@
 	An external-link row for a work or education experience.
 -->
 <li class="experience-item">
+	<!-- eslint-disable svelte/no-navigation-without-resolve -- external experience URLs -->
 	<a
 		href={item.link}
 		class="experience-item__link"
@@ -25,6 +26,7 @@
 		<span class="experience-item__external" aria-hidden="true">↗</span>
 		<span class="visually-hidden">(opens in a new tab)</span>
 	</a>
+	<!-- eslint-enable svelte/no-navigation-without-resolve -->
 </li>
 
 <style>

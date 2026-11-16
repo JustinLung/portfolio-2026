@@ -85,6 +85,7 @@
 					<dt class="font-small">Elsewhere</dt>
 					<dd class="contact-info__socials">
 						{#each socialLinks as link (link.href)}
+							<!-- eslint-disable svelte/no-navigation-without-resolve -- external social URLs -->
 							<a
 								class="link"
 								href={link.href}
@@ -95,6 +96,7 @@
 							>
 								{link.label}
 							</a>
+							<!-- eslint-enable svelte/no-navigation-without-resolve -->
 						{/each}
 					</dd>
 				</div>

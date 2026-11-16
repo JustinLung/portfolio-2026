@@ -1,6 +1,9 @@
 <script>
 	import { resolve } from '$app/paths';
+	import Seo from '$lib/components/shared/misc/Seo.svelte';
 </script>
+
+<Seo title="Page not found" robots="noindex, follow" />
 
 <section>
 	<div class="error-container">

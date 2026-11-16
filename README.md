@@ -135,16 +135,17 @@ pnpm dev       # http://localhost:5173
 
 ## Scripts
 
-| Command              | What it does                             |
-| -------------------- | ---------------------------------------- |
-| `pnpm dev`           | Vite / SvelteKit dev server              |
-| `pnpm build`         | Production build                         |
-| `pnpm preview`       | Preview the production build             |
-| `pnpm codegen`       | Regenerate GraphQL types + introspection |
-| `pnpm codegen:watch` | Codegen in watch mode                    |
-| `pnpm check`         | `svelte-check` + type sync               |
-| `pnpm lint`          | Prettier check + ESLint                  |
-| `pnpm format`        | Prettier write                           |
+| Command              | What it does                                 |
+| -------------------- | -------------------------------------------- |
+| `pnpm dev`           | Vite / SvelteKit dev server                  |
+| `pnpm build`         | Production build                             |
+| `pnpm preview`       | Preview the production build                 |
+| `pnpm codegen`       | Regenerate GraphQL types + introspection     |
+| `pnpm codegen:watch` | Codegen in watch mode                        |
+| `pnpm check`         | `svelte-check` + type sync                   |
+| `pnpm lint`          | Prettier check + ESLint                      |
+| `pnpm format`        | Prettier write                               |
+| `pnpm test:e2e`      | Playwright smoke + axe tests (needs a build) |
 
 Quality gate before shipping: `pnpm check`, `pnpm lint`, and `pnpm build`. Re-run `pnpm codegen` whenever queries or the WordPress schema change.
 
@@ -172,3 +173,13 @@ Product intent, architecture, coding standards, and the feature workflow live in
 ## Deploy
 
 The project uses `@sveltejs/adapter-auto` from `vite.config.ts`. Pick an explicit [SvelteKit adapter](https://svelte.dev/docs/kit/adapters) when you lock a host. Ensure `WORDPRESS_GRAPHQL_URL` is set in the deployment environment.
+
+### Tests and CI
+
+`pnpm test:e2e` runs Playwright smoke tests and axe WCAG A/AA checks against `vite preview`, so run
+`pnpm build` first and have `WORDPRESS_GRAPHQL_URL` set. Install a browser once with
+`pnpm exec playwright install chromium`, or set `PW_CHANNEL=chrome` to use installed Chrome.
+The color-contrast rule is tracked by a `fixme` test in `tests/e2e/a11y.spec.ts`.
+
+GitHub Actions (`.github/workflows/ci.yml`) runs check, lint, and build on every PR and push to
+`main`. The Playwright job runs only when the repository variable `WORDPRESS_GRAPHQL_URL` is set.
