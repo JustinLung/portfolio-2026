@@ -12,6 +12,87 @@
 		"types": [
 			{
 				"kind": "OBJECT",
+				"name": "AboutFields",
+				"description": "The &quot;AboutFields&quot; Field Group. Added to the Schema by &quot;WPGraphQL for ACF&quot;.",
+				"isOneOf": null,
+				"fields": [
+					{
+						"name": "fieldGroupName",
+						"description": "The name of the field group",
+						"args": [],
+						"type": {
+							"kind": "SCALAR",
+							"name": "String",
+							"ofType": null
+						},
+						"isDeprecated": true,
+						"deprecationReason": "Use __typename instead"
+					}
+				],
+				"inputFields": null,
+				"interfaces": [
+					{
+						"kind": "INTERFACE",
+						"name": "AboutFields_Fields",
+						"ofType": null
+					},
+					{
+						"kind": "INTERFACE",
+						"name": "AcfFieldGroup",
+						"ofType": null
+					},
+					{
+						"kind": "INTERFACE",
+						"name": "AcfFieldGroupFields",
+						"ofType": null
+					}
+				],
+				"enumValues": null,
+				"possibleTypes": null
+			},
+			{
+				"kind": "INTERFACE",
+				"name": "AboutFields_Fields",
+				"description": "Interface representing fields of the ACF &quot;AboutFields&quot; Field Group",
+				"isOneOf": null,
+				"fields": [
+					{
+						"name": "fieldGroupName",
+						"description": "The name of the field group",
+						"args": [],
+						"type": {
+							"kind": "SCALAR",
+							"name": "String",
+							"ofType": null
+						},
+						"isDeprecated": true,
+						"deprecationReason": "Use __typename instead"
+					}
+				],
+				"inputFields": null,
+				"interfaces": [
+					{
+						"kind": "INTERFACE",
+						"name": "AcfFieldGroup",
+						"ofType": null
+					},
+					{
+						"kind": "INTERFACE",
+						"name": "AcfFieldGroupFields",
+						"ofType": null
+					}
+				],
+				"enumValues": null,
+				"possibleTypes": [
+					{
+						"kind": "OBJECT",
+						"name": "AboutFields",
+						"ofType": null
+					}
+				]
+			},
+			{
+				"kind": "OBJECT",
 				"name": "AcfContentNodeConnection",
 				"description": "Connection between the PostMeta_Fields type and the ContentNode type",
 				"isOneOf": null,
@@ -257,6 +338,11 @@
 				"possibleTypes": [
 					{
 						"kind": "OBJECT",
+						"name": "AboutFields",
+						"ofType": null
+					},
+					{
+						"kind": "OBJECT",
 						"name": "BlogPostFields",
 						"ofType": null
 					},
@@ -305,6 +391,11 @@
 				"interfaces": [],
 				"enumValues": null,
 				"possibleTypes": [
+					{
+						"kind": "OBJECT",
+						"name": "AboutFields",
+						"ofType": null
+					},
 					{
 						"kind": "OBJECT",
 						"name": "BlogPostFields",
@@ -753,7 +844,7 @@
 					},
 					{
 						"name": "categoryId",
-						"description": "The id field matches the WP_Post-&gt;ID field.",
+						"description": "The unique numeric identifier for the term.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -1000,6 +1091,18 @@
 								"defaultValue": null,
 								"isDeprecated": false,
 								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "TermNodeToEnqueuedScriptConnectionWhereArgs",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
 							}
 						],
 						"type": {
@@ -1056,6 +1159,18 @@
 								"type": {
 									"kind": "SCALAR",
 									"name": "Int",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "TermNodeToEnqueuedStylesheetConnectionWhereArgs",
 									"ofType": null
 								},
 								"defaultValue": null,
@@ -4417,7 +4532,7 @@
 				"fields": [
 					{
 						"name": "agent",
-						"description": "User agent used to post the comment. This field is equivalent to WP_Comment-&gt;comment_agent and the value matching the &quot;comment_agent&quot; column in SQL.",
+						"description": "User agent (browser or client) used to post the comment.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -4429,7 +4544,7 @@
 					},
 					{
 						"name": "approved",
-						"description": "The approval status of the comment. This field is equivalent to WP_Comment-&gt;comment_approved and the value matching the &quot;comment_approved&quot; column in SQL.",
+						"description": "The approval status of the comment.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -4453,7 +4568,7 @@
 					},
 					{
 						"name": "authorIp",
-						"description": "IP address for the author at the time of commenting. This field is equivalent to WP_Comment-&gt;comment_author_IP and the value matching the &quot;comment_author_IP&quot; column in SQL.",
+						"description": "IP address for the author at the time of commenting.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -4489,7 +4604,7 @@
 					},
 					{
 						"name": "content",
-						"description": "Content of the comment. This field is equivalent to WP_Comment-&gt;comment_content and the value matching the &quot;comment_content&quot; column in SQL.",
+						"description": "Content of the comment.",
 						"args": [
 							{
 								"name": "format",
@@ -4530,7 +4645,7 @@
 					},
 					{
 						"name": "date",
-						"description": "Date the comment was posted in local time. This field is equivalent to WP_Comment-&gt;date and the value matching the &quot;date&quot; column in SQL.",
+						"description": "Date the comment was posted in local time.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -4542,7 +4657,7 @@
 					},
 					{
 						"name": "dateGmt",
-						"description": "Date the comment was posted in GMT. This field is equivalent to WP_Comment-&gt;date_gmt and the value matching the &quot;date_gmt&quot; column in SQL.",
+						"description": "Date the comment was posted in GMT.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -4662,7 +4777,7 @@
 					},
 					{
 						"name": "karma",
-						"description": "Karma value for the comment. This field is equivalent to WP_Comment-&gt;comment_karma and the value matching the &quot;comment_karma&quot; column in SQL.",
+						"description": "Karma value for the comment.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -4808,7 +4923,7 @@
 					},
 					{
 						"name": "status",
-						"description": "The approval status of the comment. This field is equivalent to WP_Comment-&gt;comment_approved and the value matching the &quot;comment_approved&quot; column in SQL.",
+						"description": "The approval status of the comment.",
 						"args": [],
 						"type": {
 							"kind": "ENUM",
@@ -4820,7 +4935,7 @@
 					},
 					{
 						"name": "type",
-						"description": "Type of comment. This field is equivalent to WP_Comment-&gt;comment_type and the value matching the &quot;comment_type&quot; column in SQL.",
+						"description": "Type of comment.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -6064,7 +6179,7 @@
 					},
 					{
 						"name": "ipAddress",
-						"description": "IP address of the author at the time of making this comment. This field is equivalent to WP_Comment-&gt;comment_author_IP and the value matching the &quot;comment_author_IP&quot; column in SQL.",
+						"description": "IP address of the author at the time of making this comment.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -7531,6 +7646,18 @@
 								"defaultValue": null,
 								"isDeprecated": false,
 								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "ContentNodeToEnqueuedScriptConnectionWhereArgs",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
 							}
 						],
 						"type": {
@@ -7592,6 +7719,18 @@
 								"defaultValue": null,
 								"isDeprecated": false,
 								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "ContentNodeToEnqueuedStylesheetConnectionWhereArgs",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
 							}
 						],
 						"type": {
@@ -7604,7 +7743,7 @@
 					},
 					{
 						"name": "guid",
-						"description": "The global unique identifier for this post. This currently matches the value stored in WP_Post-&gt;guid and the guid column in the &quot;post_objects&quot; database table.",
+						"description": "The global unique identifier for this content node. This is a stable, unique identifier for the node that does not change even if the node is moved or its url changes.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -7796,7 +7935,7 @@
 					},
 					{
 						"name": "previewRevisionId",
-						"description": "Whether the object is a node in the preview state",
+						"description": "The globally unique ID of the preview node",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -7808,7 +7947,7 @@
 					},
 					{
 						"name": "slug",
-						"description": "The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table.",
+						"description": "The URL-friendly, human-readable identifier for the content node, used in its permalink.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -8705,6 +8844,34 @@
 				"possibleTypes": null
 			},
 			{
+				"kind": "INPUT_OBJECT",
+				"name": "ContentNodeToEnqueuedScriptConnectionWhereArgs",
+				"description": "Arguments for filtering the ContentNodeToEnqueuedScriptConnection connection",
+				"isOneOf": false,
+				"fields": null,
+				"inputFields": [
+					{
+						"name": "handlesIn",
+						"description": "Limit results to assets whose handle is in the provided list. Handles that do not match an asset are ignored. An empty list matches no assets, while omitting the argument (or passing null) leaves the connection unfiltered.",
+						"type": {
+							"kind": "LIST",
+							"name": null,
+							"ofType": {
+								"name": "String",
+								"kind": "SCALAR",
+								"ofType": null
+							}
+						},
+						"defaultValue": null,
+						"isDeprecated": false,
+						"deprecationReason": null
+					}
+				],
+				"interfaces": null,
+				"enumValues": null,
+				"possibleTypes": null
+			},
+			{
 				"kind": "OBJECT",
 				"name": "ContentNodeToEnqueuedStylesheetConnection",
 				"description": "Connection between the ContentNode type and the EnqueuedStylesheet type",
@@ -8923,6 +9090,34 @@
 						"ofType": null
 					}
 				],
+				"enumValues": null,
+				"possibleTypes": null
+			},
+			{
+				"kind": "INPUT_OBJECT",
+				"name": "ContentNodeToEnqueuedStylesheetConnectionWhereArgs",
+				"description": "Arguments for filtering the ContentNodeToEnqueuedStylesheetConnection connection",
+				"isOneOf": false,
+				"fields": null,
+				"inputFields": [
+					{
+						"name": "handlesIn",
+						"description": "Limit results to assets whose handle is in the provided list. Handles that do not match an asset are ignored. An empty list matches no assets, while omitting the argument (or passing null) leaves the connection unfiltered.",
+						"type": {
+							"kind": "LIST",
+							"name": null,
+							"ofType": {
+								"name": "String",
+								"kind": "SCALAR",
+								"ofType": null
+							}
+						},
+						"defaultValue": null,
+						"isDeprecated": false,
+						"deprecationReason": null
+					}
+				],
+				"interfaces": null,
 				"enumValues": null,
 				"possibleTypes": null
 			},
@@ -15735,6 +15930,18 @@
 								"defaultValue": null,
 								"isDeprecated": false,
 								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "ContentNodeToEnqueuedScriptConnectionWhereArgs",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
 							}
 						],
 						"type": {
@@ -15796,6 +16003,18 @@
 								"defaultValue": null,
 								"isDeprecated": false,
 								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "ContentNodeToEnqueuedStylesheetConnectionWhereArgs",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
 							}
 						],
 						"type": {
@@ -15820,7 +16039,7 @@
 					},
 					{
 						"name": "experienceId",
-						"description": "The id field matches the WP_Post-&gt;ID field.",
+						"description": "The unique numeric identifier for the content node.",
 						"args": [],
 						"type": {
 							"kind": "NON_NULL",
@@ -15836,7 +16055,7 @@
 					},
 					{
 						"name": "guid",
-						"description": "The global unique identifier for this post. This currently matches the value stored in WP_Post-&gt;guid and the guid column in the &quot;post_objects&quot; database table.",
+						"description": "The global unique identifier for this content node. This is a stable, unique identifier for the node that does not change even if the node is moved or its url changes.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -16088,7 +16307,7 @@
 					},
 					{
 						"name": "slug",
-						"description": "The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table.",
+						"description": "The URL-friendly, human-readable identifier for the content node, used in its permalink.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -17597,6 +17816,18 @@
 								"defaultValue": null,
 								"isDeprecated": false,
 								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "ContentNodeToEnqueuedScriptConnectionWhereArgs",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
 							}
 						],
 						"type": {
@@ -17658,6 +17889,18 @@
 								"defaultValue": null,
 								"isDeprecated": false,
 								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "ContentNodeToEnqueuedStylesheetConnectionWhereArgs",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
 							}
 						],
 						"type": {
@@ -17670,7 +17913,7 @@
 					},
 					{
 						"name": "guid",
-						"description": "The global unique identifier for this post. This currently matches the value stored in WP_Post-&gt;guid and the guid column in the &quot;post_objects&quot; database table.",
+						"description": "The global unique identifier for this content node. This is a stable, unique identifier for the node that does not change even if the node is moved or its url changes.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -17898,7 +18141,7 @@
 					},
 					{
 						"name": "previewRevisionId",
-						"description": "Whether the object is a node in the preview state",
+						"description": "The globally unique ID of the preview node",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -17910,7 +18153,7 @@
 					},
 					{
 						"name": "slug",
-						"description": "The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table.",
+						"description": "The URL-friendly, human-readable identifier for the content node, used in its permalink.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -19259,6 +19502,18 @@
 								"defaultValue": null,
 								"isDeprecated": false,
 								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "TermNodeToEnqueuedScriptConnectionWhereArgs",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
 							}
 						],
 						"type": {
@@ -19315,6 +19570,18 @@
 								"type": {
 									"kind": "SCALAR",
 									"name": "Int",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "TermNodeToEnqueuedStylesheetConnectionWhereArgs",
 									"ofType": null
 								},
 								"defaultValue": null,
@@ -20502,6 +20769,18 @@
 								"defaultValue": null,
 								"isDeprecated": false,
 								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "ContentNodeToEnqueuedScriptConnectionWhereArgs",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
 							}
 						],
 						"type": {
@@ -20558,6 +20837,18 @@
 								"type": {
 									"kind": "SCALAR",
 									"name": "Int",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "ContentNodeToEnqueuedStylesheetConnectionWhereArgs",
 									"ofType": null
 								},
 								"defaultValue": null,
@@ -20650,7 +20941,7 @@
 					},
 					{
 						"name": "guid",
-						"description": "The global unique identifier for this post. This currently matches the value stored in WP_Post-&gt;guid and the guid column in the &quot;post_objects&quot; database table.",
+						"description": "The global unique identifier for this content node. This is a stable, unique identifier for the node that does not change even if the node is moved or its url changes.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -20830,7 +21121,7 @@
 					},
 					{
 						"name": "mediaItemId",
-						"description": "The id field matches the WP_Post-&gt;ID field.",
+						"description": "The unique numeric identifier for the content node.",
 						"args": [],
 						"type": {
 							"kind": "NON_NULL",
@@ -20966,7 +21257,7 @@
 					},
 					{
 						"name": "previewRevisionId",
-						"description": "Whether the object is a node in the preview state",
+						"description": "The globally unique ID of the preview node",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -21003,7 +21294,7 @@
 					},
 					{
 						"name": "slug",
-						"description": "The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table.",
+						"description": "The URL-friendly, human-readable identifier for the content node, used in its permalink.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -22641,7 +22932,7 @@
 					},
 					{
 						"name": "name",
-						"description": "Display name of the menu. Equivalent to WP_Term-&gt;name.",
+						"description": "Display name of the menu.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -22653,7 +22944,7 @@
 					},
 					{
 						"name": "slug",
-						"description": "The url friendly name of the menu. Equivalent to WP_Term-&gt;slug",
+						"description": "The url friendly name of the menu.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -26407,6 +26698,18 @@
 				"isOneOf": null,
 				"fields": [
 					{
+						"name": "aboutFields",
+						"description": "Fields of the AboutFields ACF Field Group",
+						"args": [],
+						"type": {
+							"kind": "OBJECT",
+							"name": "AboutFields",
+							"ofType": null
+						},
+						"isDeprecated": false,
+						"deprecationReason": null
+					},
+					{
 						"name": "aboutImages",
 						"description": "Images selected for the About page.",
 						"args": [],
@@ -26881,6 +27184,18 @@
 								"defaultValue": null,
 								"isDeprecated": false,
 								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "ContentNodeToEnqueuedScriptConnectionWhereArgs",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
 							}
 						],
 						"type": {
@@ -26942,6 +27257,18 @@
 								"defaultValue": null,
 								"isDeprecated": false,
 								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "ContentNodeToEnqueuedStylesheetConnectionWhereArgs",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
 							}
 						],
 						"type": {
@@ -26990,7 +27317,7 @@
 					},
 					{
 						"name": "guid",
-						"description": "The global unique identifier for this post. This currently matches the value stored in WP_Post-&gt;guid and the guid column in the &quot;post_objects&quot; database table.",
+						"description": "The global unique identifier for this content node. This is a stable, unique identifier for the node that does not change even if the node is moved or its url changes.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -27234,7 +27561,7 @@
 					},
 					{
 						"name": "pageId",
-						"description": "The id field matches the WP_Post-&gt;ID field.",
+						"description": "The unique numeric identifier for the content node.",
 						"args": [],
 						"type": {
 							"kind": "NON_NULL",
@@ -27322,7 +27649,7 @@
 					},
 					{
 						"name": "previewRevisionId",
-						"description": "Whether the object is a node in the preview state",
+						"description": "The globally unique ID of the preview node",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -27419,7 +27746,7 @@
 					},
 					{
 						"name": "slug",
-						"description": "The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table.",
+						"description": "The URL-friendly, human-readable identifier for the content node, used in its permalink.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -27571,6 +27898,11 @@
 					{
 						"kind": "INTERFACE",
 						"name": "UniformResourceIdentifiable",
+						"ofType": null
+					},
+					{
+						"kind": "INTERFACE",
+						"name": "WithAcfAboutFields",
 						"ofType": null
 					},
 					{
@@ -30468,6 +30800,18 @@
 								"defaultValue": null,
 								"isDeprecated": false,
 								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "ContentNodeToEnqueuedScriptConnectionWhereArgs",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
 							}
 						],
 						"type": {
@@ -30524,6 +30868,18 @@
 								"type": {
 									"kind": "SCALAR",
 									"name": "Int",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "ContentNodeToEnqueuedStylesheetConnectionWhereArgs",
 									"ofType": null
 								},
 								"defaultValue": null,
@@ -30602,7 +30958,7 @@
 					},
 					{
 						"name": "guid",
-						"description": "The global unique identifier for this post. This currently matches the value stored in WP_Post-&gt;guid and the guid column in the &quot;post_objects&quot; database table.",
+						"description": "The global unique identifier for this content node. This is a stable, unique identifier for the node that does not change even if the node is moved or its url changes.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -30947,7 +31303,7 @@
 					},
 					{
 						"name": "postId",
-						"description": "The id field matches the WP_Post-&gt;ID field.",
+						"description": "The unique numeric identifier for the content node.",
 						"args": [],
 						"type": {
 							"kind": "NON_NULL",
@@ -31096,7 +31452,7 @@
 					},
 					{
 						"name": "slug",
-						"description": "The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table.",
+						"description": "The URL-friendly, human-readable identifier for the content node, used in its permalink.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -32016,6 +32372,18 @@
 								"defaultValue": null,
 								"isDeprecated": false,
 								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "TermNodeToEnqueuedScriptConnectionWhereArgs",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
 							}
 						],
 						"type": {
@@ -32072,6 +32440,18 @@
 								"type": {
 									"kind": "SCALAR",
 									"name": "Int",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "TermNodeToEnqueuedStylesheetConnectionWhereArgs",
 									"ofType": null
 								},
 								"defaultValue": null,
@@ -32221,7 +32601,7 @@
 					},
 					{
 						"name": "postFormatId",
-						"description": "The id field matches the WP_Post-&gt;ID field.",
+						"description": "The unique numeric identifier for the term.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -40565,18 +40945,6 @@
 						"description": "A node used to manage content",
 						"args": [
 							{
-								"name": "asPreview",
-								"description": "Whether to return the Preview Node instead of the Published Node. When the ID of a Node is provided along with asPreview being set to true, the preview node with un-published changes will be returned instead of the published node. If no preview node exists or the requester doesn't have proper capabilities to preview, no node will be returned. If the ID provided is a URI and has a preview query arg, it will be used as a fallback if the \"asPreview\" argument is not explicitly provided as an argument.",
-								"type": {
-									"kind": "SCALAR",
-									"name": "Boolean",
-									"ofType": null
-								},
-								"defaultValue": null,
-								"isDeprecated": false,
-								"deprecationReason": null
-							},
-							{
 								"name": "contentType",
 								"description": "The content type the node is used for. Required when idType is set to \"name\" or \"slug\"",
 								"type": {
@@ -40817,18 +41185,6 @@
 						"description": "An object of the experience Type. ",
 						"args": [
 							{
-								"name": "asPreview",
-								"description": "Whether to return the Preview Node instead of the Published Node. When the ID of a Node is provided along with asPreview being set to true, the preview node with un-published changes will be returned instead of the published node. If no preview node exists or the requester doesn't have proper capabilities to preview, no node will be returned. If the ID provided is a URI and has a preview query arg, it will be used as a fallback if the \"asPreview\" argument is not explicitly provided as an argument.",
-								"type": {
-									"kind": "SCALAR",
-									"name": "Boolean",
-									"ofType": null
-								},
-								"defaultValue": null,
-								"isDeprecated": false,
-								"deprecationReason": null
-							},
-							{
 								"name": "id",
 								"description": "The globally unique identifier of the object.",
 								"type": {
@@ -41015,18 +41371,6 @@
 						"name": "mediaItem",
 						"description": "An object of the mediaItem Type. ",
 						"args": [
-							{
-								"name": "asPreview",
-								"description": "Whether to return the Preview Node instead of the Published Node. When the ID of a Node is provided along with asPreview being set to true, the preview node with un-published changes will be returned instead of the published node. If no preview node exists or the requester doesn't have proper capabilities to preview, no node will be returned. If the ID provided is a URI and has a preview query arg, it will be used as a fallback if the \"asPreview\" argument is not explicitly provided as an argument.",
-								"type": {
-									"kind": "SCALAR",
-									"name": "Boolean",
-									"ofType": null
-								},
-								"defaultValue": null,
-								"isDeprecated": false,
-								"deprecationReason": null
-							},
 							{
 								"name": "id",
 								"description": "The globally unique identifier of the object.",
@@ -41485,18 +41829,6 @@
 						"description": "An object of the page Type. ",
 						"args": [
 							{
-								"name": "asPreview",
-								"description": "Whether to return the Preview Node instead of the Published Node. When the ID of a Node is provided along with asPreview being set to true, the preview node with un-published changes will be returned instead of the published node. If no preview node exists or the requester doesn't have proper capabilities to preview, no node will be returned. If the ID provided is a URI and has a preview query arg, it will be used as a fallback if the \"asPreview\" argument is not explicitly provided as an argument.",
-								"type": {
-									"kind": "SCALAR",
-									"name": "Boolean",
-									"ofType": null
-								},
-								"defaultValue": null,
-								"isDeprecated": false,
-								"deprecationReason": null
-							},
-							{
 								"name": "id",
 								"description": "The globally unique identifier of the object.",
 								"type": {
@@ -41773,18 +42105,6 @@
 						"name": "post",
 						"description": "An object of the post Type. ",
 						"args": [
-							{
-								"name": "asPreview",
-								"description": "Whether to return the Preview Node instead of the Published Node. When the ID of a Node is provided along with asPreview being set to true, the preview node with un-published changes will be returned instead of the published node. If no preview node exists or the requester doesn't have proper capabilities to preview, no node will be returned. If the ID provided is a URI and has a preview query arg, it will be used as a fallback if the \"asPreview\" argument is not explicitly provided as an argument.",
-								"type": {
-									"kind": "SCALAR",
-									"name": "Boolean",
-									"ofType": null
-								},
-								"defaultValue": null,
-								"isDeprecated": false,
-								"deprecationReason": null
-							},
 							{
 								"name": "id",
 								"description": "The globally unique identifier of the object.",
@@ -42133,6 +42453,18 @@
 								"defaultValue": null,
 								"isDeprecated": false,
 								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "RootQueryToEnqueuedScriptConnectionWhereArgs",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
 							}
 						],
 						"type": {
@@ -42189,6 +42521,18 @@
 								"type": {
 									"kind": "SCALAR",
 									"name": "Int",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "RootQueryToEnqueuedStylesheetConnectionWhereArgs",
 									"ofType": null
 								},
 								"defaultValue": null,
@@ -42929,18 +43273,6 @@
 						"name": "work",
 						"description": "An object of the work Type. ",
 						"args": [
-							{
-								"name": "asPreview",
-								"description": "Whether to return the Preview Node instead of the Published Node. When the ID of a Node is provided along with asPreview being set to true, the preview node with un-published changes will be returned instead of the published node. If no preview node exists or the requester doesn't have proper capabilities to preview, no node will be returned. If the ID provided is a URI and has a preview query arg, it will be used as a fallback if the \"asPreview\" argument is not explicitly provided as an argument.",
-								"type": {
-									"kind": "SCALAR",
-									"name": "Boolean",
-									"ofType": null
-								},
-								"defaultValue": null,
-								"isDeprecated": false,
-								"deprecationReason": null
-							},
 							{
 								"name": "id",
 								"description": "The globally unique identifier of the object.",
@@ -45229,6 +45561,34 @@
 				"possibleTypes": null
 			},
 			{
+				"kind": "INPUT_OBJECT",
+				"name": "RootQueryToEnqueuedScriptConnectionWhereArgs",
+				"description": "Arguments for filtering the RootQueryToEnqueuedScriptConnection connection",
+				"isOneOf": false,
+				"fields": null,
+				"inputFields": [
+					{
+						"name": "handlesIn",
+						"description": "Limit results to assets whose handle is in the provided list. Handles that do not match an asset are ignored. An empty list matches no assets, while omitting the argument (or passing null) leaves the connection unfiltered.",
+						"type": {
+							"kind": "LIST",
+							"name": null,
+							"ofType": {
+								"name": "String",
+								"kind": "SCALAR",
+								"ofType": null
+							}
+						},
+						"defaultValue": null,
+						"isDeprecated": false,
+						"deprecationReason": null
+					}
+				],
+				"interfaces": null,
+				"enumValues": null,
+				"possibleTypes": null
+			},
+			{
 				"kind": "OBJECT",
 				"name": "RootQueryToEnqueuedStylesheetConnection",
 				"description": "Connection between the RootQuery type and the EnqueuedStylesheet type",
@@ -45447,6 +45807,34 @@
 						"ofType": null
 					}
 				],
+				"enumValues": null,
+				"possibleTypes": null
+			},
+			{
+				"kind": "INPUT_OBJECT",
+				"name": "RootQueryToEnqueuedStylesheetConnectionWhereArgs",
+				"description": "Arguments for filtering the RootQueryToEnqueuedStylesheetConnection connection",
+				"isOneOf": false,
+				"fields": null,
+				"inputFields": [
+					{
+						"name": "handlesIn",
+						"description": "Limit results to assets whose handle is in the provided list. Handles that do not match an asset are ignored. An empty list matches no assets, while omitting the argument (or passing null) leaves the connection unfiltered.",
+						"type": {
+							"kind": "LIST",
+							"name": null,
+							"ofType": {
+								"name": "String",
+								"kind": "SCALAR",
+								"ofType": null
+							}
+						},
+						"defaultValue": null,
+						"isDeprecated": false,
+						"deprecationReason": null
+					}
+				],
+				"interfaces": null,
 				"enumValues": null,
 				"possibleTypes": null
 			},
@@ -52839,6 +53227,18 @@
 								"defaultValue": null,
 								"isDeprecated": false,
 								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "TermNodeToEnqueuedScriptConnectionWhereArgs",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
 							}
 						],
 						"type": {
@@ -52895,6 +53295,18 @@
 								"type": {
 									"kind": "SCALAR",
 									"name": "Int",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "TermNodeToEnqueuedStylesheetConnectionWhereArgs",
 									"ofType": null
 								},
 								"defaultValue": null,
@@ -53129,7 +53541,7 @@
 					},
 					{
 						"name": "tagId",
-						"description": "The id field matches the WP_Post-&gt;ID field.",
+						"description": "The unique numeric identifier for the term.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -54895,7 +55307,7 @@
 					},
 					{
 						"name": "description",
-						"description": "Description of the taxonomy. This field is equivalent to WP_Taxonomy-&gt;description",
+						"description": "Description of the taxonomy.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -54983,7 +55395,7 @@
 					},
 					{
 						"name": "name",
-						"description": "The display name of the taxonomy. This field is equivalent to WP_Taxonomy-&gt;label",
+						"description": "The display name of the taxonomy.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -54995,7 +55407,19 @@
 					},
 					{
 						"name": "public",
-						"description": "Whether the taxonomy is publicly queryable",
+						"description": "Whether the taxonomy is intended for public use. This is a broad statement of intent rather than a behavior of its own: the more specific settings, such as publiclyQueryable, showUi and showInNavMenus, follow it unless they are given their own value.",
+						"args": [],
+						"type": {
+							"kind": "SCALAR",
+							"name": "Boolean",
+							"ofType": null
+						},
+						"isDeprecated": false,
+						"deprecationReason": null
+					},
+					{
+						"name": "publiclyQueryable",
+						"description": "Whether terms in this taxonomy can be queried from the front end of the site.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -55031,7 +55455,7 @@
 					},
 					{
 						"name": "showCloud",
-						"description": "Whether to show the taxonomy as part of a tag cloud widget. This field is equivalent to WP_Taxonomy-&gt;show_tagcloud",
+						"description": "Whether to show the taxonomy as part of a tag cloud widget.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -56017,6 +56441,18 @@
 								"defaultValue": null,
 								"isDeprecated": false,
 								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "TermNodeToEnqueuedScriptConnectionWhereArgs",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
 							}
 						],
 						"type": {
@@ -56073,6 +56509,18 @@
 								"type": {
 									"kind": "SCALAR",
 									"name": "Int",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "TermNodeToEnqueuedStylesheetConnectionWhereArgs",
 									"ofType": null
 								},
 								"defaultValue": null,
@@ -56848,6 +57296,34 @@
 				"possibleTypes": null
 			},
 			{
+				"kind": "INPUT_OBJECT",
+				"name": "TermNodeToEnqueuedScriptConnectionWhereArgs",
+				"description": "Arguments for filtering the TermNodeToEnqueuedScriptConnection connection",
+				"isOneOf": false,
+				"fields": null,
+				"inputFields": [
+					{
+						"name": "handlesIn",
+						"description": "Limit results to assets whose handle is in the provided list. Handles that do not match an asset are ignored. An empty list matches no assets, while omitting the argument (or passing null) leaves the connection unfiltered.",
+						"type": {
+							"kind": "LIST",
+							"name": null,
+							"ofType": {
+								"name": "String",
+								"kind": "SCALAR",
+								"ofType": null
+							}
+						},
+						"defaultValue": null,
+						"isDeprecated": false,
+						"deprecationReason": null
+					}
+				],
+				"interfaces": null,
+				"enumValues": null,
+				"possibleTypes": null
+			},
+			{
 				"kind": "OBJECT",
 				"name": "TermNodeToEnqueuedStylesheetConnection",
 				"description": "Connection between the TermNode type and the EnqueuedStylesheet type",
@@ -57070,6 +57546,34 @@
 				"possibleTypes": null
 			},
 			{
+				"kind": "INPUT_OBJECT",
+				"name": "TermNodeToEnqueuedStylesheetConnectionWhereArgs",
+				"description": "Arguments for filtering the TermNodeToEnqueuedStylesheetConnection connection",
+				"isOneOf": false,
+				"fields": null,
+				"inputFields": [
+					{
+						"name": "handlesIn",
+						"description": "Limit results to assets whose handle is in the provided list. Handles that do not match an asset are ignored. An empty list matches no assets, while omitting the argument (or passing null) leaves the connection unfiltered.",
+						"type": {
+							"kind": "LIST",
+							"name": null,
+							"ofType": {
+								"name": "String",
+								"kind": "SCALAR",
+								"ofType": null
+							}
+						},
+						"defaultValue": null,
+						"isDeprecated": false,
+						"deprecationReason": null
+					}
+				],
+				"interfaces": null,
+				"enumValues": null,
+				"possibleTypes": null
+			},
+			{
 				"kind": "ENUM",
 				"name": "TermObjectsConnectionOrderbyEnum",
 				"description": "Sorting attributes for taxonomy term collections. Determines which property of taxonomy terms is used for ordering results.",
@@ -57131,7 +57635,7 @@
 				"fields": [
 					{
 						"name": "author",
-						"description": "Name of the theme author(s), could also be a company name. This field is equivalent to WP_Theme-&gt;get( &quot;Author&quot; ).",
+						"description": "Name of the theme author(s), could also be a company name.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -57143,7 +57647,7 @@
 					},
 					{
 						"name": "authorUri",
-						"description": "URI for the author/company website. This field is equivalent to WP_Theme-&gt;get( &quot;AuthorURI&quot; ).",
+						"description": "URI for the author/company website.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -57155,7 +57659,7 @@
 					},
 					{
 						"name": "description",
-						"description": "The description of the theme. This field is equivalent to WP_Theme-&gt;get( &quot;Description&quot; ).",
+						"description": "The description of the theme.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -57195,7 +57699,7 @@
 					},
 					{
 						"name": "name",
-						"description": "Display name of the theme. This field is equivalent to WP_Theme-&gt;get( &quot;Name&quot; ).",
+						"description": "Display name of the theme.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -57207,7 +57711,7 @@
 					},
 					{
 						"name": "screenshot",
-						"description": "The URL of the screenshot for the theme. The screenshot is intended to give an overview of what the theme looks like. This field is equivalent to WP_Theme-&gt;get_screenshot().",
+						"description": "The URL of the screenshot for the theme. The screenshot is intended to give an overview of what the theme looks like.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -57219,7 +57723,7 @@
 					},
 					{
 						"name": "slug",
-						"description": "The theme slug is used to internally match themes. Theme slugs can have subdirectories like: my-theme/sub-theme. This field is equivalent to WP_Theme-&gt;get_stylesheet().",
+						"description": "The theme slug is used to internally match themes. Theme slugs can have subdirectories like: my-theme/sub-theme.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -57231,7 +57735,7 @@
 					},
 					{
 						"name": "tags",
-						"description": "URI for the author/company website. This field is equivalent to WP_Theme-&gt;get( &quot;Tags&quot; ).",
+						"description": "A list of tags associated with the theme, typically describing its features (e.g. custom-logo, accessibility-ready, full-site-editing).",
 						"args": [],
 						"type": {
 							"kind": "LIST",
@@ -57247,7 +57751,7 @@
 					},
 					{
 						"name": "themeUri",
-						"description": "A URI if the theme has a website associated with it. The Theme URI is handy for directing users to a theme site for support etc. This field is equivalent to WP_Theme-&gt;get( &quot;ThemeURI&quot; ).",
+						"description": "A URI if the theme has a website associated with it. The Theme URI is handy for directing users to a theme site for support etc.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -57259,7 +57763,7 @@
 					},
 					{
 						"name": "version",
-						"description": "The current version of the theme. This field is equivalent to WP_Theme-&gt;get( &quot;Version&quot; ).",
+						"description": "The current version of the theme.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -60158,7 +60662,7 @@
 					},
 					{
 						"name": "email",
-						"description": "Email address of the user. This is equivalent to the WP_User-&gt;user_email property.",
+						"description": "Email address of the user.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -60214,6 +60718,18 @@
 								"type": {
 									"kind": "SCALAR",
 									"name": "Int",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "UserToEnqueuedScriptConnectionWhereArgs",
 									"ofType": null
 								},
 								"defaultValue": null,
@@ -60280,6 +60796,18 @@
 								"defaultValue": null,
 								"isDeprecated": false,
 								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "UserToEnqueuedStylesheetConnectionWhereArgs",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
 							}
 						],
 						"type": {
@@ -60292,7 +60820,7 @@
 					},
 					{
 						"name": "extraCapabilities",
-						"description": "A complete list of capabilities including capabilities inherited from a role. This is equivalent to the array keys of WP_User-&gt;allcaps.",
+						"description": "A complete list of capabilities including capabilities inherited from a role.",
 						"args": [],
 						"type": {
 							"kind": "LIST",
@@ -60308,7 +60836,7 @@
 					},
 					{
 						"name": "firstName",
-						"description": "First name of the user. This is equivalent to the WP_User-&gt;user_first_name property.",
+						"description": "First name of the user.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -60464,7 +60992,7 @@
 					},
 					{
 						"name": "lastName",
-						"description": "Last name of the user. This is equivalent to the WP_User-&gt;user_last_name property.",
+						"description": "Last name of the user.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -60561,7 +61089,7 @@
 					},
 					{
 						"name": "name",
-						"description": "Display name of the user. This is equivalent to the WP_User-&gt;display_name property.",
+						"description": "Display name of the user.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -60573,7 +61101,7 @@
 					},
 					{
 						"name": "nicename",
-						"description": "The nicename for the user. This field is equivalent to WP_User-&gt;user_nicename",
+						"description": "The url friendly name for the user, used to reference the user in a public url.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -60901,7 +61429,7 @@
 					},
 					{
 						"name": "slug",
-						"description": "The slug for the user. This field is equivalent to WP_User-&gt;user_nicename",
+						"description": "The url friendly identifier for the user.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -60937,7 +61465,7 @@
 					},
 					{
 						"name": "userId",
-						"description": "The Id of the user. Equivalent to WP_User-&gt;ID",
+						"description": "The unique numeric identifier for the user.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -60949,7 +61477,7 @@
 					},
 					{
 						"name": "username",
-						"description": "Username for the user. This field is equivalent to WP_User-&gt;user_login.",
+						"description": "Username for the user. This is the unique identifier the user provides to log in.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -62511,6 +63039,34 @@
 				"possibleTypes": null
 			},
 			{
+				"kind": "INPUT_OBJECT",
+				"name": "UserToEnqueuedScriptConnectionWhereArgs",
+				"description": "Arguments for filtering the UserToEnqueuedScriptConnection connection",
+				"isOneOf": false,
+				"fields": null,
+				"inputFields": [
+					{
+						"name": "handlesIn",
+						"description": "Limit results to assets whose handle is in the provided list. Handles that do not match an asset are ignored. An empty list matches no assets, while omitting the argument (or passing null) leaves the connection unfiltered.",
+						"type": {
+							"kind": "LIST",
+							"name": null,
+							"ofType": {
+								"name": "String",
+								"kind": "SCALAR",
+								"ofType": null
+							}
+						},
+						"defaultValue": null,
+						"isDeprecated": false,
+						"deprecationReason": null
+					}
+				],
+				"interfaces": null,
+				"enumValues": null,
+				"possibleTypes": null
+			},
+			{
 				"kind": "OBJECT",
 				"name": "UserToEnqueuedStylesheetConnection",
 				"description": "Connection between the User type and the EnqueuedStylesheet type",
@@ -62729,6 +63285,34 @@
 						"ofType": null
 					}
 				],
+				"enumValues": null,
+				"possibleTypes": null
+			},
+			{
+				"kind": "INPUT_OBJECT",
+				"name": "UserToEnqueuedStylesheetConnectionWhereArgs",
+				"description": "Arguments for filtering the UserToEnqueuedStylesheetConnection connection",
+				"isOneOf": false,
+				"fields": null,
+				"inputFields": [
+					{
+						"name": "handlesIn",
+						"description": "Limit results to assets whose handle is in the provided list. Handles that do not match an asset are ignored. An empty list matches no assets, while omitting the argument (or passing null) leaves the connection unfiltered.",
+						"type": {
+							"kind": "LIST",
+							"name": null,
+							"ofType": {
+								"name": "String",
+								"kind": "SCALAR",
+								"ofType": null
+							}
+						},
+						"defaultValue": null,
+						"isDeprecated": false,
+						"deprecationReason": null
+					}
+				],
+				"interfaces": null,
 				"enumValues": null,
 				"possibleTypes": null
 			},
@@ -65796,6 +66380,36 @@
 			},
 			{
 				"kind": "INTERFACE",
+				"name": "WithAcfAboutFields",
+				"description": "Provides access to fields of the &quot;AboutFields&quot; ACF Field Group via the &quot;aboutFields&quot; field",
+				"isOneOf": null,
+				"fields": [
+					{
+						"name": "aboutFields",
+						"description": "Fields of the AboutFields ACF Field Group",
+						"args": [],
+						"type": {
+							"kind": "OBJECT",
+							"name": "AboutFields",
+							"ofType": null
+						},
+						"isDeprecated": false,
+						"deprecationReason": null
+					}
+				],
+				"inputFields": null,
+				"interfaces": [],
+				"enumValues": null,
+				"possibleTypes": [
+					{
+						"kind": "OBJECT",
+						"name": "Page",
+						"ofType": null
+					}
+				]
+			},
+			{
+				"kind": "INTERFACE",
 				"name": "WithAcfBlogPostFields",
 				"description": "Provides access to fields of the &quot;BlogPostFields&quot; ACF Field Group via the &quot;blogPostFields&quot; field",
 				"isOneOf": null,
@@ -66264,6 +66878,18 @@
 								"defaultValue": null,
 								"isDeprecated": false,
 								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "ContentNodeToEnqueuedScriptConnectionWhereArgs",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
 							}
 						],
 						"type": {
@@ -66325,6 +66951,18 @@
 								"defaultValue": null,
 								"isDeprecated": false,
 								"deprecationReason": null
+							},
+							{
+								"name": "where",
+								"description": "Arguments for filtering the connection",
+								"type": {
+									"kind": "INPUT_OBJECT",
+									"name": "ContentNodeToEnqueuedStylesheetConnectionWhereArgs",
+									"ofType": null
+								},
+								"defaultValue": null,
+								"isDeprecated": false,
+								"deprecationReason": null
 							}
 						],
 						"type": {
@@ -66373,7 +67011,7 @@
 					},
 					{
 						"name": "guid",
-						"description": "The global unique identifier for this post. This currently matches the value stored in WP_Post-&gt;guid and the guid column in the &quot;post_objects&quot; database table.",
+						"description": "The global unique identifier for this content node. This is a stable, unique identifier for the node that does not change even if the node is moved or its url changes.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -66625,7 +67263,7 @@
 					},
 					{
 						"name": "slug",
-						"description": "The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table.",
+						"description": "The URL-friendly, human-readable identifier for the content node, used in its permalink.",
 						"args": [],
 						"type": {
 							"kind": "SCALAR",
@@ -66783,7 +67421,7 @@
 					},
 					{
 						"name": "workId",
-						"description": "The id field matches the WP_Post-&gt;ID field.",
+						"description": "The unique numeric identifier for the content node.",
 						"args": [],
 						"type": {
 							"kind": "NON_NULL",

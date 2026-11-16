@@ -1,5 +1,6 @@
 import type { WorkFieldsFragment } from '$lib/graphql/generated/graphql';
 import type { AdjacentWork, WorkItem } from '../../utils/types';
+import { toImageMeta } from './media';
 
 export function toWorkItem(work: WorkFieldsFragment): WorkItem {
 	if (!work.slug || !work.title || !work.date) {
@@ -29,7 +30,8 @@ export function toWorkItem(work: WorkFieldsFragment): WorkItem {
 		role: roles.join(', ') || undefined,
 		at: workplaces.join(', ') || undefined,
 		image: work.featuredImage?.node.sourceUrl ?? undefined,
-		imageAlt: work.featuredImage?.node.altText || work.title
+		imageAlt: work.featuredImage?.node.altText || work.title,
+		imageMeta: toImageMeta(work.featuredImage?.node)
 	};
 }
 
@@ -44,7 +46,8 @@ export function toAdjacentWork(work: WorkItem): AdjacentWork {
 		category: work.category,
 		year: work.year,
 		image: work.image,
-		imageAlt: work.imageAlt
+		imageAlt: work.imageAlt,
+		imageMeta: work.imageMeta
 	};
 }
 

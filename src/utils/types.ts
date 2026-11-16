@@ -1,5 +1,12 @@
 import type { ThemeId } from '$lib/theme.svelte';
 
+/** Responsive-image data for a CMS image, from its WordPress media item. */
+export type ImageMeta = {
+	srcset?: string;
+	width?: number;
+	height?: number;
+};
+
 export type WorkItem = {
 	id: number | string;
 	slug: string;
@@ -22,12 +29,13 @@ export type WorkItem = {
 	at?: string;
 	image?: string;
 	imageAlt?: string;
+	imageMeta?: ImageMeta;
 	previewHue?: number;
 };
 
 export type AdjacentWork = Pick<
 	WorkItem,
-	'slug' | 'title' | 'category' | 'year' | 'image' | 'imageAlt'
+	'slug' | 'title' | 'category' | 'year' | 'image' | 'imageAlt' | 'imageMeta'
 >;
 
 export type ExperienceItem = {
@@ -50,6 +58,7 @@ export type PostItem = {
 	excerpt?: string;
 	image?: string;
 	imageAlt: string;
+	imageMeta?: ImageMeta;
 };
 
 export type AboutProps = {
@@ -57,6 +66,7 @@ export type AboutProps = {
 	content: string;
 	src: string;
 	alt: string;
+	imageMeta?: ImageMeta;
 };
 
 export type CardStackProps = {
@@ -64,6 +74,7 @@ export type CardStackProps = {
 	cardImages: {
 		url: string;
 		alt: string;
+		imageMeta?: ImageMeta;
 	}[];
 };
 
@@ -73,6 +84,7 @@ export type PersonalIntroProps = {
 	description: string;
 	image: string;
 	imageAlt: string;
+	imageMeta?: ImageMeta;
 };
 
 export type SeoProps = {
@@ -102,6 +114,7 @@ export type HomePage = {
 		text: string;
 		image: string;
 		imageAlt: string;
+		imageMeta?: ImageMeta;
 	};
 };
 

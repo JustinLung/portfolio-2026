@@ -21,6 +21,7 @@
 	content={data.page.content}
 	src={data.page.image ?? '/images/justin.avif'}
 	alt={data.page.imageAlt}
+	imageMeta={data.page.imageMeta}
 />
 <Experiences items={data.experiences} />
 {#if data.page.cardImages.length}

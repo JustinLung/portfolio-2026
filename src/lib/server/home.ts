@@ -1,5 +1,6 @@
 import type { GetHomePageQuery } from '$lib/graphql/generated/graphql';
 import type { HomePage } from '../../utils/types';
+import { toImageMeta } from './media';
 
 type HomePageNode = NonNullable<GetHomePageQuery['page']>;
 
@@ -49,7 +50,8 @@ export function toHomePage(page: HomePageNode): HomePage {
 			subtitle: personalSubtitle!,
 			text: personalText!,
 			image: personalImage || '/images/justin.avif',
-			imageAlt: fields.personalImage?.node.altText?.trim() || personalTitle!
+			imageAlt: fields.personalImage?.node.altText?.trim() || personalTitle!,
+			imageMeta: toImageMeta(fields.personalImage?.node)
 		}
 	};
 }

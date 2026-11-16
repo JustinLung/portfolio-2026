@@ -1,10 +1,13 @@
 <script lang="ts">
+	import type { ImageMeta } from '../../../../utils/types';
+	import { imageAttrs } from '../../../../utils/image';
 	import { resolve } from '$app/paths';
 	import { formatShortDate } from '../../../../utils/date';
 
 	let {
 		image,
 		imageAlt,
+		imageMeta,
 		title,
 		category,
 		date,
@@ -12,6 +15,7 @@
 	}: {
 		image?: string;
 		imageAlt: string;
+		imageMeta?: ImageMeta;
 		title: string;
 		category: string;
 		date: string;
@@ -24,7 +28,7 @@
 <header class="write-hero" class:write-hero--no-image={!image}>
 	{#if image}
 		<figure class="write-hero__media">
-			<img src={image} alt={imageAlt} />
+			<img src={image} alt={imageAlt} {...imageAttrs(imageMeta, '100vw')} />
 		</figure>
 	{/if}
 

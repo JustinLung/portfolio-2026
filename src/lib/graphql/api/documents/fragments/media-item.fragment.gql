@@ -4,4 +4,9 @@ fragment MediaItemFields on MediaItem {
 	link
 	sourceUrl
 	altText
+	srcSet
+	mediaDetails {
+		width
+		height
+	}
 }

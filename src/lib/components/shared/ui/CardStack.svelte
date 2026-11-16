@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { imageAttrs } from '../../../../utils/image';
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
 	import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -98,7 +99,12 @@
 	{#each cardImages as image (image.url)}
 		<div class="card">
 			<div class="card-image">
-				<img src={image.url} alt={image.alt} loading="lazy" />
+				<img
+					src={image.url}
+					alt={image.alt}
+					loading="lazy"
+					{...imageAttrs(image.imageMeta, '(min-width: 1024px) 25vw, 75vw')}
+				/>
 			</div>
 		</div>
 	{/each}

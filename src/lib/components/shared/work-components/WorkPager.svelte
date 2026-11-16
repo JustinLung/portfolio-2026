@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { imageAttrs } from '../../../../utils/image';
 	import { resolve } from '$app/paths';
 	import previewPlaceholder from '$lib/assets/work-preview-placeholder.svg';
 	import type { AdjacentWork } from '../../../../utils/types';
@@ -53,7 +54,11 @@
 			</span>
 		</span>
 		<figure class="work-pager__media">
-			<img src={work.image ?? previewPlaceholder} alt={work.imageAlt} />
+			<img
+				src={work.image ?? previewPlaceholder}
+				alt={work.imageAlt}
+				{...imageAttrs(work.imageMeta, '(min-width: 768px) 50vw, 100vw')}
+			/>
 		</figure>
 	</a>
 {/snippet}

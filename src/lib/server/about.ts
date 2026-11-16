@@ -1,4 +1,6 @@
 import type { GetAboutPageQuery } from '$lib/graphql/generated/graphql';
+import type { ImageMeta } from '../../utils/types';
+import { toImageMeta } from './media';
 
 export type AboutPage = {
 	id: string;
@@ -7,9 +9,11 @@ export type AboutPage = {
 	uri: string;
 	image?: string;
 	imageAlt: string;
+	imageMeta?: ImageMeta;
 	cardImages: {
 		url: string;
 		alt: string;
+		imageMeta?: ImageMeta;
 	}[];
 };
 
@@ -29,8 +33,11 @@ export function toAboutPage(page: AboutPageNode): AboutPage {
 		uri: page.uri ?? '/about/',
 		image: page.featuredImage?.node.sourceUrl ?? undefined,
 		imageAlt: page.featuredImage?.node.altText || title,
+		imageMeta: toImageMeta(page.featuredImage?.node),
 		cardImages: (page.aboutImages ?? []).flatMap((image) =>
-			image?.sourceUrl ? [{ url: image.sourceUrl, alt: image.altText || title }] : []
+			image?.sourceUrl
+				? [{ url: image.sourceUrl, alt: image.altText || title, imageMeta: toImageMeta(image) }]
+				: []
 		)
 	};
 }

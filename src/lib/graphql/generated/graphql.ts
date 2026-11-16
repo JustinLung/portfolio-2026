@@ -15,6 +15,27 @@ export type Scalars = {
 	Float: { input: number; output: number };
 };
 
+/** The &quot;AboutFields&quot; Field Group. Added to the Schema by &quot;WPGraphQL for ACF&quot;. */
+export type AboutFields = AboutFields_Fields &
+	AcfFieldGroup &
+	AcfFieldGroupFields & {
+		__typename?: 'AboutFields';
+		/**
+		 * The name of the field group
+		 * @deprecated Use __typename instead
+		 */
+		fieldGroupName?: Maybe<Scalars['String']['output']>;
+	};
+
+/** Interface representing fields of the ACF &quot;AboutFields&quot; Field Group */
+export type AboutFields_Fields = {
+	/**
+	 * The name of the field group
+	 * @deprecated Use __typename instead
+	 */
+	fieldGroupName?: Maybe<Scalars['String']['output']>;
+};
+
 /** Connection between the PostMeta_Fields type and the ContentNode type */
 export type AcfContentNodeConnection = Connection &
 	ContentNodeConnection & {
@@ -157,7 +178,7 @@ export type Category = DatabaseIdentifier &
 		/** The ancestors of the node. Default ordered as lowest (closest to the child) to highest (closest to the root). */
 		ancestors?: Maybe<CategoryToAncestorsCategoryConnection>;
 		/**
-		 * The id field matches the WP_Post-&gt;ID field.
+		 * The unique numeric identifier for the term.
 		 * @deprecated Deprecated in favor of databaseId
 		 */
 		categoryId?: Maybe<Scalars['Int']['output']>;
@@ -249,6 +270,7 @@ export type CategoryEnqueuedScriptsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<TermNodeToEnqueuedScriptConnectionWhereArgs>;
 };
 
 /** A taxonomy term that classifies content. Categories support hierarchy and can be used to create a nested structure. */
@@ -257,6 +279,7 @@ export type CategoryEnqueuedStylesheetsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<TermNodeToEnqueuedStylesheetConnectionWhereArgs>;
 };
 
 /** A taxonomy term that classifies content. Categories support hierarchy and can be used to create a nested structure. */
@@ -741,17 +764,17 @@ export type Comment = DatabaseIdentifier &
 	Node &
 	UniformResourceIdentifiable & {
 		__typename?: 'Comment';
-		/** User agent used to post the comment. This field is equivalent to WP_Comment-&gt;comment_agent and the value matching the &quot;comment_agent&quot; column in SQL. */
+		/** User agent (browser or client) used to post the comment. */
 		agent?: Maybe<Scalars['String']['output']>;
 		/**
-		 * The approval status of the comment. This field is equivalent to WP_Comment-&gt;comment_approved and the value matching the &quot;comment_approved&quot; column in SQL.
+		 * The approval status of the comment.
 		 * @deprecated Deprecated in favor of the `status` field
 		 */
 		approved?: Maybe<Scalars['Boolean']['output']>;
 		/** The author of the comment */
 		author?: Maybe<CommentToCommenterConnectionEdge>;
 		/**
-		 * IP address for the author at the time of commenting. This field is equivalent to WP_Comment-&gt;comment_author_IP and the value matching the &quot;comment_author_IP&quot; column in SQL.
+		 * IP address for the author at the time of commenting.
 		 * @deprecated Use the ipAddress field on the edge between the comment and author
 		 */
 		authorIp?: Maybe<Scalars['String']['output']>;
@@ -762,13 +785,13 @@ export type Comment = DatabaseIdentifier &
 		commentId?: Maybe<Scalars['Int']['output']>;
 		/** Connection between the Comment type and the ContentNode type */
 		commentedOn?: Maybe<CommentToContentNodeConnectionEdge>;
-		/** Content of the comment. This field is equivalent to WP_Comment-&gt;comment_content and the value matching the &quot;comment_content&quot; column in SQL. */
+		/** Content of the comment. */
 		content?: Maybe<Scalars['String']['output']>;
 		/** The unique identifier stored in the database */
 		databaseId: Scalars['Int']['output'];
-		/** Date the comment was posted in local time. This field is equivalent to WP_Comment-&gt;date and the value matching the &quot;date&quot; column in SQL. */
+		/** Date the comment was posted in local time. */
 		date?: Maybe<Scalars['String']['output']>;
-		/** Date the comment was posted in GMT. This field is equivalent to WP_Comment-&gt;date_gmt and the value matching the &quot;date_gmt&quot; column in SQL. */
+		/** Date the comment was posted in GMT. */
 		dateGmt?: Maybe<Scalars['String']['output']>;
 		/** The globally unique identifier for the comment object */
 		id: Scalars['ID']['output'];
@@ -784,7 +807,7 @@ export type Comment = DatabaseIdentifier &
 		isRestricted?: Maybe<Scalars['Boolean']['output']>;
 		/** Whether the node is a Term */
 		isTermNode: Scalars['Boolean']['output'];
-		/** Karma value for the comment. This field is equivalent to WP_Comment-&gt;comment_karma and the value matching the &quot;comment_karma&quot; column in SQL. */
+		/** Karma value for the comment. */
 		karma?: Maybe<Scalars['Int']['output']>;
 		/** The permalink of the comment */
 		link?: Maybe<Scalars['String']['output']>;
@@ -796,9 +819,9 @@ export type Comment = DatabaseIdentifier &
 		parentId?: Maybe<Scalars['ID']['output']>;
 		/** Connection between the Comment type and the Comment type */
 		replies?: Maybe<CommentToCommentConnection>;
-		/** The approval status of the comment. This field is equivalent to WP_Comment-&gt;comment_approved and the value matching the &quot;comment_approved&quot; column in SQL. */
+		/** The approval status of the comment. */
 		status?: Maybe<CommentStatusEnum>;
-		/** Type of comment. This field is equivalent to WP_Comment-&gt;comment_type and the value matching the &quot;comment_type&quot; column in SQL. */
+		/** Type of comment. */
 		type?: Maybe<Scalars['String']['output']>;
 		/** The unique resource identifier path */
 		uri?: Maybe<Scalars['String']['output']>;
@@ -1009,7 +1032,7 @@ export type CommentToCommenterConnectionEdge = CommenterConnectionEdge &
 		cursor?: Maybe<Scalars['String']['output']>;
 		/** Email address representing the author for this particular comment */
 		email?: Maybe<Scalars['String']['output']>;
-		/** IP address of the author at the time of making this comment. This field is equivalent to WP_Comment-&gt;comment_author_IP and the value matching the &quot;comment_author_IP&quot; column in SQL. */
+		/** IP address of the author at the time of making this comment. */
 		ipAddress?: Maybe<Scalars['String']['output']>;
 		/** The display name of the comment author for this particular comment */
 		name?: Maybe<Scalars['String']['output']>;
@@ -1197,7 +1220,7 @@ export type ContentNode = {
 	enqueuedScripts?: Maybe<ContentNodeToEnqueuedScriptConnection>;
 	/** Connection between the ContentNode type and the EnqueuedStylesheet type */
 	enqueuedStylesheets?: Maybe<ContentNodeToEnqueuedStylesheetConnection>;
-	/** The global unique identifier for this post. This currently matches the value stored in WP_Post-&gt;guid and the guid column in the &quot;post_objects&quot; database table. */
+	/** The global unique identifier for this content node. This is a stable, unique identifier for the node that does not change even if the node is moved or its url changes. */
 	guid?: Maybe<Scalars['String']['output']>;
 	/** The globally unique ID for the object */
 	id: Scalars['ID']['output'];
@@ -1225,9 +1248,9 @@ export type ContentNode = {
 	modifiedGmt?: Maybe<Scalars['String']['output']>;
 	/** The database id of the preview node */
 	previewRevisionDatabaseId?: Maybe<Scalars['Int']['output']>;
-	/** Whether the object is a node in the preview state */
+	/** The globally unique ID of the preview node */
 	previewRevisionId?: Maybe<Scalars['ID']['output']>;
-	/** The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table. */
+	/** The URL-friendly, human-readable identifier for the content node, used in its permalink. */
 	slug?: Maybe<Scalars['String']['output']>;
 	/** The current status of the object */
 	status?: Maybe<Scalars['String']['output']>;
@@ -1243,6 +1266,7 @@ export type ContentNodeEnqueuedScriptsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<ContentNodeToEnqueuedScriptConnectionWhereArgs>;
 };
 
 /** Base interface for content objects like posts, pages, and media items. Provides common fields available across these content types. */
@@ -1251,6 +1275,7 @@ export type ContentNodeEnqueuedStylesheetsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<ContentNodeToEnqueuedStylesheetConnectionWhereArgs>;
 };
 
 /** A paginated collection of ContentNode Nodes, Supports cursor-based pagination and filtering to efficiently retrieve sets of ContentNode Nodes */
@@ -1365,6 +1390,12 @@ export type ContentNodeToEnqueuedScriptConnectionPageInfo = EnqueuedScriptConnec
 		startCursor?: Maybe<Scalars['String']['output']>;
 	};
 
+/** Arguments for filtering the ContentNodeToEnqueuedScriptConnection connection */
+export type ContentNodeToEnqueuedScriptConnectionWhereArgs = {
+	/** Limit results to assets whose handle is in the provided list. Handles that do not match an asset are ignored. An empty list matches no assets, while omitting the argument (or passing null) leaves the connection unfiltered. */
+	handlesIn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
 /** Connection between the ContentNode type and the EnqueuedStylesheet type */
 export type ContentNodeToEnqueuedStylesheetConnection = Connection &
 	EnqueuedStylesheetConnection & {
@@ -1402,6 +1433,12 @@ export type ContentNodeToEnqueuedStylesheetConnectionPageInfo =
 			/** When paginating backwards, the cursor to continue. */
 			startCursor?: Maybe<Scalars['String']['output']>;
 		};
+
+/** Arguments for filtering the ContentNodeToEnqueuedStylesheetConnection connection */
+export type ContentNodeToEnqueuedStylesheetConnectionWhereArgs = {
+	/** Limit results to assets whose handle is in the provided list. Handles that do not match an asset are ignored. An empty list matches no assets, while omitting the argument (or passing null) leaves the connection unfiltered. */
+	handlesIn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
 
 /** A layout pattern that can help inform how content might be structured and displayed. Templates can define specialized layouts for different types of content. */
 export type ContentTemplate = {
@@ -2543,11 +2580,11 @@ export type Experience = ContentNode &
 		/** Fields of the ExperienceFields ACF Field Group */
 		experienceFields?: Maybe<ExperienceFields>;
 		/**
-		 * The id field matches the WP_Post-&gt;ID field.
+		 * The unique numeric identifier for the content node.
 		 * @deprecated Deprecated in favor of the databaseId field
 		 */
 		experienceId: Scalars['Int']['output'];
-		/** The global unique identifier for this post. This currently matches the value stored in WP_Post-&gt;guid and the guid column in the &quot;post_objects&quot; database table. */
+		/** The global unique identifier for this content node. This is a stable, unique identifier for the node that does not change even if the node is moved or its url changes. */
 		guid?: Maybe<Scalars['String']['output']>;
 		/** Whether the experience object is password protected. */
 		hasPassword?: Maybe<Scalars['Boolean']['output']>;
@@ -2588,7 +2625,7 @@ export type Experience = ContentNode &
 		previewRevisionDatabaseId?: Maybe<Scalars['Int']['output']>;
 		/** Whether the object is a node in the preview state */
 		previewRevisionId?: Maybe<Scalars['ID']['output']>;
-		/** The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table. */
+		/** The URL-friendly, human-readable identifier for the content node, used in its permalink. */
 		slug?: Maybe<Scalars['String']['output']>;
 		/** The current status of the object */
 		status?: Maybe<Scalars['String']['output']>;
@@ -2614,6 +2651,7 @@ export type ExperienceEnqueuedScriptsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<ContentNodeToEnqueuedScriptConnectionWhereArgs>;
 };
 
 /** The experience type */
@@ -2622,6 +2660,7 @@ export type ExperienceEnqueuedStylesheetsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<ContentNodeToEnqueuedStylesheetConnectionWhereArgs>;
 };
 
 /** The experience type */
@@ -2844,7 +2883,7 @@ export type HierarchicalContentNode = {
 	enqueuedScripts?: Maybe<ContentNodeToEnqueuedScriptConnection>;
 	/** Connection between the ContentNode type and the EnqueuedStylesheet type */
 	enqueuedStylesheets?: Maybe<ContentNodeToEnqueuedStylesheetConnection>;
-	/** The global unique identifier for this post. This currently matches the value stored in WP_Post-&gt;guid and the guid column in the &quot;post_objects&quot; database table. */
+	/** The global unique identifier for this content node. This is a stable, unique identifier for the node that does not change even if the node is moved or its url changes. */
 	guid?: Maybe<Scalars['String']['output']>;
 	/** The globally unique ID for the object */
 	id: Scalars['ID']['output'];
@@ -2878,9 +2917,9 @@ export type HierarchicalContentNode = {
 	parentId?: Maybe<Scalars['ID']['output']>;
 	/** The database id of the preview node */
 	previewRevisionDatabaseId?: Maybe<Scalars['Int']['output']>;
-	/** Whether the object is a node in the preview state */
+	/** The globally unique ID of the preview node */
 	previewRevisionId?: Maybe<Scalars['ID']['output']>;
-	/** The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table. */
+	/** The URL-friendly, human-readable identifier for the content node, used in its permalink. */
 	slug?: Maybe<Scalars['String']['output']>;
 	/** The current status of the object */
 	status?: Maybe<Scalars['String']['output']>;
@@ -2914,6 +2953,7 @@ export type HierarchicalContentNodeEnqueuedScriptsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<ContentNodeToEnqueuedScriptConnectionWhereArgs>;
 };
 
 /** Content that can be organized in a parent-child structure. Provides fields for navigating up and down the hierarchy and maintaining structured relationships. */
@@ -2922,6 +2962,7 @@ export type HierarchicalContentNodeEnqueuedStylesheetsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<ContentNodeToEnqueuedStylesheetConnectionWhereArgs>;
 };
 
 /** Connection between the HierarchicalContentNode type and the ContentNode type */
@@ -3164,6 +3205,7 @@ export type HierarchicalTermNodeEnqueuedScriptsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<TermNodeToEnqueuedScriptConnectionWhereArgs>;
 };
 
 /** Term node with hierarchical (parent/child) relationships */
@@ -3172,6 +3214,7 @@ export type HierarchicalTermNodeEnqueuedStylesheetsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<TermNodeToEnqueuedStylesheetConnectionWhereArgs>;
 };
 
 /** The &quot;HomeFields&quot; Field Group. Added to the Schema by &quot;WPGraphQL for ACF&quot;. */
@@ -3310,7 +3353,7 @@ export type MediaItem = ContentNode &
 		filePath?: Maybe<Scalars['String']['output']>;
 		/** The filesize in bytes of the resource */
 		fileSize?: Maybe<Scalars['Int']['output']>;
-		/** The global unique identifier for this post. This currently matches the value stored in WP_Post-&gt;guid and the guid column in the &quot;post_objects&quot; database table. */
+		/** The global unique identifier for this content node. This is a stable, unique identifier for the node that does not change even if the node is moved or its url changes. */
 		guid?: Maybe<Scalars['String']['output']>;
 		/** Whether the attachment object is password protected. */
 		hasPassword?: Maybe<Scalars['Boolean']['output']>;
@@ -3337,7 +3380,7 @@ export type MediaItem = ContentNode &
 		/** Details about the mediaItem */
 		mediaDetails?: Maybe<MediaDetails>;
 		/**
-		 * The id field matches the WP_Post-&gt;ID field.
+		 * The unique numeric identifier for the content node.
 		 * @deprecated Deprecated in favor of the databaseId field
 		 */
 		mediaItemId: Scalars['Int']['output'];
@@ -3361,11 +3404,11 @@ export type MediaItem = ContentNode &
 		password?: Maybe<Scalars['String']['output']>;
 		/** The database id of the preview node */
 		previewRevisionDatabaseId?: Maybe<Scalars['Int']['output']>;
-		/** Whether the object is a node in the preview state */
+		/** The globally unique ID of the preview node */
 		previewRevisionId?: Maybe<Scalars['ID']['output']>;
 		/** The sizes attribute value for an image. */
 		sizes?: Maybe<Scalars['String']['output']>;
-		/** The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table. */
+		/** The URL-friendly, human-readable identifier for the content node, used in its permalink. */
 		slug?: Maybe<Scalars['String']['output']>;
 		/** Url of the mediaItem */
 		sourceUrl?: Maybe<Scalars['String']['output']>;
@@ -3424,6 +3467,7 @@ export type MediaItemEnqueuedScriptsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<ContentNodeToEnqueuedScriptConnectionWhereArgs>;
 };
 
 /** Represents uploaded media, including images, videos, documents, and audio files. */
@@ -3432,6 +3476,7 @@ export type MediaItemEnqueuedStylesheetsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<ContentNodeToEnqueuedStylesheetConnectionWhereArgs>;
 };
 
 /** Represents uploaded media, including images, videos, documents, and audio files. */
@@ -3711,9 +3756,9 @@ export type Menu = DatabaseIdentifier &
 		menuId?: Maybe<Scalars['Int']['output']>;
 		/** Connection between the Menu type and the MenuItem type */
 		menuItems?: Maybe<MenuToMenuItemConnection>;
-		/** Display name of the menu. Equivalent to WP_Term-&gt;name. */
+		/** Display name of the menu. */
 		name?: Maybe<Scalars['String']['output']>;
-		/** The url friendly name of the menu. Equivalent to WP_Term-&gt;slug */
+		/** The url friendly name of the menu. */
 		slug?: Maybe<Scalars['String']['output']>;
 	};
 
@@ -4401,8 +4446,11 @@ export type Page = ContentNode &
 	NodeWithTitle &
 	Previewable &
 	UniformResourceIdentifiable &
+	WithAcfAboutFields &
 	WithAcfHomeFields & {
 		__typename?: 'Page';
+		/** Fields of the AboutFields ACF Field Group */
+		aboutFields?: Maybe<AboutFields>;
 		/** Images selected for the About page. */
 		aboutImages?: Maybe<Array<Maybe<MediaItem>>>;
 		/** Returns ancestors of the node. Default ordered as lowest (closest to the child) to highest (closest to the root). */
@@ -4449,7 +4497,7 @@ export type Page = ContentNode &
 		featuredImageDatabaseId?: Maybe<Scalars['Int']['output']>;
 		/** Globally unique ID of the featured image assigned to the node */
 		featuredImageId?: Maybe<Scalars['ID']['output']>;
-		/** The global unique identifier for this post. This currently matches the value stored in WP_Post-&gt;guid and the guid column in the &quot;post_objects&quot; database table. */
+		/** The global unique identifier for this content node. This is a stable, unique identifier for the node that does not change even if the node is moved or its url changes. */
 		guid?: Maybe<Scalars['String']['output']>;
 		/** Whether the page object is password protected. */
 		hasPassword?: Maybe<Scalars['Boolean']['output']>;
@@ -4486,7 +4534,7 @@ export type Page = ContentNode &
 		/** The GMT modified time for a post. If a post was recently updated the modified field will change to match the corresponding time in GMT. */
 		modifiedGmt?: Maybe<Scalars['String']['output']>;
 		/**
-		 * The id field matches the WP_Post-&gt;ID field.
+		 * The unique numeric identifier for the content node.
 		 * @deprecated Deprecated in favor of the databaseId field
 		 */
 		pageId: Scalars['Int']['output'];
@@ -4502,13 +4550,13 @@ export type Page = ContentNode &
 		preview?: Maybe<PageToPreviewConnectionEdge>;
 		/** The database id of the preview node */
 		previewRevisionDatabaseId?: Maybe<Scalars['Int']['output']>;
-		/** Whether the object is a node in the preview state */
+		/** The globally unique ID of the preview node */
 		previewRevisionId?: Maybe<Scalars['ID']['output']>;
 		/** If the current node is a revision, this field exposes the node this is a revision of. Returns null if the node is not a revision of another node. */
 		revisionOf?: Maybe<NodeWithRevisionsToContentNodeConnectionEdge>;
 		/** Connection between the Page type and the page type */
 		revisions?: Maybe<PageToRevisionConnection>;
-		/** The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table. */
+		/** The URL-friendly, human-readable identifier for the content node, used in its permalink. */
 		slug?: Maybe<Scalars['String']['output']>;
 		/** The current status of the object */
 		status?: Maybe<Scalars['String']['output']>;
@@ -4558,6 +4606,7 @@ export type PageEnqueuedScriptsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<ContentNodeToEnqueuedScriptConnectionWhereArgs>;
 };
 
 /** A standalone content entry generally used for static, non-chronological content such as &quot;About Us&quot; or &quot;Contact&quot; pages. */
@@ -4566,6 +4615,7 @@ export type PageEnqueuedStylesheetsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<ContentNodeToEnqueuedStylesheetConnectionWhereArgs>;
 };
 
 /** A standalone content entry generally used for static, non-chronological content such as &quot;About Us&quot; or &quot;Contact&quot; pages. */
@@ -4985,7 +5035,7 @@ export type Post = ContentNode &
 		featuredImageDatabaseId?: Maybe<Scalars['Int']['output']>;
 		/** Globally unique ID of the featured image assigned to the node */
 		featuredImageId?: Maybe<Scalars['ID']['output']>;
-		/** The global unique identifier for this post. This currently matches the value stored in WP_Post-&gt;guid and the guid column in the &quot;post_objects&quot; database table. */
+		/** The global unique identifier for this content node. This is a stable, unique identifier for the node that does not change even if the node is moved or its url changes. */
 		guid?: Maybe<Scalars['String']['output']>;
 		/** Whether the post object is password protected. */
 		hasPassword?: Maybe<Scalars['Boolean']['output']>;
@@ -5031,7 +5081,7 @@ export type Post = ContentNode &
 		/** Connection between the Post type and the postFormat type */
 		postFormats?: Maybe<PostToPostFormatConnection>;
 		/**
-		 * The id field matches the WP_Post-&gt;ID field.
+		 * The unique numeric identifier for the content node.
 		 * @deprecated Deprecated in favor of the databaseId field
 		 */
 		postId: Scalars['Int']['output'];
@@ -5047,7 +5097,7 @@ export type Post = ContentNode &
 		revisionOf?: Maybe<NodeWithRevisionsToContentNodeConnectionEdge>;
 		/** Connection between the Post type and the post type */
 		revisions?: Maybe<PostToRevisionConnection>;
-		/** The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table. */
+		/** The URL-friendly, human-readable identifier for the content node, used in its permalink. */
 		slug?: Maybe<Scalars['String']['output']>;
 		/** The current status of the object */
 		status?: Maybe<Scalars['String']['output']>;
@@ -5102,6 +5152,7 @@ export type PostEnqueuedScriptsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<ContentNodeToEnqueuedScriptConnectionWhereArgs>;
 };
 
 /** A chronological content entry typically used for blog posts, news articles, or similar date-based content. */
@@ -5110,6 +5161,7 @@ export type PostEnqueuedStylesheetsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<ContentNodeToEnqueuedStylesheetConnectionWhereArgs>;
 };
 
 /** A chronological content entry typically used for blog posts, news articles, or similar date-based content. */
@@ -5246,7 +5298,7 @@ export type PostFormat = DatabaseIdentifier &
 		/** The human friendly name of the object. */
 		name?: Maybe<Scalars['String']['output']>;
 		/**
-		 * The id field matches the WP_Post-&gt;ID field.
+		 * The unique numeric identifier for the term.
 		 * @deprecated Deprecated in favor of databaseId
 		 */
 		postFormatId?: Maybe<Scalars['Int']['output']>;
@@ -5281,6 +5333,7 @@ export type PostFormatEnqueuedScriptsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<TermNodeToEnqueuedScriptConnectionWhereArgs>;
 };
 
 /** A standardized classification system for content presentation styles. These formats can be used to display content differently based on type, such as &quot;standard&quot;, &quot;gallery&quot;, &quot;video&quot;, etc. */
@@ -5289,6 +5342,7 @@ export type PostFormatEnqueuedStylesheetsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<TermNodeToEnqueuedStylesheetConnectionWhereArgs>;
 };
 
 /** A standardized classification system for content presentation styles. These formats can be used to display content differently based on type, such as &quot;standard&quot;, &quot;gallery&quot;, &quot;video&quot;, etc. */
@@ -6901,7 +6955,6 @@ export type RootQueryCommentsArgs = {
 
 /** The root entry point into the Graph */
 export type RootQueryContentNodeArgs = {
-	asPreview?: InputMaybe<Scalars['Boolean']['input']>;
 	contentType?: InputMaybe<ContentTypeEnum>;
 	id: Scalars['ID']['input'];
 	idType?: InputMaybe<ContentNodeIdTypeEnum>;
@@ -6932,7 +6985,6 @@ export type RootQueryContentTypesArgs = {
 
 /** The root entry point into the Graph */
 export type RootQueryExperienceArgs = {
-	asPreview?: InputMaybe<Scalars['Boolean']['input']>;
 	id: Scalars['ID']['input'];
 	idType?: InputMaybe<ExperienceIdType>;
 };
@@ -6956,7 +7008,6 @@ export type RootQueryExperiencesArgs = {
 
 /** The root entry point into the Graph */
 export type RootQueryMediaItemArgs = {
-	asPreview?: InputMaybe<Scalars['Boolean']['input']>;
 	id: Scalars['ID']['input'];
 	idType?: InputMaybe<MediaItemIdType>;
 };
@@ -7020,7 +7071,6 @@ export type RootQueryNodeByUriArgs = {
 
 /** The root entry point into the Graph */
 export type RootQueryPageArgs = {
-	asPreview?: InputMaybe<Scalars['Boolean']['input']>;
 	id: Scalars['ID']['input'];
 	idType?: InputMaybe<PageIdType>;
 };
@@ -7057,7 +7107,6 @@ export type RootQueryPluginsArgs = {
 
 /** The root entry point into the Graph */
 export type RootQueryPostArgs = {
-	asPreview?: InputMaybe<Scalars['Boolean']['input']>;
 	id: Scalars['ID']['input'];
 	idType?: InputMaybe<PostIdType>;
 };
@@ -7100,6 +7149,7 @@ export type RootQueryRegisteredScriptsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<RootQueryToEnqueuedScriptConnectionWhereArgs>;
 };
 
 /** The root entry point into the Graph */
@@ -7108,6 +7158,7 @@ export type RootQueryRegisteredStylesheetsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<RootQueryToEnqueuedStylesheetConnectionWhereArgs>;
 };
 
 /** The root entry point into the Graph */
@@ -7207,7 +7258,6 @@ export type RootQueryUsersArgs = {
 
 /** The root entry point into the Graph */
 export type RootQueryWorkArgs = {
-	asPreview?: InputMaybe<Scalars['Boolean']['input']>;
 	id: Scalars['ID']['input'];
 	idType?: InputMaybe<WorkIdType>;
 };
@@ -7564,6 +7614,12 @@ export type RootQueryToEnqueuedScriptConnectionPageInfo = EnqueuedScriptConnecti
 		startCursor?: Maybe<Scalars['String']['output']>;
 	};
 
+/** Arguments for filtering the RootQueryToEnqueuedScriptConnection connection */
+export type RootQueryToEnqueuedScriptConnectionWhereArgs = {
+	/** Limit results to assets whose handle is in the provided list. Handles that do not match an asset are ignored. An empty list matches no assets, while omitting the argument (or passing null) leaves the connection unfiltered. */
+	handlesIn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
 /** Connection between the RootQuery type and the EnqueuedStylesheet type */
 export type RootQueryToEnqueuedStylesheetConnection = Connection &
 	EnqueuedStylesheetConnection & {
@@ -7600,6 +7656,12 @@ export type RootQueryToEnqueuedStylesheetConnectionPageInfo = EnqueuedStylesheet
 		/** When paginating backwards, the cursor to continue. */
 		startCursor?: Maybe<Scalars['String']['output']>;
 	};
+
+/** Arguments for filtering the RootQueryToEnqueuedStylesheetConnection connection */
+export type RootQueryToEnqueuedStylesheetConnectionWhereArgs = {
+	/** Limit results to assets whose handle is in the provided list. Handles that do not match an asset are ignored. An empty list matches no assets, while omitting the argument (or passing null) leaves the connection unfiltered. */
+	handlesIn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
 
 /** Connection between the RootQuery type and the experience type */
 export type RootQueryToExperienceConnection = Connection &
@@ -8828,7 +8890,7 @@ export type Tag = DatabaseIdentifier &
 		/** An alphanumeric identifier for the object unique to its type. */
 		slug?: Maybe<Scalars['String']['output']>;
 		/**
-		 * The id field matches the WP_Post-&gt;ID field.
+		 * The unique numeric identifier for the term.
 		 * @deprecated Deprecated in favor of databaseId
 		 */
 		tagId?: Maybe<Scalars['Int']['output']>;
@@ -8859,6 +8921,7 @@ export type TagEnqueuedScriptsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<TermNodeToEnqueuedScriptConnectionWhereArgs>;
 };
 
 /** A taxonomy term used to organize and classify content. Tags do not have a hierarchy and are generally used for more specific classifications. */
@@ -8867,6 +8930,7 @@ export type TagEnqueuedStylesheetsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<TermNodeToEnqueuedStylesheetConnectionWhereArgs>;
 };
 
 /** A taxonomy term used to organize and classify content. Tags do not have a hierarchy and are generally used for more specific classifications. */
@@ -9128,7 +9192,7 @@ export type Taxonomy = Node & {
 	connectedContentTypes?: Maybe<TaxonomyToContentTypeConnection>;
 	/** List of Term Nodes associated with the Taxonomy */
 	connectedTerms?: Maybe<TaxonomyToTermNodeConnection>;
-	/** Description of the taxonomy. This field is equivalent to WP_Taxonomy-&gt;description */
+	/** Description of the taxonomy. */
 	description?: Maybe<Scalars['String']['output']>;
 	/** The plural name of the post type within the GraphQL Schema. */
 	graphqlPluralName?: Maybe<Scalars['String']['output']>;
@@ -9142,15 +9206,17 @@ export type Taxonomy = Node & {
 	isRestricted?: Maybe<Scalars['Boolean']['output']>;
 	/** Name of the taxonomy shown in the menu. Usually plural. */
 	label?: Maybe<Scalars['String']['output']>;
-	/** The display name of the taxonomy. This field is equivalent to WP_Taxonomy-&gt;label */
+	/** The display name of the taxonomy. */
 	name?: Maybe<Scalars['String']['output']>;
-	/** Whether the taxonomy is publicly queryable */
+	/** Whether the taxonomy is intended for public use. This is a broad statement of intent rather than a behavior of its own: the more specific settings, such as publiclyQueryable, showUi and showInNavMenus, follow it unless they are given their own value. */
 	public?: Maybe<Scalars['Boolean']['output']>;
+	/** Whether terms in this taxonomy can be queried from the front end of the site. */
+	publiclyQueryable?: Maybe<Scalars['Boolean']['output']>;
 	/** Name of content type to display in REST API &quot;wp/v2&quot; namespace. */
 	restBase?: Maybe<Scalars['String']['output']>;
 	/** The REST Controller class assigned to handling this content type. */
 	restControllerClass?: Maybe<Scalars['String']['output']>;
-	/** Whether to show the taxonomy as part of a tag cloud widget. This field is equivalent to WP_Taxonomy-&gt;show_tagcloud */
+	/** Whether to show the taxonomy as part of a tag cloud widget. */
 	showCloud?: Maybe<Scalars['Boolean']['output']>;
 	/** Whether to display a column for the taxonomy on its post type listing screens. */
 	showInAdminColumn?: Maybe<Scalars['Boolean']['output']>;
@@ -9361,6 +9427,7 @@ export type TermNodeEnqueuedScriptsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<TermNodeToEnqueuedScriptConnectionWhereArgs>;
 };
 
 /** Base interface for taxonomy terms such as categories and tags. Terms are used to organize and classify content. */
@@ -9369,6 +9436,7 @@ export type TermNodeEnqueuedStylesheetsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<TermNodeToEnqueuedStylesheetConnectionWhereArgs>;
 };
 
 /** A paginated collection of TermNode Nodes, Supports cursor-based pagination and filtering to efficiently retrieve sets of TermNode Nodes */
@@ -9452,6 +9520,12 @@ export type TermNodeToEnqueuedScriptConnectionPageInfo = EnqueuedScriptConnectio
 		startCursor?: Maybe<Scalars['String']['output']>;
 	};
 
+/** Arguments for filtering the TermNodeToEnqueuedScriptConnection connection */
+export type TermNodeToEnqueuedScriptConnectionWhereArgs = {
+	/** Limit results to assets whose handle is in the provided list. Handles that do not match an asset are ignored. An empty list matches no assets, while omitting the argument (or passing null) leaves the connection unfiltered. */
+	handlesIn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
 /** Connection between the TermNode type and the EnqueuedStylesheet type */
 export type TermNodeToEnqueuedStylesheetConnection = Connection &
 	EnqueuedStylesheetConnection & {
@@ -9489,6 +9563,12 @@ export type TermNodeToEnqueuedStylesheetConnectionPageInfo = EnqueuedStylesheetC
 		startCursor?: Maybe<Scalars['String']['output']>;
 	};
 
+/** Arguments for filtering the TermNodeToEnqueuedStylesheetConnection connection */
+export type TermNodeToEnqueuedStylesheetConnectionWhereArgs = {
+	/** Limit results to assets whose handle is in the provided list. Handles that do not match an asset are ignored. An empty list matches no assets, while omitting the argument (or passing null) leaves the connection unfiltered. */
+	handlesIn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
 /** Sorting attributes for taxonomy term collections. Determines which property of taxonomy terms is used for ordering results. */
 export enum TermObjectsConnectionOrderbyEnum {
 	/** Ordering by number of associated content items. */
@@ -9510,27 +9590,27 @@ export enum TermObjectsConnectionOrderbyEnum {
 /** A theme object */
 export type Theme = Node & {
 	__typename?: 'Theme';
-	/** Name of the theme author(s), could also be a company name. This field is equivalent to WP_Theme-&gt;get( &quot;Author&quot; ). */
+	/** Name of the theme author(s), could also be a company name. */
 	author?: Maybe<Scalars['String']['output']>;
-	/** URI for the author/company website. This field is equivalent to WP_Theme-&gt;get( &quot;AuthorURI&quot; ). */
+	/** URI for the author/company website. */
 	authorUri?: Maybe<Scalars['String']['output']>;
-	/** The description of the theme. This field is equivalent to WP_Theme-&gt;get( &quot;Description&quot; ). */
+	/** The description of the theme. */
 	description?: Maybe<Scalars['String']['output']>;
 	/** The globally unique identifier of the theme object. */
 	id: Scalars['ID']['output'];
 	/** Whether the object is restricted from the current viewer */
 	isRestricted?: Maybe<Scalars['Boolean']['output']>;
-	/** Display name of the theme. This field is equivalent to WP_Theme-&gt;get( &quot;Name&quot; ). */
+	/** Display name of the theme. */
 	name?: Maybe<Scalars['String']['output']>;
-	/** The URL of the screenshot for the theme. The screenshot is intended to give an overview of what the theme looks like. This field is equivalent to WP_Theme-&gt;get_screenshot(). */
+	/** The URL of the screenshot for the theme. The screenshot is intended to give an overview of what the theme looks like. */
 	screenshot?: Maybe<Scalars['String']['output']>;
-	/** The theme slug is used to internally match themes. Theme slugs can have subdirectories like: my-theme/sub-theme. This field is equivalent to WP_Theme-&gt;get_stylesheet(). */
+	/** The theme slug is used to internally match themes. Theme slugs can have subdirectories like: my-theme/sub-theme. */
 	slug?: Maybe<Scalars['String']['output']>;
-	/** URI for the author/company website. This field is equivalent to WP_Theme-&gt;get( &quot;Tags&quot; ). */
+	/** A list of tags associated with the theme, typically describing its features (e.g. custom-logo, accessibility-ready, full-site-editing). */
 	tags?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-	/** A URI if the theme has a website associated with it. The Theme URI is handy for directing users to a theme site for support etc. This field is equivalent to WP_Theme-&gt;get( &quot;ThemeURI&quot; ). */
+	/** A URI if the theme has a website associated with it. The Theme URI is handy for directing users to a theme site for support etc. */
 	themeUri?: Maybe<Scalars['String']['output']>;
-	/** The current version of the theme. This field is equivalent to WP_Theme-&gt;get( &quot;Version&quot; ). */
+	/** The current version of the theme. */
 	version?: Maybe<Scalars['String']['output']>;
 };
 
@@ -10027,15 +10107,15 @@ export type User = Commenter &
 		databaseId: Scalars['Int']['output'];
 		/** Description of the user. */
 		description?: Maybe<Scalars['String']['output']>;
-		/** Email address of the user. This is equivalent to the WP_User-&gt;user_email property. */
+		/** Email address of the user. */
 		email?: Maybe<Scalars['String']['output']>;
 		/** Connection between the User type and the EnqueuedScript type */
 		enqueuedScripts?: Maybe<UserToEnqueuedScriptConnection>;
 		/** Connection between the User type and the EnqueuedStylesheet type */
 		enqueuedStylesheets?: Maybe<UserToEnqueuedStylesheetConnection>;
-		/** A complete list of capabilities including capabilities inherited from a role. This is equivalent to the array keys of WP_User-&gt;allcaps. */
+		/** A complete list of capabilities including capabilities inherited from a role. */
 		extraCapabilities?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-		/** First name of the user. This is equivalent to the WP_User-&gt;user_first_name property. */
+		/** First name of the user. */
 		firstName?: Maybe<Scalars['String']['output']>;
 		/** Whether the user has enabled keyboard shortcuts for comment moderation. Defaults to false. */
 		hasCommentShortcutsEnabled?: Maybe<Scalars['Boolean']['output']>;
@@ -10057,15 +10137,15 @@ export type User = Commenter &
 		isRestricted?: Maybe<Scalars['Boolean']['output']>;
 		/** Whether the node is a Term */
 		isTermNode: Scalars['Boolean']['output'];
-		/** Last name of the user. This is equivalent to the WP_User-&gt;user_last_name property. */
+		/** Last name of the user. */
 		lastName?: Maybe<Scalars['String']['output']>;
 		/** The preferred language locale set for the user. Value derived from get_user_locale(). */
 		locale?: Maybe<Scalars['String']['output']>;
 		/** Connection between the User type and the mediaItem type */
 		mediaItems?: Maybe<UserToMediaItemConnection>;
-		/** Display name of the user. This is equivalent to the WP_User-&gt;display_name property. */
+		/** Display name of the user. */
 		name?: Maybe<Scalars['String']['output']>;
-		/** The nicename for the user. This field is equivalent to WP_User-&gt;user_nicename */
+		/** The url friendly name for the user, used to reference the user in a public url. */
 		nicename?: Maybe<Scalars['String']['output']>;
 		/** Nickname of the user. */
 		nickname?: Maybe<Scalars['String']['output']>;
@@ -10081,18 +10161,18 @@ export type User = Commenter &
 		roles?: Maybe<UserToUserRoleConnection>;
 		/** Whether the Toolbar should be displayed when the user is viewing the site. */
 		shouldShowAdminToolbar?: Maybe<Scalars['Boolean']['output']>;
-		/** The slug for the user. This field is equivalent to WP_User-&gt;user_nicename */
+		/** The url friendly identifier for the user. */
 		slug?: Maybe<Scalars['String']['output']>;
 		/** The unique resource identifier path */
 		uri?: Maybe<Scalars['String']['output']>;
 		/** A website url that is associated with the user. */
 		url?: Maybe<Scalars['String']['output']>;
 		/**
-		 * The Id of the user. Equivalent to WP_User-&gt;ID
+		 * The unique numeric identifier for the user.
 		 * @deprecated Deprecated in favor of the databaseId field
 		 */
 		userId?: Maybe<Scalars['Int']['output']>;
-		/** Username for the user. This field is equivalent to WP_User-&gt;user_login. */
+		/** Username for the user. This is the unique identifier the user provides to log in. */
 		username?: Maybe<Scalars['String']['output']>;
 	};
 
@@ -10118,6 +10198,7 @@ export type UserEnqueuedScriptsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<UserToEnqueuedScriptConnectionWhereArgs>;
 };
 
 /** A registered user account. Users can be assigned roles, author content, and have various capabilities within the site. */
@@ -10126,6 +10207,7 @@ export type UserEnqueuedStylesheetsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<UserToEnqueuedStylesheetConnectionWhereArgs>;
 };
 
 /** A registered user account. Users can be assigned roles, author content, and have various capabilities within the site. */
@@ -10413,6 +10495,12 @@ export type UserToEnqueuedScriptConnectionPageInfo = EnqueuedScriptConnectionPag
 		startCursor?: Maybe<Scalars['String']['output']>;
 	};
 
+/** Arguments for filtering the UserToEnqueuedScriptConnection connection */
+export type UserToEnqueuedScriptConnectionWhereArgs = {
+	/** Limit results to assets whose handle is in the provided list. Handles that do not match an asset are ignored. An empty list matches no assets, while omitting the argument (or passing null) leaves the connection unfiltered. */
+	handlesIn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
 /** Connection between the User type and the EnqueuedStylesheet type */
 export type UserToEnqueuedStylesheetConnection = Connection &
 	EnqueuedStylesheetConnection & {
@@ -10449,6 +10537,12 @@ export type UserToEnqueuedStylesheetConnectionPageInfo = EnqueuedStylesheetConne
 		/** When paginating backwards, the cursor to continue. */
 		startCursor?: Maybe<Scalars['String']['output']>;
 	};
+
+/** Arguments for filtering the UserToEnqueuedStylesheetConnection connection */
+export type UserToEnqueuedStylesheetConnectionWhereArgs = {
+	/** Limit results to assets whose handle is in the provided list. Handles that do not match an asset are ignored. An empty list matches no assets, while omitting the argument (or passing null) leaves the connection unfiltered. */
+	handlesIn?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
 
 /** Connection between the User type and the mediaItem type */
 export type UserToMediaItemConnection = Connection &
@@ -10903,6 +10997,12 @@ export type WpPageInfo = {
 	startCursor?: Maybe<Scalars['String']['output']>;
 };
 
+/** Provides access to fields of the &quot;AboutFields&quot; ACF Field Group via the &quot;aboutFields&quot; field */
+export type WithAcfAboutFields = {
+	/** Fields of the AboutFields ACF Field Group */
+	aboutFields?: Maybe<AboutFields>;
+};
+
 /** Provides access to fields of the &quot;BlogPostFields&quot; ACF Field Group via the &quot;blogPostFields&quot; field */
 export type WithAcfBlogPostFields = {
 	/** Fields of the BlogPostFields ACF Field Group */
@@ -10981,7 +11081,7 @@ export type Work = ContentNode &
 		featuredImageDatabaseId?: Maybe<Scalars['Int']['output']>;
 		/** Globally unique ID of the featured image assigned to the node */
 		featuredImageId?: Maybe<Scalars['ID']['output']>;
-		/** The global unique identifier for this post. This currently matches the value stored in WP_Post-&gt;guid and the guid column in the &quot;post_objects&quot; database table. */
+		/** The global unique identifier for this content node. This is a stable, unique identifier for the node that does not change even if the node is moved or its url changes. */
 		guid?: Maybe<Scalars['String']['output']>;
 		/** Whether the work object is password protected. */
 		hasPassword?: Maybe<Scalars['Boolean']['output']>;
@@ -11022,7 +11122,7 @@ export type Work = ContentNode &
 		previewRevisionDatabaseId?: Maybe<Scalars['Int']['output']>;
 		/** Whether the object is a node in the preview state */
 		previewRevisionId?: Maybe<Scalars['ID']['output']>;
-		/** The uri slug for the post. This is equivalent to the WP_Post-&gt;post_name field and the post_name column in the database for the &quot;post_objects&quot; table. */
+		/** The URL-friendly, human-readable identifier for the content node, used in its permalink. */
 		slug?: Maybe<Scalars['String']['output']>;
 		/** The current status of the object */
 		status?: Maybe<Scalars['String']['output']>;
@@ -11037,7 +11137,7 @@ export type Work = ContentNode &
 		/** Fields of the WorkFields ACF Field Group */
 		workFields?: Maybe<WorkFields>;
 		/**
-		 * The id field matches the WP_Post-&gt;ID field.
+		 * The unique numeric identifier for the content node.
 		 * @deprecated Deprecated in favor of the databaseId field
 		 */
 		workId: Scalars['Int']['output'];
@@ -11071,6 +11171,7 @@ export type WorkEnqueuedScriptsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<ContentNodeToEnqueuedScriptConnectionWhereArgs>;
 };
 
 /** The work type */
@@ -11079,6 +11180,7 @@ export type WorkEnqueuedStylesheetsArgs = {
 	before?: InputMaybe<Scalars['String']['input']>;
 	first?: InputMaybe<Scalars['Int']['input']>;
 	last?: InputMaybe<Scalars['Int']['input']>;
+	where?: InputMaybe<ContentNodeToEnqueuedStylesheetConnectionWhereArgs>;
 };
 
 /** The work type */
@@ -11472,6 +11574,8 @@ export type HomePageFieldsFragment = {
 				link: string | null;
 				sourceUrl: string | null;
 				altText: string | null;
+				srcSet: string | null;
+				mediaDetails: { width: number | null; height: number | null } | null;
 			};
 		} | null;
 	} | null;
@@ -11483,6 +11587,8 @@ export type MediaItemFieldsFragment = {
 	link: string | null;
 	sourceUrl: string | null;
 	altText: string | null;
+	srcSet: string | null;
+	mediaDetails: { width: number | null; height: number | null } | null;
 };
 
 export type PostFieldsFragment = {
@@ -11500,6 +11606,8 @@ export type PostFieldsFragment = {
 			link: string | null;
 			sourceUrl: string | null;
 			altText: string | null;
+			srcSet: string | null;
+			mediaDetails: { width: number | null; height: number | null } | null;
 		};
 	} | null;
 	postMeta: {
@@ -11517,6 +11625,8 @@ export type PostFieldsFragment = {
 									link: string | null;
 									sourceUrl: string | null;
 									altText: string | null;
+									srcSet: string | null;
+									mediaDetails: { width: number | null; height: number | null } | null;
 								};
 							} | null;
 					  }
@@ -11538,6 +11648,8 @@ export type PrivacyPolicyFieldsFragment = {
 			link: string | null;
 			sourceUrl: string | null;
 			altText: string | null;
+			srcSet: string | null;
+			mediaDetails: { width: number | null; height: number | null } | null;
 		};
 	} | null;
 };
@@ -11554,6 +11666,8 @@ export type TermsOfServiceFieldsFragment = {
 			link: string | null;
 			sourceUrl: string | null;
 			altText: string | null;
+			srcSet: string | null;
+			mediaDetails: { width: number | null; height: number | null } | null;
 		};
 	} | null;
 };
@@ -11580,6 +11694,8 @@ export type WorkFieldsFragment = {
 			link: string | null;
 			sourceUrl: string | null;
 			altText: string | null;
+			srcSet: string | null;
+			mediaDetails: { width: number | null; height: number | null } | null;
 		};
 	} | null;
 };
@@ -11599,6 +11715,8 @@ export type GetAboutPageQuery = {
 				link: string | null;
 				sourceUrl: string | null;
 				altText: string | null;
+				srcSet: string | null;
+				mediaDetails: { width: number | null; height: number | null } | null;
 			};
 		} | null;
 		aboutImages: Array<{
@@ -11607,6 +11725,8 @@ export type GetAboutPageQuery = {
 			link: string | null;
 			sourceUrl: string | null;
 			altText: string | null;
+			srcSet: string | null;
+			mediaDetails: { width: number | null; height: number | null } | null;
 		} | null> | null;
 	} | null;
 };
@@ -11654,6 +11774,8 @@ export type GetHomePageQuery = {
 					link: string | null;
 					sourceUrl: string | null;
 					altText: string | null;
+					srcSet: string | null;
+					mediaDetails: { width: number | null; height: number | null } | null;
 				};
 			} | null;
 		} | null;
@@ -11679,6 +11801,8 @@ export type PostsQuery = {
 					link: string | null;
 					sourceUrl: string | null;
 					altText: string | null;
+					srcSet: string | null;
+					mediaDetails: { width: number | null; height: number | null } | null;
 				};
 			} | null;
 			postMeta: {
@@ -11696,6 +11820,8 @@ export type PostsQuery = {
 											link: string | null;
 											sourceUrl: string | null;
 											altText: string | null;
+											srcSet: string | null;
+											mediaDetails: { width: number | null; height: number | null } | null;
 										};
 									} | null;
 							  }
@@ -11727,6 +11853,8 @@ export type PostQuery = {
 				link: string | null;
 				sourceUrl: string | null;
 				altText: string | null;
+				srcSet: string | null;
+				mediaDetails: { width: number | null; height: number | null } | null;
 			};
 		} | null;
 		postMeta: {
@@ -11744,6 +11872,8 @@ export type PostQuery = {
 										link: string | null;
 										sourceUrl: string | null;
 										altText: string | null;
+										srcSet: string | null;
+										mediaDetails: { width: number | null; height: number | null } | null;
 									};
 								} | null;
 						  }
@@ -11769,6 +11899,8 @@ export type GetPrivacyPolicyPageQuery = {
 				link: string | null;
 				sourceUrl: string | null;
 				altText: string | null;
+				srcSet: string | null;
+				mediaDetails: { width: number | null; height: number | null } | null;
 			};
 		} | null;
 	} | null;
@@ -11789,6 +11921,8 @@ export type GetTermsOfServicePageQuery = {
 				link: string | null;
 				sourceUrl: string | null;
 				altText: string | null;
+				srcSet: string | null;
+				mediaDetails: { width: number | null; height: number | null } | null;
 			};
 		} | null;
 	} | null;
@@ -11820,6 +11954,8 @@ export type WorksQuery = {
 					link: string | null;
 					sourceUrl: string | null;
 					altText: string | null;
+					srcSet: string | null;
+					mediaDetails: { width: number | null; height: number | null } | null;
 				};
 			} | null;
 		}>;
@@ -11853,6 +11989,8 @@ export type WorkQuery = {
 				link: string | null;
 				sourceUrl: string | null;
 				altText: string | null;
+				srcSet: string | null;
+				mediaDetails: { width: number | null; height: number | null } | null;
 			};
 		} | null;
 	} | null;
@@ -11907,7 +12045,19 @@ export const MediaItemFieldsFragmentDoc = {
 					{ kind: 'Field', name: { kind: 'Name', value: 'uri' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'link' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'sourceUrl' } },
-					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } }
+					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } },
+					{ kind: 'Field', name: { kind: 'Name', value: 'srcSet' } },
+					{
+						kind: 'Field',
+						name: { kind: 'Name', value: 'mediaDetails' },
+						selectionSet: {
+							kind: 'SelectionSet',
+							selections: [
+								{ kind: 'Field', name: { kind: 'Name', value: 'width' } },
+								{ kind: 'Field', name: { kind: 'Name', value: 'height' } }
+							]
+						}
+					}
 				]
 			}
 		}
@@ -11977,7 +12127,19 @@ export const HomePageFieldsFragmentDoc = {
 					{ kind: 'Field', name: { kind: 'Name', value: 'uri' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'link' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'sourceUrl' } },
-					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } }
+					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } },
+					{ kind: 'Field', name: { kind: 'Name', value: 'srcSet' } },
+					{
+						kind: 'Field',
+						name: { kind: 'Name', value: 'mediaDetails' },
+						selectionSet: {
+							kind: 'SelectionSet',
+							selections: [
+								{ kind: 'Field', name: { kind: 'Name', value: 'width' } },
+								{ kind: 'Field', name: { kind: 'Name', value: 'height' } }
+							]
+						}
+					}
 				]
 			}
 		}
@@ -12129,7 +12291,19 @@ export const PostFieldsFragmentDoc = {
 					{ kind: 'Field', name: { kind: 'Name', value: 'uri' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'link' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'sourceUrl' } },
-					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } }
+					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } },
+					{ kind: 'Field', name: { kind: 'Name', value: 'srcSet' } },
+					{
+						kind: 'Field',
+						name: { kind: 'Name', value: 'mediaDetails' },
+						selectionSet: {
+							kind: 'SelectionSet',
+							selections: [
+								{ kind: 'Field', name: { kind: 'Name', value: 'width' } },
+								{ kind: 'Field', name: { kind: 'Name', value: 'height' } }
+							]
+						}
+					}
 				]
 			}
 		}
@@ -12182,7 +12356,19 @@ export const PrivacyPolicyFieldsFragmentDoc = {
 					{ kind: 'Field', name: { kind: 'Name', value: 'uri' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'link' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'sourceUrl' } },
-					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } }
+					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } },
+					{ kind: 'Field', name: { kind: 'Name', value: 'srcSet' } },
+					{
+						kind: 'Field',
+						name: { kind: 'Name', value: 'mediaDetails' },
+						selectionSet: {
+							kind: 'SelectionSet',
+							selections: [
+								{ kind: 'Field', name: { kind: 'Name', value: 'width' } },
+								{ kind: 'Field', name: { kind: 'Name', value: 'height' } }
+							]
+						}
+					}
 				]
 			}
 		}
@@ -12235,7 +12421,19 @@ export const TermsOfServiceFieldsFragmentDoc = {
 					{ kind: 'Field', name: { kind: 'Name', value: 'uri' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'link' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'sourceUrl' } },
-					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } }
+					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } },
+					{ kind: 'Field', name: { kind: 'Name', value: 'srcSet' } },
+					{
+						kind: 'Field',
+						name: { kind: 'Name', value: 'mediaDetails' },
+						selectionSet: {
+							kind: 'SelectionSet',
+							selections: [
+								{ kind: 'Field', name: { kind: 'Name', value: 'width' } },
+								{ kind: 'Field', name: { kind: 'Name', value: 'height' } }
+							]
+						}
+					}
 				]
 			}
 		}
@@ -12325,7 +12523,19 @@ export const WorkFieldsFragmentDoc = {
 					{ kind: 'Field', name: { kind: 'Name', value: 'uri' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'link' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'sourceUrl' } },
-					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } }
+					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } },
+					{ kind: 'Field', name: { kind: 'Name', value: 'srcSet' } },
+					{
+						kind: 'Field',
+						name: { kind: 'Name', value: 'mediaDetails' },
+						selectionSet: {
+							kind: 'SelectionSet',
+							selections: [
+								{ kind: 'Field', name: { kind: 'Name', value: 'width' } },
+								{ kind: 'Field', name: { kind: 'Name', value: 'height' } }
+							]
+						}
+					}
 				]
 			}
 		}
@@ -12412,7 +12622,19 @@ export const GetAboutPageDocument = {
 					{ kind: 'Field', name: { kind: 'Name', value: 'uri' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'link' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'sourceUrl' } },
-					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } }
+					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } },
+					{ kind: 'Field', name: { kind: 'Name', value: 'srcSet' } },
+					{
+						kind: 'Field',
+						name: { kind: 'Name', value: 'mediaDetails' },
+						selectionSet: {
+							kind: 'SelectionSet',
+							selections: [
+								{ kind: 'Field', name: { kind: 'Name', value: 'width' } },
+								{ kind: 'Field', name: { kind: 'Name', value: 'height' } }
+							]
+						}
+					}
 				]
 			}
 		}
@@ -12563,7 +12785,19 @@ export const GetHomePageDocument = {
 					{ kind: 'Field', name: { kind: 'Name', value: 'uri' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'link' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'sourceUrl' } },
-					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } }
+					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } },
+					{ kind: 'Field', name: { kind: 'Name', value: 'srcSet' } },
+					{
+						kind: 'Field',
+						name: { kind: 'Name', value: 'mediaDetails' },
+						selectionSet: {
+							kind: 'SelectionSet',
+							selections: [
+								{ kind: 'Field', name: { kind: 'Name', value: 'width' } },
+								{ kind: 'Field', name: { kind: 'Name', value: 'height' } }
+							]
+						}
+					}
 				]
 			}
 		},
@@ -12702,7 +12936,19 @@ export const PostsDocument = {
 					{ kind: 'Field', name: { kind: 'Name', value: 'uri' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'link' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'sourceUrl' } },
-					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } }
+					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } },
+					{ kind: 'Field', name: { kind: 'Name', value: 'srcSet' } },
+					{
+						kind: 'Field',
+						name: { kind: 'Name', value: 'mediaDetails' },
+						selectionSet: {
+							kind: 'SelectionSet',
+							selections: [
+								{ kind: 'Field', name: { kind: 'Name', value: 'width' } },
+								{ kind: 'Field', name: { kind: 'Name', value: 'height' } }
+							]
+						}
+					}
 				]
 			}
 		},
@@ -12894,7 +13140,19 @@ export const PostDocument = {
 					{ kind: 'Field', name: { kind: 'Name', value: 'uri' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'link' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'sourceUrl' } },
-					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } }
+					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } },
+					{ kind: 'Field', name: { kind: 'Name', value: 'srcSet' } },
+					{
+						kind: 'Field',
+						name: { kind: 'Name', value: 'mediaDetails' },
+						selectionSet: {
+							kind: 'SelectionSet',
+							selections: [
+								{ kind: 'Field', name: { kind: 'Name', value: 'width' } },
+								{ kind: 'Field', name: { kind: 'Name', value: 'height' } }
+							]
+						}
+					}
 				]
 			}
 		},
@@ -13078,7 +13336,19 @@ export const GetPrivacyPolicyPageDocument = {
 					{ kind: 'Field', name: { kind: 'Name', value: 'uri' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'link' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'sourceUrl' } },
-					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } }
+					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } },
+					{ kind: 'Field', name: { kind: 'Name', value: 'srcSet' } },
+					{
+						kind: 'Field',
+						name: { kind: 'Name', value: 'mediaDetails' },
+						selectionSet: {
+							kind: 'SelectionSet',
+							selections: [
+								{ kind: 'Field', name: { kind: 'Name', value: 'width' } },
+								{ kind: 'Field', name: { kind: 'Name', value: 'height' } }
+							]
+						}
+					}
 				]
 			}
 		},
@@ -13163,7 +13433,19 @@ export const GetTermsOfServicePageDocument = {
 					{ kind: 'Field', name: { kind: 'Name', value: 'uri' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'link' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'sourceUrl' } },
-					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } }
+					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } },
+					{ kind: 'Field', name: { kind: 'Name', value: 'srcSet' } },
+					{
+						kind: 'Field',
+						name: { kind: 'Name', value: 'mediaDetails' },
+						selectionSet: {
+							kind: 'SelectionSet',
+							selections: [
+								{ kind: 'Field', name: { kind: 'Name', value: 'width' } },
+								{ kind: 'Field', name: { kind: 'Name', value: 'height' } }
+							]
+						}
+					}
 				]
 			}
 		},
@@ -13280,7 +13562,19 @@ export const WorksDocument = {
 					{ kind: 'Field', name: { kind: 'Name', value: 'uri' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'link' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'sourceUrl' } },
-					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } }
+					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } },
+					{ kind: 'Field', name: { kind: 'Name', value: 'srcSet' } },
+					{
+						kind: 'Field',
+						name: { kind: 'Name', value: 'mediaDetails' },
+						selectionSet: {
+							kind: 'SelectionSet',
+							selections: [
+								{ kind: 'Field', name: { kind: 'Name', value: 'width' } },
+								{ kind: 'Field', name: { kind: 'Name', value: 'height' } }
+							]
+						}
+					}
 				]
 			}
 		},
@@ -13410,7 +13704,19 @@ export const WorkDocument = {
 					{ kind: 'Field', name: { kind: 'Name', value: 'uri' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'link' } },
 					{ kind: 'Field', name: { kind: 'Name', value: 'sourceUrl' } },
-					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } }
+					{ kind: 'Field', name: { kind: 'Name', value: 'altText' } },
+					{ kind: 'Field', name: { kind: 'Name', value: 'srcSet' } },
+					{
+						kind: 'Field',
+						name: { kind: 'Name', value: 'mediaDetails' },
+						selectionSet: {
+							kind: 'SelectionSet',
+							selections: [
+								{ kind: 'Field', name: { kind: 'Name', value: 'width' } },
+								{ kind: 'Field', name: { kind: 'Name', value: 'height' } }
+							]
+						}
+					}
 				]
 			}
 		},

@@ -94,3 +94,32 @@ test('theme-color follows the selected theme', async ({ page }) => {
 	const meta = page.locator('meta[name="theme-color"]');
 	await expect(meta).toHaveAttribute('content', '#111318');
 });
+
+for (const path of ['/', '/work', '/write', '/about']) {
+	test(`CMS images on ${path} are responsive`, async ({ page }) => {
+		await page.goto(path);
+		await page.waitForLoadState('networkidle');
+
+		const images = await page
+			.locator('main img[src*="/wp-content/uploads/"]')
+			.evaluateAll((nodes) =>
+				nodes.map((node) => {
+					const img = node as HTMLImageElement;
+					return {
+						src: img.currentSrc,
+						srcset: img.getAttribute('srcset'),
+						sizes: img.getAttribute('sizes'),
+						width: img.getAttribute('width'),
+						height: img.getAttribute('height')
+					};
+				})
+			);
+
+		for (const image of images) {
+			expect(image.srcset, image.src).toBeTruthy();
+			expect(image.sizes, image.src).toBeTruthy();
+			expect(image.width, image.src).toBeTruthy();
+			expect(image.height, image.src).toBeTruthy();
+		}
+	});
+}

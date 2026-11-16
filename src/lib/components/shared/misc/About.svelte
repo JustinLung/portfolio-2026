@@ -1,7 +1,8 @@
 <script lang="ts">
+	import { imageAttrs } from '../../../../utils/image';
 	import type { AboutProps } from '../../../../utils/types';
 
-	const { title, content, src, alt }: AboutProps = $props();
+	const { title, content, src, alt, imageMeta }: AboutProps = $props();
 </script>
 
 <section class="about">
@@ -16,7 +17,7 @@
 	</div>
 	{#if src}
 		<picture class="about__image-container">
-			<img {src} {alt} />
+			<img {src} {alt} {...imageAttrs(imageMeta, '(min-width: 1280px) 50vw, 100vw')} />
 		</picture>
 	{/if}
 </section>

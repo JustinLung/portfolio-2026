@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { imageAttrs } from '../../../../utils/image';
 	import { readReducedMotion } from '$lib/settings.svelte';
 	import { resolve } from '$app/paths';
 	import previewPlaceholder from '$lib/assets/work-preview-placeholder.svg';
@@ -153,7 +154,11 @@
 		style={`--preview-hue: ${item.previewHue ?? 0}deg;`}
 		aria-hidden="true"
 	>
-		<img src={item.image ?? previewPlaceholder} alt="" />
+		<img
+			src={item.image ?? previewPlaceholder}
+			alt=""
+			{...imageAttrs(item.imageMeta, '(min-width: 600px) 420px, 70vw')}
+		/>
 	</figure>
 </li>
 

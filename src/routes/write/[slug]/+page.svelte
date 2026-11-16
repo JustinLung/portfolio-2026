@@ -42,6 +42,7 @@
 	<WriteHero
 		image={data.post.image}
 		imageAlt={data.post.imageAlt}
+		imageMeta={data.post.imageMeta}
 		title={data.post.title}
 		category={data.post.category}
 		date={data.post.date}

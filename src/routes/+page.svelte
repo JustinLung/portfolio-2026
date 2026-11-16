@@ -32,4 +32,5 @@
 	description={data.page.personal.text}
 	image={data.page.personal.image}
 	imageAlt={data.page.personal.imageAlt}
+	imageMeta={data.page.personal.imageMeta}
 />

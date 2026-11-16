@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { imageAttrs } from '../../../../utils/image';
 	import { resolve } from '$app/paths';
 	import previewPlaceholder from '$lib/assets/work-preview-placeholder.svg';
 	import type { WorkItem } from '../../../../utils/types';
@@ -25,7 +26,11 @@
 		data-uisfx="forward"
 	>
 		<figure class="work-list-item__media">
-			<img src={item.image ?? previewPlaceholder} alt={item.imageAlt ?? item.title} />
+			<img
+				src={item.image ?? previewPlaceholder}
+				alt={item.imageAlt ?? item.title}
+				{...imageAttrs(item.imageMeta, '(min-width: 1024px) 50vw, 100vw')}
+			/>
 		</figure>
 		<span class="work-list-item__title">{item.title}</span>
 		<span class="work-list-item__category">{item.category}</span>

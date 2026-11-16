@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { imageAttrs } from '../../../../utils/image';
 	import { readReducedMotion } from '$lib/settings.svelte';
 	import { resolve } from '$app/paths';
 	import { onMount } from 'svelte';
@@ -9,7 +10,7 @@
 
 	import type { PersonalIntroProps } from '../../../../utils/types';
 
-	let { title, subtitle, description, image, imageAlt }: PersonalIntroProps = $props();
+	let { title, subtitle, description, image, imageAlt, imageMeta }: PersonalIntroProps = $props();
 	let sectionRef: HTMLElement;
 
 	onMount(() => {
@@ -72,7 +73,12 @@
 		</a>
 	</div>
 	<figure class="personal-intro__image">
-		<img src={image} alt={imageAlt} loading="lazy" />
+		<img
+			src={image}
+			alt={imageAlt}
+			loading="lazy"
+			{...imageAttrs(imageMeta, '(min-width: 1024px) 50vw, 100vw')}
+		/>
 	</figure>
 </section>
 

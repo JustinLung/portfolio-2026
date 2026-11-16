@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { imageAttrs } from '../../../../utils/image';
 	import { resolve } from '$app/paths';
 	import { formatShortDate } from '../../../../utils/date';
 	import type { PostItem } from '../../../../utils/types';
@@ -17,7 +18,15 @@
 	>
 		<figure class:blog-card__media--empty={!item.image} class="blog-card__media">
 			{#if item.image}
-				<img src={item.image} alt={item.imageAlt} loading="lazy" />
+				<img
+					src={item.image}
+					alt={item.imageAlt}
+					loading="lazy"
+					{...imageAttrs(
+						item.imageMeta,
+						'(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw'
+					)}
+				/>
 			{:else}
 				<span aria-hidden="true">{item.title.slice(0, 1)}</span>
 			{/if}
