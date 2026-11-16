@@ -8,7 +8,7 @@
 	<div class="about__inner">
 		<h1>{title}</h1>
 		{#if content}
-			<div class="about__content">
+			<div class="about__content prose">
 				<!-- eslint-disable-next-line svelte/no-at-html-tags -- Content comes from the trusted WordPress CMS. -->
 				{@html content}
 			</div>
@@ -39,18 +39,8 @@
 			}
 		}
 
-		.about__content :global(p) {
-			font-size: 1rem;
-		}
-
 		.about__content :global(p:first-child) {
 			font-weight: 700;
-		}
-
-		.about__content :global(a) {
-			color: inherit;
-			text-decoration: underline;
-			text-underline-offset: 0.2em;
 		}
 
 		picture {

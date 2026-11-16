@@ -54,7 +54,7 @@
 				<PostToc items={data.toc} />
 			</aside>
 
-			<div class="post__content" use:copyCode={data.post.content}>
+			<div class="post__content prose" use:copyCode={data.post.content}>
 				<!-- eslint-disable-next-line svelte/no-at-html-tags -- Content comes from the trusted WordPress CMS. -->
 				{@html data.post.content}
 			</div>
@@ -122,21 +122,11 @@
 		border-top: 1px solid var(--color-primary);
 	}
 
-	.post__content :global(p) {
-		font-size: 1rem;
-	}
-
 	.post__content :global(img) {
 		display: block;
 		width: 100%;
 		height: auto;
 		border-radius: 4px;
-	}
-
-	.post__content :global(a) {
-		color: inherit;
-		text-decoration: underline;
-		text-underline-offset: 0.2em;
 	}
 
 	.post__content :global(code) {

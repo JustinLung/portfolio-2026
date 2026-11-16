@@ -207,6 +207,24 @@
 				border-radius: 4px;
 			}
 
+			/* Skeleton shown behind media until the image or first video frame paints over it. */
+			:global(img),
+			:global(video) {
+				background-color: var(--color-tertiary);
+				background-image: linear-gradient(
+					100deg,
+					transparent 30%,
+					color-mix(in srgb, var(--color-white) 8%, transparent) 50%,
+					transparent 70%
+				);
+				background-size: 200% 100%;
+				background-repeat: no-repeat;
+
+				@media (--motion-allow) {
+					animation: work-media-skeleton 1.4s linear infinite;
+				}
+			}
+
 			:global(a) {
 				color: inherit;
 			}
@@ -220,7 +238,29 @@
 				position: sticky;
 				top: var(--header-height);
 				margin-bottom: 0;
+				flex: 0 0 clamp(18rem, 34vw, 28rem);
+
+				/* Mono titles are wide: scale with the column so they never run into the media. */
+				h1 {
+					font-size: min(var(--font-size-h1), 4vw);
+					overflow-wrap: anywhere;
+				}
 			}
+
+			/* Fixed width from the flex layout, so media can't resize it once its metadata loads. */
+			.work-detail__main {
+				flex: 1 1 0;
+				min-width: 0;
+			}
+		}
+	}
+
+	@keyframes work-media-skeleton {
+		from {
+			background-position: 150% 0;
+		}
+		to {
+			background-position: -50% 0;
 		}
 	}
 </style>

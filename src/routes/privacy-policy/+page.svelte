@@ -11,7 +11,7 @@
 	<h1>{data.page.title}</h1>
 
 	{#if data.page.content}
-		<div class="privacy-policy__content">
+		<div class="privacy-policy__content prose">
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -- Content comes from the trusted WordPress CMS. -->
 			{@html data.page.content}
 		</div>
@@ -25,14 +25,7 @@
 		padding-block: 128px;
 	}
 
-	.privacy-policy__content :global(p),
 	.privacy-policy__content :global(li) {
 		font-size: 1rem;
-	}
-
-	.privacy-policy__content :global(a) {
-		color: inherit;
-		text-decoration: underline;
-		text-underline-offset: 0.2em;
 	}
 </style>

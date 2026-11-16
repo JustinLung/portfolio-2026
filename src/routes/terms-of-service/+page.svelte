@@ -11,7 +11,7 @@
 	<h1>{data.page.title}</h1>
 
 	{#if data.page.content}
-		<div class="terms-of-service__content">
+		<div class="terms-of-service__content prose">
 			<!-- eslint-disable-next-line svelte/no-at-html-tags -- Content comes from the trusted WordPress CMS. -->
 			{@html data.page.content}
 		</div>
@@ -25,14 +25,7 @@
 		padding-block: 128px;
 	}
 
-	.terms-of-service__content :global(p),
 	.terms-of-service__content :global(li) {
 		font-size: 1rem;
-	}
-
-	.terms-of-service__content :global(a) {
-		color: inherit;
-		text-decoration: underline;
-		text-underline-offset: 0.2em;
 	}
 </style>
