@@ -4,13 +4,9 @@
 	import { htmlToText } from '../../../../utils/text';
 	import type { SeoProps } from '../../../../utils/types';
 
-	const DEFAULT_KEYWORDS =
-		'Justin, Creative Coder, Amsterdam, GSAP, Framer Motion, Next.js, SvelteKit';
-
 	let {
 		title,
 		description,
-		keywords = DEFAULT_KEYWORDS,
 		author = 'Justin',
 		robots = 'index, follow',
 		ogImage,
@@ -44,7 +40,6 @@
 	{#if plainDescription}
 		<meta name="description" content={plainDescription} />
 	{/if}
-	<meta name="keywords" content={keywords} />
 	<meta name="author" content={author} />
 	<meta name="robots" content={robots} />
 	<meta property="og:title" content={documentTitle} />

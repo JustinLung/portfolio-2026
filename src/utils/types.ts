@@ -90,7 +90,6 @@ export type PersonalIntroProps = {
 export type SeoProps = {
 	title: string;
 	description?: string;
-	keywords?: string;
 	author?: string;
 	robots?: string;
 	/** Path (`/og/work/x.png`) or absolute URL of a generated social preview. Defaults to the portrait. */
