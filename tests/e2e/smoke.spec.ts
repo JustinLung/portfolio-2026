@@ -123,3 +123,90 @@ for (const path of ['/', '/work', '/write', '/about']) {
 		}
 	});
 }
+
+test.describe('command palette actions', () => {
+	test.beforeEach(async ({ page }) => {
+		await page.goto('/');
+		await page.waitForLoadState('networkidle');
+		await page.keyboard.press('ControlOrMeta+k');
+		await expect(page.getByRole('dialog', { name: 'Command palette' })).toBeVisible();
+	});
+
+	test('Download CV starts a PDF download', async ({ page }) => {
+		const download = page.waitForEvent('download');
+		await page.getByRole('combobox', { name: 'Search commands' }).fill('download cv');
+		await page.keyboard.press('Enter');
+
+		expect((await download).suggestedFilename()).toMatch(/\.pdf$/);
+	});
+
+	test('Copy email address copies and announces it', async ({ page, context }) => {
+		await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+		await page.getByRole('combobox', { name: 'Search commands' }).fill('copy email');
+		await page.keyboard.press('Enter');
+
+		await expect(
+			page.getByRole('status').filter({ hasText: 'Email address copied' })
+		).toBeVisible();
+		expect(await page.evaluate(() => navigator.clipboard.readText())).toMatch(/^[^@\s]+@[^@\s]+$/);
+	});
+
+	test('Open RSS feed opens the feed in a new tab', async ({ page, context }) => {
+		const popup = context.waitForEvent('page');
+		await page.getByRole('combobox', { name: 'Search commands' }).fill('rss');
+		await page.keyboard.press('Enter');
+
+		expect((await popup).url()).toContain('/rss.xml');
+	});
+});
+
+test.describe('toasts', () => {
+	const run = async (page: import('@playwright/test').Page, query: string) => {
+		await page.keyboard.press('ControlOrMeta+k');
+		await page.getByRole('combobox', { name: 'Search commands' }).fill(query);
+		await page.keyboard.press('Enter');
+		await expect(page.getByRole('dialog', { name: 'Command palette' })).toBeHidden();
+		// The palette's own `open` state updates a tick after the dialog closes; reopening in that tick is ignored.
+		await page.waitForTimeout(150);
+	};
+
+	test('a command shows a toast that dismisses itself', async ({ page }) => {
+		await page.goto('/');
+		await page.waitForLoadState('networkidle');
+		await run(page, 'download cv');
+
+		const toast = page.locator('.toast', { hasText: 'CV download started' });
+		await expect(toast).toBeVisible();
+		await expect(toast).toBeHidden({ timeout: 8000 });
+	});
+
+	test('the same message replaces itself instead of stacking', async ({ page }) => {
+		await page.goto('/');
+		await page.waitForLoadState('networkidle');
+		await run(page, 'sound');
+		await run(page, 'sound');
+		await run(page, 'sound');
+
+		// Sound on/off alternate, so at most two distinct messages can be showing.
+		expect(await page.locator('.toast').count()).toBeLessThanOrEqual(2);
+	});
+
+	test('a blocked clipboard shows an error toast with the address', async ({ page }) => {
+		await page.addInitScript(() => {
+			Object.defineProperty(navigator, 'clipboard', {
+				value: { writeText: () => Promise.reject(new Error('blocked')) }
+			});
+		});
+		await page.goto('/');
+		await page.waitForLoadState('networkidle');
+		await run(page, 'copy email');
+
+		await expect(page.locator('.toast--error', { hasText: /@/ })).toBeVisible();
+	});
+
+	test('the Toaster is the only status region added outside the palette', async ({ page }) => {
+		await page.goto('/about');
+		await expect(page.locator('main [role="status"]')).toHaveCount(0);
+		await expect(page.locator('.toaster[role="status"]')).toHaveCount(1);
+	});
+});

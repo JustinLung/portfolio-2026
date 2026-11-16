@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Seo from '$lib/components/shared/misc/Seo.svelte';
-	import { socialLinks } from '../../utils/links';
+	import { CONTACT_EMAIL, socialLinks } from '../../utils/links';
 	import { playSfx } from '$lib/sfx.svelte';
 	import { enhance } from '$app/forms';
 	import type { SubmitFunction } from '@sveltejs/kit';
@@ -12,7 +12,7 @@
 	} from '$lib/contact';
 	import type { PageProps } from './$types';
 
-	const email = 'justinlung77@gmail.com';
+	const email = CONTACT_EMAIL;
 
 	let { form }: PageProps = $props();
 	let sending = $state(false);

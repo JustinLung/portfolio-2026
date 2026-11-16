@@ -9,7 +9,8 @@
 	import { playSfx, sfxState, toggleSfx } from '$lib/sfx.svelte';
 	import TerminalIcon from '$lib/assets/icons/terminal.svg?component';
 	import { setTheme, themes, themeState } from '$lib/theme.svelte';
-	import { links, policyLinks } from '../../../../utils/links';
+	import { CONTACT_EMAIL, CV_URL, links, policyLinks, RSS_URL } from '../../../../utils/links';
+	import { showToast } from '$lib/toast.svelte';
 	import type { Command, SearchEntry, SearchIndex } from '../../../../utils/types';
 
 	interface Props {
@@ -34,7 +35,7 @@
 	};
 
 	/** Group order in the list. */
-	const groups = ['Pages', 'Projects', 'Writing', 'Themes', 'Sound'];
+	const groups = ['Pages', 'Actions', 'Projects', 'Writing', 'Themes', 'Sound'];
 
 	/** Groups that can be long show only the latest few until the visitor searches. */
 	const idleLimits: Record<string, number> = { Projects: 5, Writing: 5 };
@@ -44,7 +45,6 @@
 	let query = $state('');
 	let activeIndex = $state(0);
 	let closing = $state(false);
-	let announcement = $state('');
 	let searchIndex = $state<SearchIndex | null>(null);
 	let loadingIndex = false;
 	let ranCommand = false;
@@ -99,6 +99,57 @@
 			run: () => `Sound ${toggleSfx() ? 'on' : 'off'}`
 		};
 
+		const actions: Command[] = [
+			{
+				id: 'action-cv',
+				group: 'Actions',
+				label: 'Download CV',
+				hint: 'PDF',
+				keywords: 'cv resume curriculum vitae pdf file save',
+				run: () => {
+					// A temporary link is the way to start a download without leaving the page.
+					const link = document.createElement('a');
+					link.href = CV_URL;
+					link.download = '';
+					link.click();
+					playSfx('select');
+
+					return 'CV download started';
+				}
+			},
+			{
+				id: 'action-email',
+				group: 'Actions',
+				label: 'Copy email address',
+				hint: CONTACT_EMAIL,
+				keywords: 'mail contact hire clipboard',
+				run: async () => {
+					try {
+						await navigator.clipboard.writeText(CONTACT_EMAIL);
+						playSfx('select');
+
+						return 'Email address copied';
+					} catch {
+						// Clipboard access can be blocked; say the address so it can still be typed.
+						return { message: `Couldn't copy. The address is ${CONTACT_EMAIL}`, tone: 'error' };
+					}
+				}
+			},
+			{
+				id: 'action-rss',
+				group: 'Actions',
+				label: 'Open RSS feed',
+				hint: 'Opens in a new tab',
+				keywords: 'rss atom xml subscribe feed reader writing blog',
+				run: () => {
+					window.open(RSS_URL, '_blank', 'noopener');
+					playSfx('forward');
+
+					return 'RSS feed opened in a new tab';
+				}
+			}
+		];
+
 		const content = (
 			group: string,
 			entries: SearchEntry[],
@@ -119,6 +170,7 @@
 
 		return [
 			...pages,
+			...actions,
 			...content('Projects', searchIndex?.works ?? [], 'Project', '/work/[slug]'),
 			...content('Writing', searchIndex?.posts ?? [], 'Post', '/write/[slug]'),
 			...themeCommands,
@@ -210,12 +262,6 @@
 		}
 	}
 
-	function announce(message: string) {
-		// Clearing first makes a repeated message count as a change.
-		announcement = '';
-		setTimeout(() => (announcement = message), 50);
-	}
-
 	// Orient: the palette rises from where the eye already is and sinks back to it. `--backdrop-opacity`
 	// is how the backdrop is animated, since GSAP can't target a pseudo-element.
 	const hidden = { opacity: 0, y: 8, scale: 0.98, '--backdrop-opacity': 0 };
@@ -245,8 +291,11 @@
 		ranCommand = true;
 		dismiss();
 
-		const message = command.run();
-		if (message) announce(message);
+		void Promise.resolve(command.run()).then((result) => {
+			if (!result) return;
+			if (typeof result === 'string') showToast(result);
+			else showToast(result.message, result.tone);
+		});
 	}
 
 	function handleClose() {
@@ -313,9 +362,6 @@
 
 <svelte:window onkeydown={handleWindowKeydown} />
 
-<!-- The dialog is inert while closed, so this region sits outside it to announce after it closes. -->
-<p class="visually-hidden" role="status" aria-atomic="true">{announcement}</p>
-
 <!-- Escape and focus handling are native to <dialog>; the click is only a pointer shortcut for it. -->
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <dialog
@@ -346,7 +392,7 @@
 			aria-activedescendant={activeId}
 			aria-autocomplete="list"
 			aria-describedby="{uid}-instructions"
-			placeholder="Search pages, themes, sound…"
+			placeholder="Search pages, actions, themes…"
 			autocomplete="off"
 			autocapitalize="off"
 			spellcheck="false"

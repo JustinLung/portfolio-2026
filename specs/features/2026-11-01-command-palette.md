@@ -10,8 +10,9 @@ updated: 2026-11-01
 
 ## Summary
 
-A keyboard-first palette (Cmd+K / Ctrl+K) to jump to pages, switch themes, and toggle interface sound
-without leaving the keyboard. It is also a visible demonstration of the site's accessibility work.
+A keyboard-first palette (Cmd+K / Ctrl+K) to jump to pages, run a few site actions (download the CV,
+copy the email address, open the RSS feed), switch themes, and toggle interface sound without
+leaving the keyboard. It is also a visible demonstration of the site's accessibility work.
 
 ## Goals
 
@@ -20,7 +21,7 @@ without leaving the keyboard. It is also a visible demonstration of the site's a
 
 ## Non-goals
 
-- External links, and searching page body text (only titles, categories, and years are searched).
+- Links to other sites, and searching page body text (only titles, categories, and years are searched).
 - Live theme preview while arrowing through results.
 
 ## Experience specification
@@ -53,12 +54,22 @@ without leaving the keyboard. It is also a visible demonstration of the site's a
   Midnight theme") so they read correctly without the group name.
 - Current page / theme / sound state is text ("Current page", "Currently on"), never color alone.
   The selected option has a tint plus an enter glyph; forced colors get a `Highlight` outline.
-- A polite live region reports the result count as the query changes, and another, outside the
-  dialog, announces the outcome after a command runs ("Midnight theme applied", "Sound off").
+- A polite live region reports the result count as the query changes. The outcome of a command
+  ("Midnight theme applied", "Sound off") is shown as a toast, which is also the live region that
+  announces it (see `src/lib/toast.svelte.ts` and `Toaster.svelte`). The palette has no status
+  element of its own for outcomes.
 - Instructions are exposed through `aria-describedby`. Text is white-on-surface at >= 4.5:1 in
   every theme. Options and the close button are at least 44px tall.
 - Page scroll (native and Lenis) is locked while open via the shared `lockScroll` counter, which the
   header sheet now also uses so overlapping overlays cannot unlock each other.
+
+### Actions
+
+- **Download CV** downloads `CV_URL` without leaving the page. **Copy email address** copies
+  `CONTACT_EMAIL` to the clipboard. **Open RSS feed** opens `RSS_URL` in a new tab (`noopener`).
+- Each shows its outcome as a toast. If the clipboard is blocked, the toast says so and shows the
+  address so it can still be typed.
+- Their addresses live in `src/utils/links.ts`, shared with the contact page and the CV button.
 
 ## States
 

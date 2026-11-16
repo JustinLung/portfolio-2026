@@ -1,3 +1,9 @@
+/** Public contact address, shown on /contact and available from the command palette. */
+export const CONTACT_EMAIL = 'justinlung77@gmail.com';
+
+export const CV_URL = '/justinlung-cv.pdf';
+export const RSS_URL = '/rss.xml';
+
 export const links = [
 	{
 		label: 'Home',

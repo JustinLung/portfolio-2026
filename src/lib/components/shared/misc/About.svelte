@@ -50,7 +50,9 @@
 			align-self: flex-start;
 
 			img {
+				display: block;
 				width: 100%;
+				height: auto; /* the height attribute would otherwise pin a pixel height and stretch the image */
 				aspect-ratio: 5 / 4;
 				object-fit: cover;
 			}

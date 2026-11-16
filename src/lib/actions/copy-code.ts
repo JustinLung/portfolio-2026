@@ -1,4 +1,5 @@
 import type { Action } from 'svelte/action';
+import { showToast } from '$lib/toast.svelte';
 
 const RESET_MS = 2000;
 
@@ -31,8 +32,10 @@ export const copyCode: Action<HTMLElement, unknown> = (node) => {
 				try {
 					await navigator.clipboard.writeText(text);
 					button.textContent = 'Copied';
+					showToast('Code copied');
 				} catch {
 					button.textContent = 'Failed';
+					showToast('Could not copy the code', 'error');
 				}
 				const timer = setTimeout(() => {
 					button.textContent = 'Copy';

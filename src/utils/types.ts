@@ -118,6 +118,8 @@ export type HomePage = {
 	};
 };
 
+export type CommandResult = string | { message: string; tone: 'error' } | void;
+
 export type Command = {
 	id: string;
 	group: string;
@@ -128,8 +130,8 @@ export type Command = {
 	keywords: string;
 	current?: boolean;
 	swatch?: ThemeId;
-	/** Performs the command and returns what to announce to screen readers, if anything. */
-	run: () => string | void;
+	/** Performs the command and returns the outcome to show as a toast, if any. */
+	run: () => CommandResult | Promise<CommandResult>;
 };
 
 export type SearchEntry = {

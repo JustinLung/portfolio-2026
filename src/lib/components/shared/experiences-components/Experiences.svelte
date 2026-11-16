@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { CV_URL } from '../../../../utils/links';
 	import type { ExperienceItem } from '../../../../utils/types';
 	import Experience from './Experience.svelte';
 
@@ -17,7 +18,7 @@
 	</ul>
 	<!-- eslint-disable svelte/no-navigation-without-resolve -- static asset, not a route -->
 	<a
-		href="/justinlung-cv.pdf"
+		href={CV_URL}
 		class="button button--secondary button--download"
 		target="_blank"
 		rel="noopener noreferrer"

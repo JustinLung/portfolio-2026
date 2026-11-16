@@ -6,6 +6,7 @@
 	import LinkedinIcon from '$lib/assets/icons/linkedin.svg?component';
 	import ShareIcon from '$lib/assets/icons/share.svg?component';
 	import XIcon from '$lib/assets/icons/x.svg?component';
+	import { showToast } from '$lib/toast.svelte';
 	import { SITE_URL } from '../../../../utils/site';
 
 	let { title }: { title: string } = $props();
@@ -35,7 +36,6 @@
 	let canShare = $state(false);
 	let canCopy = $state(false);
 	let copied = $state(false);
-	let status = $state('');
 	let resetTimeout: ReturnType<typeof setTimeout> | undefined;
 
 	$effect(() => {
@@ -51,7 +51,7 @@
 		} catch (cause) {
 			// Dismissing the share sheet rejects with AbortError. That is not a failure.
 			if (!(cause instanceof DOMException && cause.name === 'AbortError')) {
-				status = 'Sharing failed';
+				showToast('Sharing failed', 'error');
 			}
 		}
 	}
@@ -60,14 +60,11 @@
 		try {
 			await navigator.clipboard.writeText(url);
 			copied = true;
-			status = 'Link copied';
+			showToast('Link copied');
 			clearTimeout(resetTimeout);
-			resetTimeout = setTimeout(() => {
-				copied = false;
-				status = '';
-			}, 2000);
+			resetTimeout = setTimeout(() => (copied = false), 2000);
 		} catch {
-			status = 'Could not copy the link';
+			showToast('Could not copy the link', 'error');
 		}
 	}
 </script>
@@ -131,8 +128,6 @@
 			</li>
 		{/if}
 	</ul>
-
-	<span class="visually-hidden" role="status">{status}</span>
 </div>
 
 <style>

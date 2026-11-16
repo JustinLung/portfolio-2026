@@ -14,6 +14,7 @@
 	import Header from '$lib/components/layout/Header.svelte';
 	import Lenis from '$lib/components/shared/ui/Lenis.svelte';
 	import PageTransition from '$lib/components/shared/ui/PageTransition.svelte';
+	import Toaster from '$lib/components/shared/ui/Toaster.svelte';
 	import SiteLoader from '$lib/components/shared/ui/SiteLoader.svelte';
 	import { initializeSettings, settings } from '$lib/settings.svelte';
 	import { initializeSfx, setSfxVolume, unlockSfx } from '$lib/sfx.svelte';
@@ -64,3 +65,4 @@
 	{@render children()}
 </main>
 <Footer />
+<Toaster />
