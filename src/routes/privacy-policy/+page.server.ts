@@ -4,10 +4,11 @@ import {
 	type GetPrivacyPolicyPageQuery
 } from '$lib/graphql/generated/graphql';
 import { createApolloClient } from '$lib/server/apollo';
+import { PAGE_CACHE_CONTROL } from '$lib/server/cache';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ fetch }) => {
+export const load: PageServerLoad = async ({ fetch, setHeaders }) => {
 	const endpoint = env.WORDPRESS_GRAPHQL_URL;
 
 	if (!endpoint) {
@@ -32,6 +33,8 @@ export const load: PageServerLoad = async ({ fetch }) => {
 	if (!page) {
 		error(404, 'Privacy policy not found');
 	}
+
+	setHeaders({ 'cache-control': PAGE_CACHE_CONTROL });
 
 	return { page };
 };

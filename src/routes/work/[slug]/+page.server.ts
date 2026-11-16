@@ -5,11 +5,12 @@ import {
 	type WorkFieldsFragment
 } from '$lib/graphql/generated/graphql';
 import { createApolloClient } from '$lib/server/apollo';
+import { PAGE_CACHE_CONTROL } from '$lib/server/cache';
 import { getAdjacentWorks, sortWorksByYearDesc, toWorkItem } from '$lib/server/work';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ fetch, params }) => {
+export const load: PageServerLoad = async ({ fetch, params, setHeaders }) => {
 	const endpoint = env.WORDPRESS_GRAPHQL_URL;
 
 	if (!endpoint) {
@@ -48,6 +49,8 @@ export const load: PageServerLoad = async ({ fetch, params }) => {
 	if (!work) {
 		error(404, 'Work not found');
 	}
+
+	setHeaders({ 'cache-control': PAGE_CACHE_CONTROL });
 
 	return {
 		work: toWorkItem(work),

@@ -7,13 +7,14 @@ import {
 	type WorksQuery
 } from '$lib/graphql/generated/graphql';
 import { createApolloClient } from '$lib/server/apollo';
+import { PAGE_CACHE_CONTROL } from '$lib/server/cache';
 import { toHomePage } from '$lib/server/home';
 import { toPostItem } from '$lib/server/post';
 import { sortWorksByYearDesc, toWorkItem } from '$lib/server/work';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ fetch }) => {
+export const load: PageServerLoad = async ({ fetch, setHeaders }) => {
 	const endpoint = env.WORDPRESS_GRAPHQL_URL;
 
 	if (!endpoint) {
@@ -56,6 +57,8 @@ export const load: PageServerLoad = async ({ fetch }) => {
 	if (!works) {
 		error(502, 'Unable to load latest work from WordPress');
 	}
+
+	setHeaders({ 'cache-control': PAGE_CACHE_CONTROL });
 
 	return {
 		page: toHomePage(page),

@@ -25,7 +25,7 @@ Svelte components (presentation-ready props only)
 3. Server mappers in `src/lib/server/` normalize CMS shapes into app types (`WorkItem`, `PostItem`, etc.).
 4. Components receive serializable data — they never query WordPress directly.
 
-`/contact` is client-only: the form opens a `mailto:` draft and does not query WordPress.
+`/contact` does not query WordPress: its form action validates the message and emails it through Resend (honeypot plus a best-effort in-memory rate limit).
 
 Upstream GraphQL shapes stay behind the server boundary. Missing optional fields are omitted; bad slugs return `404`; CMS failures return `5xx`.
 
@@ -51,9 +51,9 @@ Upstream GraphQL shapes stay behind the server boundary. Missing optional fields
 | `/write`                               | Filterable writing index                                   |
 | `/write/[slug]`                        | Post                                                       |
 | `/about`                               | Bio, experience, photo stack                               |
-| `/contact`                             | Mailto inquiry form + socials                              |
+| `/contact`                             | Inquiry form (emailed via Resend) + socials                |
 | `/privacy-policy`, `/terms-of-service` | Legal pages from CMS                                       |
-| `/styleguide`                          | Internal visual reference                                  |
+| `/rss.xml`, `/sitemap.xml`, `/og/*`    | Feeds, sitemap, generated share images                     |
 
 Nav, social, and policy links live in `src/utils/links.ts`.
 
@@ -83,6 +83,12 @@ static/                   # Public files (robots, CV)
 specs/                    # Product, architecture, and feature specs
 ```
 
+### Caching
+
+Page loaders set `PAGE_CACHE_CONTROL` (`src/lib/server/cache.ts`) after a successful WordPress fetch,
+so a CDN serves pages without waiting on the CMS. CMS edits can take up to ~5 minutes to appear. See
+ADR-009 in `specs/05_project_memory/decision-log.md`.
+
 ### Data contract
 
 For each content type, keep these in sync:
@@ -111,13 +117,16 @@ pnpm install
 cp .env.example .env
 ```
 
-Set the private env var:
+Set the private env vars (see `.env.example`):
 
 ```env
 WORDPRESS_GRAPHQL_URL=https://your-wordpress-site.com/graphql
+RESEND_API_KEY=re_your_api_key
+CONTACT_TO_EMAIL=you@example.com
+CONTACT_FROM_EMAIL=contact@your-domain.com
 ```
 
-This value is server-only (`$env/dynamic/private`). Never expose it to the client.
+These values are server-only (`$env/dynamic/private`). Never expose them to the client.
 
 ```sh
 pnpm codegen   # generate GraphQL types from the live schema

@@ -7,11 +7,12 @@ import {
 } from '$lib/graphql/generated/graphql';
 import { toAboutPage } from '$lib/server/about';
 import { createApolloClient } from '$lib/server/apollo';
+import { PAGE_CACHE_CONTROL } from '$lib/server/cache';
 import { toExperienceItem } from '$lib/server/experience';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ fetch }) => {
+export const load: PageServerLoad = async ({ fetch, setHeaders }) => {
 	const endpoint = env.WORDPRESS_GRAPHQL_URL;
 
 	if (!endpoint) {
@@ -48,6 +49,8 @@ export const load: PageServerLoad = async ({ fetch }) => {
 	if (!experiences) {
 		error(502, 'Unable to load experiences from WordPress');
 	}
+
+	setHeaders({ 'cache-control': PAGE_CACHE_CONTROL });
 
 	return {
 		page: toAboutPage(page),

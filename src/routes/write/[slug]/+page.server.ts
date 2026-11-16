@@ -5,12 +5,13 @@ import {
 	type PostFieldsFragment
 } from '$lib/graphql/generated/graphql';
 import { createApolloClient } from '$lib/server/apollo';
+import { PAGE_CACHE_CONTROL } from '$lib/server/cache';
 import { toPostItem } from '$lib/server/post';
 import { addHeadingAnchors, getReadingMinutes } from '../../../utils/post-content';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ fetch, params }) => {
+export const load: PageServerLoad = async ({ fetch, params, setHeaders }) => {
 	const endpoint = env.WORDPRESS_GRAPHQL_URL;
 
 	if (!endpoint) {
@@ -51,6 +52,8 @@ export const load: PageServerLoad = async ({ fetch, params }) => {
 
 	const item = toPostItem(post);
 	const { html, toc } = addHeadingAnchors(item.content ?? '');
+
+	setHeaders({ 'cache-control': PAGE_CACHE_CONTROL });
 
 	return {
 		post: { ...item, content: html || undefined },

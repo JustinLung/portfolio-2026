@@ -1,11 +1,12 @@
 import { env } from '$env/dynamic/private';
 import { PostsDocument } from '$lib/graphql/generated/graphql';
 import { createApolloClient } from '$lib/server/apollo';
+import { PAGE_CACHE_CONTROL } from '$lib/server/cache';
 import { toPostItem } from '$lib/server/post';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ fetch }) => {
+export const load: PageServerLoad = async ({ fetch, setHeaders }) => {
 	const endpoint = env.WORDPRESS_GRAPHQL_URL;
 
 	if (!endpoint) {
@@ -13,6 +14,8 @@ export const load: PageServerLoad = async ({ fetch }) => {
 	}
 
 	const client = createApolloClient(endpoint, fetch);
+
+	let posts: ReturnType<typeof toPostItem>[];
 
 	try {
 		const { data } = await client.query({
@@ -24,11 +27,13 @@ export const load: PageServerLoad = async ({ fetch }) => {
 			throw new Error('WordPress returned no post data');
 		}
 
-		return {
-			posts: data.posts.nodes.map(toPostItem)
-		};
+		posts = data.posts.nodes.map(toPostItem);
 	} catch (cause) {
 		console.error('Failed to fetch posts from WordPress', cause);
 		error(502, 'Unable to load writing from WordPress');
 	}
+
+	setHeaders({ 'cache-control': PAGE_CACHE_CONTROL });
+
+	return { posts };
 };
