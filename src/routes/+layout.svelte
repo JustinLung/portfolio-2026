@@ -7,6 +7,7 @@
 	import '../lib/css/variables.css';
 	import '../lib/css/button.css';
 	import '../utils/easter-egg';
+	import appleTouchIcon from '$lib/assets/apple-touch-icon.png';
 	import favicon from '$lib/assets/favicon.ico';
 	import CustomCursor from '$lib/components/shared/ui/CustomCursor.svelte';
 	import Footer from '$lib/components/layout/Footer.svelte';
@@ -49,6 +50,7 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
+	<link rel="apple-touch-icon" href={appleTouchIcon} />
 	<link rel="alternate" type="application/rss+xml" title={RSS_TITLE} href="/rss.xml" />
 </svelte:head>
 

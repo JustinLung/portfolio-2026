@@ -68,3 +68,29 @@ test('skip link moves focus to the main content', async ({ page }) => {
 
 	await expect(page.locator('main#main')).toBeFocused();
 });
+
+test('web manifest is served and linked', async ({ page, request }) => {
+	await page.goto('/');
+	await expect(page.locator('link[rel="manifest"]')).toHaveAttribute(
+		'href',
+		'/manifest.webmanifest'
+	);
+
+	const response = await request.get('/manifest.webmanifest');
+	expect(response.status()).toBe(200);
+	const manifest = await response.json();
+
+	expect(manifest.name).toBeTruthy();
+	expect(manifest.start_url).toBe('/');
+	for (const icon of manifest.icons) {
+		expect((await request.get(icon.src)).status()).toBe(200);
+	}
+});
+
+test('theme-color follows the selected theme', async ({ page }) => {
+	await page.addInitScript(() => localStorage.setItem('portfolio:theme', 'midnight'));
+	await page.goto('/');
+
+	const meta = page.locator('meta[name="theme-color"]');
+	await expect(meta).toHaveAttribute('content', '#111318');
+});

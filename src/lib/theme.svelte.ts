@@ -23,9 +23,19 @@ export function initializeTheme(): void {
 	setTheme(isThemeId(applied) ? applied : themeState.id, false);
 }
 
+/** Matches the browser UI (mobile address bar, installed-app title bar) to the page background. */
+function syncThemeColor(): void {
+	const color = getComputedStyle(document.documentElement)
+		.getPropertyValue('--color-neutral-800')
+		.trim();
+
+	if (color) document.querySelector('meta[name="theme-color"]')?.setAttribute('content', color);
+}
+
 export function setTheme(id: ThemeId, persist = true): void {
 	// The attribute must change before the state so listeners read the new CSS variables.
 	document.documentElement.dataset.theme = id;
+	syncThemeColor();
 	themeState.id = id;
 
 	if (!persist) return;
