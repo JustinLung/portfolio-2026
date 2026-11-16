@@ -240,3 +240,35 @@ serves for 5 minutes and then serves stale for up to a day while refreshing.
 
 Prerendering with a WordPress webhook to rebuild (rejected for now: needs webhook and deploy
 plumbing); ISR (rejected: adapter-auto doesn't configure it, and headers are simpler).
+
+## ADR-010: The loader and hero scene must not gate content on the network
+
+- **Date:** 2026-11-16
+- **Status:** Accepted
+- **Related spec:** ADR-002, ADR-007
+
+### Context
+
+Measured on a throttled mobile profile (412px, 2.6 DPR, 4x CPU, 1.6 Mbps, 150 ms RTT, cold cache), the
+home page took about 26 s to reach LCP and the loader stayed up for about 39 s. The loader waited
+for the window `load` event, every non-lazy image (including all six below-the-fold work cards),
+and Three.js, which was in the main route bundle.
+
+### Decision
+
+- The loader waits only for fonts and images near the first screen, and gives up after 2.5 s.
+- Below-the-fold work cards use `loading="lazy"`; on `/work` only the first two are eager.
+- Three.js and the hero scene are imported dynamically after hydration.
+
+### Consequences
+
+- Same profile after the change: home LCP about 9.5 s and loader about 8 s; `/work` loader about 6 s.
+  The remaining time is mostly the loader animation (about 3 s) and route JavaScript.
+- The hero rose appears shortly after the title and content instead of with them.
+- New eager images near the top of a page now delay the loader; mark below-the-fold ones lazy.
+- The measurement was synthetic and local; confirm with field data (Vercel Speed Insights or CrUX).
+
+### Alternatives considered
+
+Skipping the loader on repeat visits in a session (not done: needs an inline script to avoid a flash
+of the overlay). Removing the loader (a design decision, not made here).
