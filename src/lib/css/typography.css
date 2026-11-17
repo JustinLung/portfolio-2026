@@ -291,3 +291,37 @@ p {
 		opacity: 0.7;
 	}
 }
+
+/* Added by the `headingLinks` action to content headings. Visible on hover or focus, and always on touch. */
+.heading-link {
+	margin-inline-start: 0.25em;
+	padding: 0 0.35em;
+	min-width: 1.5rem;
+	min-height: 1.5rem;
+	font: inherit;
+	font-size: 0.7em;
+	color: inherit;
+	background: transparent;
+	border: 0;
+	border-radius: 4px;
+	cursor: pointer;
+	opacity: 0;
+	transition: opacity 0.15s;
+	vertical-align: middle;
+}
+
+:where(h2, h3):hover > .heading-link,
+.heading-link:focus-visible {
+	opacity: 0.6;
+}
+
+.heading-link:hover,
+.heading-link:focus-visible {
+	opacity: 1;
+}
+
+@media (hover: none) {
+	.heading-link {
+		opacity: 0.5;
+	}
+}

@@ -54,6 +54,7 @@
 		"@apollo/client": "^4.2.9",
 		"@resvg/resvg-js": "^2.6.2",
 		"@threlte/core": "^8.5.16",
+		"@vercel/analytics": "^2.0.1",
 		"embla-carousel": "^8.6.0",
 		"embla-carousel-svelte": "^8.6.0",
 		"graphql": "^17.0.2",

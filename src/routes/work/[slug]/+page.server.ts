@@ -7,6 +7,7 @@ import {
 import { createApolloClient } from '$lib/server/apollo';
 import { PAGE_CACHE_CONTROL } from '$lib/server/cache';
 import { getAdjacentWorks, sortWorksByYearDesc, toWorkItem } from '$lib/server/work';
+import { addHeadingAnchors } from '../../../utils/post-content';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
@@ -52,8 +53,10 @@ export const load: PageServerLoad = async ({ fetch, params, setHeaders }) => {
 
 	setHeaders({ 'cache-control': PAGE_CACHE_CONTROL });
 
+	const item = toWorkItem(work);
+
 	return {
-		work: toWorkItem(work),
+		work: { ...item, content: item.content ? addHeadingAnchors(item.content).html : undefined },
 		previous,
 		next
 	};

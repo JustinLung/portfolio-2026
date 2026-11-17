@@ -7,6 +7,8 @@
 	import ReadProgress from '$lib/components/shared/ui/ReadProgress.svelte';
 	import ShareButtons from '$lib/components/shared/ui/ShareButtons.svelte';
 	import { copyCode } from '$lib/actions/copy-code';
+	import { headingLinks } from '$lib/actions/heading-links';
+	import PostPager from '$lib/components/shared/post-components/PostPager.svelte';
 	import { htmlToText } from '../../../utils/text';
 	import { articleJsonLd } from '../../../utils/structured-data';
 	import type { PageProps } from './$types';
@@ -55,7 +57,11 @@
 				<PostToc items={data.toc} />
 			</aside>
 
-			<div class="post__content prose" use:copyCode={data.post.content}>
+			<div
+				class="post__content prose"
+				use:copyCode={data.post.content}
+				use:headingLinks={data.post.content}
+			>
 				<!-- eslint-disable-next-line svelte/no-at-html-tags -- Content comes from the trusted WordPress CMS. -->
 				{@html data.post.content}
 			</div>
@@ -66,6 +72,8 @@
 		<ShareButtons title={data.post.title} />
 	</footer>
 </article>
+
+<PostPager previous={data.previous} next={data.next} />
 
 <RelatedPostsCarousel posts={data.relatedPosts} title="Related posts" />
 

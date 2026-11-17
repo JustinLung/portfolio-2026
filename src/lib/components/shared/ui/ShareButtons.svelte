@@ -6,6 +6,7 @@
 	import LinkedinIcon from '$lib/assets/icons/linkedin.svg?component';
 	import ShareIcon from '$lib/assets/icons/share.svg?component';
 	import XIcon from '$lib/assets/icons/x.svg?component';
+	import { trackEvent } from '$lib/analytics';
 	import { showToast } from '$lib/toast.svelte';
 	import { SITE_URL } from '../../../../utils/site';
 
@@ -48,6 +49,7 @@
 	async function share() {
 		try {
 			await navigator.share({ title, url });
+			trackEvent('Share', { method: 'native' });
 		} catch (cause) {
 			// Dismissing the share sheet rejects with AbortError. That is not a failure.
 			if (!(cause instanceof DOMException && cause.name === 'AbortError')) {
@@ -61,6 +63,7 @@
 			await navigator.clipboard.writeText(url);
 			copied = true;
 			showToast('Link copied');
+			trackEvent('Share', { method: 'copy link' });
 			clearTimeout(resetTimeout);
 			resetTimeout = setTimeout(() => (copied = false), 2000);
 		} catch {

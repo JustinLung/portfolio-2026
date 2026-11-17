@@ -210,3 +210,58 @@ test.describe('toasts', () => {
 		await expect(page.locator('.toaster[role="status"]')).toHaveCount(1);
 	});
 });
+
+test.describe('error page', () => {
+	test('404 suggests content and clears the header on a phone', async ({ page }) => {
+		await page.setViewportSize({ width: 390, height: 700 });
+		await page.goto('/nothing-here');
+
+		await expect(
+			page.getByRole('navigation', { name: 'Maybe you were looking for' })
+		).toBeVisible();
+		const heading = await page.getByRole('heading', { level: 1, name: '404' }).boundingBox();
+		const header = await page.locator('header').first().boundingBox();
+		expect(heading!.y).toBeGreaterThanOrEqual(header!.y + header!.height);
+	});
+});
+
+test.describe('writing', () => {
+	test('a post shows reading time and older/newer links when neighbours exist', async ({
+		page
+	}) => {
+		await page.goto('/write');
+		const hrefs = await page
+			.locator('main a[href^="/write/"]')
+			.evaluateAll((nodes) => [...new Set(nodes.map((n) => n.getAttribute('href')!))]);
+		test.skip(hrefs.length === 0, 'No posts in the CMS');
+
+		await page.goto(hrefs[0]);
+		await expect(page.getByText(/\d+ min read/)).toBeVisible();
+
+		if (hrefs.length > 1) {
+			await expect(page.getByRole('navigation', { name: 'More posts' })).toBeVisible();
+		}
+	});
+
+	test('a section link copies a URL with the heading anchor', async ({ page, context }) => {
+		await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+		await page.goto('/write');
+		const hrefs = await page
+			.locator('main a[href^="/write/"]')
+			.evaluateAll((nodes) => [...new Set(nodes.map((n) => n.getAttribute('href')!))]);
+
+		let found = false;
+		for (const href of hrefs) {
+			await page.goto(href);
+			if ((await page.locator('.post__content .heading-link').count()) > 0) {
+				found = true;
+				break;
+			}
+		}
+		test.skip(!found, 'No post with headings in the CMS');
+
+		await page.locator('.post__content .heading-link').first().click();
+		await expect(page.locator('.toast', { hasText: 'Link to section copied' })).toBeVisible();
+		expect(await page.evaluate(() => navigator.clipboard.readText())).toMatch(/^https:\/\/.+#.+/);
+	});
+});

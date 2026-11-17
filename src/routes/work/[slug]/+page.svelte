@@ -4,6 +4,7 @@
 	import ReadProgress from '$lib/components/shared/ui/ReadProgress.svelte';
 	import ShareButtons from '$lib/components/shared/ui/ShareButtons.svelte';
 	import WorkPager from '$lib/components/shared/work-components/WorkPager.svelte';
+	import { headingLinks } from '$lib/actions/heading-links';
 	import { onMount } from 'svelte';
 	import { observeHeaderHeight } from '../../../utils/header-height';
 	import type { PageProps } from './$types';
@@ -112,7 +113,7 @@
 	<section class="work-detail__main" aria-labelledby="project-content-title">
 		<h2 id="project-content-title" class="visually-hidden">Project details</h2>
 		{#if data.work.content}
-			<div class="work-detail__content">
+			<div class="work-detail__content" use:headingLinks={data.work.content}>
 				<!-- eslint-disable-next-line svelte/no-at-html-tags -- Content comes from the trusted WordPress CMS. -->
 				{@html data.work.content}
 			</div>

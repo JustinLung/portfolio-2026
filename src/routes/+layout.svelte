@@ -16,6 +16,7 @@
 	import PageTransition from '$lib/components/shared/ui/PageTransition.svelte';
 	import Toaster from '$lib/components/shared/ui/Toaster.svelte';
 	import SiteLoader from '$lib/components/shared/ui/SiteLoader.svelte';
+	import { initializeAnalytics } from '$lib/analytics';
 	import { initializeSettings, settings } from '$lib/settings.svelte';
 	import { initializeSfx, setSfxVolume, unlockSfx } from '$lib/sfx.svelte';
 	import { initializeTheme } from '$lib/theme.svelte';
@@ -26,6 +27,7 @@
 
 	onMount(() => {
 		initializeTheme();
+		initializeAnalytics();
 		initializeSettings();
 
 		const destroySfx = initializeSfx(document);

@@ -61,6 +61,8 @@ export type PostItem = {
 	imageMeta?: ImageMeta;
 };
 
+export type AdjacentPost = Pick<PostItem, 'slug' | 'title' | 'category' | 'date'>;
+
 export type AboutProps = {
 	title: string;
 	content: string;

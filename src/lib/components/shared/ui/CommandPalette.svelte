@@ -10,6 +10,7 @@
 	import TerminalIcon from '$lib/assets/icons/terminal.svg?component';
 	import { setTheme, themes, themeState } from '$lib/theme.svelte';
 	import { CONTACT_EMAIL, CV_URL, links, policyLinks, RSS_URL } from '../../../../utils/links';
+	import { trackEvent } from '$lib/analytics';
 	import { showToast } from '$lib/toast.svelte';
 	import type { Command, SearchEntry, SearchIndex } from '../../../../utils/types';
 
@@ -289,6 +290,7 @@
 		if (closing) return;
 
 		ranCommand = true;
+		trackEvent('Palette command', { group: command.group });
 		dismiss();
 
 		void Promise.resolve(command.run()).then((result) => {
@@ -342,6 +344,7 @@
 
 		input.focus();
 		playSfx('open');
+		trackEvent('Palette opened');
 		untrack(() => void loadSearchIndex());
 
 		const unlock = lockScroll();

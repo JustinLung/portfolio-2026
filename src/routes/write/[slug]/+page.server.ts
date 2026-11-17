@@ -6,7 +6,8 @@ import {
 } from '$lib/graphql/generated/graphql';
 import { createApolloClient } from '$lib/server/apollo';
 import { PAGE_CACHE_CONTROL } from '$lib/server/cache';
-import { toPostItem } from '$lib/server/post';
+import { getAdjacentPosts, toPostItem } from '$lib/server/post';
+import type { AdjacentPost } from '../../../utils/types';
 import { addHeadingAnchors, getReadingMinutes } from '../../../utils/post-content';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
@@ -21,6 +22,8 @@ export const load: PageServerLoad = async ({ fetch, params, setHeaders }) => {
 	const client = createApolloClient(endpoint, fetch);
 	let post: PostFieldsFragment | null;
 	let relatedPosts: ReturnType<typeof toPostItem>[] = [];
+	let previous: AdjacentPost | null = null;
+	let next: AdjacentPost | null = null;
 
 	try {
 		const [{ data: postData }, { data: postsData }] = await Promise.all([
@@ -36,6 +39,10 @@ export const load: PageServerLoad = async ({ fetch, params, setHeaders }) => {
 		]);
 
 		post = postData?.post ?? null;
+		({ previous, next } = getAdjacentPosts(
+			(postsData?.posts?.nodes ?? []).map(toPostItem),
+			params.slug
+		));
 		relatedPosts =
 			postsData?.posts?.nodes
 				.filter((item) => item.slug !== params.slug)
@@ -59,6 +66,8 @@ export const load: PageServerLoad = async ({ fetch, params, setHeaders }) => {
 		post: { ...item, content: html || undefined },
 		toc,
 		readingMinutes: getReadingMinutes(item.content ?? ''),
-		relatedPosts
+		relatedPosts,
+		previous,
+		next
 	};
 };

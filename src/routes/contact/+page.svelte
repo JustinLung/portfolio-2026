@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Seo from '$lib/components/shared/misc/Seo.svelte';
 	import { CONTACT_EMAIL, socialLinks } from '../../utils/links';
+	import { trackEvent } from '$lib/analytics';
 	import { playSfx } from '$lib/sfx.svelte';
 	import { enhance } from '$app/forms';
 	import type { SubmitFunction } from '@sveltejs/kit';
@@ -27,7 +28,8 @@
 		dismissed = false;
 		playSfx('send');
 
-		return async ({ update }) => {
+		return async ({ result, update }) => {
+			if (result.type === 'success' && result.data?.success) trackEvent('Contact sent');
 			await update();
 			sending = false;
 		};
