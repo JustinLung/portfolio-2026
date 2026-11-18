@@ -15,7 +15,7 @@
 		updateSetting
 	} from '$lib/settings.svelte';
 	import { lockScroll } from '$lib/scroll-lock';
-	import { playSfx } from '$lib/sfx.svelte';
+	import { playSfx, setSfxEnabled, sfxState } from '$lib/sfx.svelte';
 	import TerminalIcon from '$lib/assets/icons/terminal.svg?component';
 	import SettingsIcon from '$lib/assets/icons/settings.svg?component';
 	import BottomSheet from '../shared/ui/BottomSheet.svelte';
@@ -23,7 +23,6 @@
 	import { themes, themeState } from '$lib/theme.svelte';
 	import SegmentedControl from '../shared/ui/SegmentedControl.svelte';
 	import VolumeSlider from '../shared/ui/VolumeSlider.svelte';
-	import SoundToggle from '../shared/ui/SoundToggle.svelte';
 	import ThemePicker from '../shared/ui/ThemePicker.svelte';
 
 	type Tab = 'menu' | 'settings';
@@ -277,9 +276,13 @@
 					<p class="header__setting-label">Sound</p>
 					<p class="header__setting-hint">Play interface sound effects</p>
 				</div>
-				<div class="header__sound">
-					<SoundToggle />
-				</div>
+				<SegmentedControl
+					name="setting-sound"
+					label="Sound"
+					options={onOffOptions}
+					value={sfxState.enabled ? 'on' : 'off'}
+					onchange={(value) => setSfxEnabled(value === 'on')}
+				/>
 			</div>
 			<div class="header__setting">
 				<label class="header__setting-label" for="setting-volume">Volume</label>
@@ -599,11 +602,6 @@
 		align-items: stretch;
 		gap: 12px;
 		padding-bottom: 0;
-	}
-
-	.header__sound {
-		color: var(--color-white);
-		font-size: 1rem;
 	}
 
 	.header__setting-heading {

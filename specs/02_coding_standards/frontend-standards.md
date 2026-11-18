@@ -84,7 +84,7 @@ preferences.
 - Add `data-uisfx` and `data-uisfx-hover` on interactive elements (links, buttons, cards).
 - Call `playSfx()` only when a cue cannot be declared on the element (submit, filter, toggle).
 - Use `playSfxIfUnlocked()` when a cue might fire before the visitor has unlocked audio.
-- Keep the footer `SoundToggle` as the visitor control; do not add a second mute path.
+- Sound is controlled from the settings sheet's Sound on/off control and the command palette, both through `src/lib/sfx.svelte.ts`; do not add a separate mute path.
 - Every action must remain complete with sound off, reduced motion, or a blocked audio context.
 
 ## Design principles

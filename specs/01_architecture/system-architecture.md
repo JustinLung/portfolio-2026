@@ -130,8 +130,8 @@ boundary and make absence intentional in component props.
 - Interface sounds use `uisfx`, initialized once from the root layout in `src/lib/sfx.ts`.
 - Prefer declarative `data-uisfx` / `data-uisfx-hover` attributes on interactive elements.
 - Call `playSfx()` only when a cue is not expressible as a data attribute (forms, filters, toggles).
-- Audio unlocks on the first pointer or keyboard interaction and can be disabled from the footer
-  `SoundToggle`. Preference persists via the uisfx `portfolio:sound` key.
+- Audio unlocks on the first pointer or keyboard interaction and can be disabled from the settings
+  sheet or the command palette. Preference persists via the uisfx `portfolio:sound` key.
 - Sound is enhancement: every action must work with sound off or blocked by autoplay policy.
 
 ## Architectural constraints

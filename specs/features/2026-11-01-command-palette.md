@@ -85,7 +85,7 @@ leaving the keyboard. It is also a visible demonstration of the site's accessibi
   keep working and the fetch is retried on the next open.
 - With an empty query, Projects and Writing show only the latest 5 each.
 - `src/lib/scroll-lock.ts` (new); `Header.svelte` sheet lock moved onto it.
-- `toggleSfx()` added to `src/lib/sfx.svelte.ts` and used by both `SoundToggle` and the palette, so
+- `toggleSfx()` added to `src/lib/sfx.svelte.ts` and used by the palette (the settings sheet uses `setSfxEnabled`), so
   there is one code path and one piece of state for sound (see ADR-006).
 
 ## Acceptance criteria
