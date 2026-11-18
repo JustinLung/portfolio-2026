@@ -265,3 +265,17 @@ test.describe('writing', () => {
 		expect(await page.evaluate(() => navigator.clipboard.readText())).toMatch(/^https:\/\/.+#.+/);
 	});
 });
+
+test('sound uses the same On/Off control as the other settings', async ({ page }) => {
+	await page.goto('/');
+	await page.locator('.footer__settings-button').click();
+
+	const sound = page.getByRole('radiogroup', { name: 'Sound' });
+	const ascii = page.getByRole('radiogroup', { name: 'ASCII effect' });
+	await expect(sound).toBeVisible();
+	await expect(sound.getByRole('radio')).toHaveCount(2);
+	await expect(ascii.getByRole('radio')).toHaveCount(2);
+
+	await sound.getByText('Off').click();
+	await expect(sound.getByRole('radio', { name: 'Off' })).toBeChecked();
+});
