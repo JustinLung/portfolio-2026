@@ -36,6 +36,8 @@
 	let paletteOpen = $state(false);
 	let tab = $state<Tab>('menu');
 	let panels: HTMLElement;
+	let volumeRow: HTMLElement;
+	let asciiRow: HTMLElement;
 	let menuButton: HTMLButtonElement;
 	let settingsButton: HTMLButtonElement;
 
@@ -121,6 +123,29 @@
 	});
 
 	$effect(() => () => gsap.killTweensOf(panels));
+
+	// Dependent settings collapse while their parent is off. Animate, but snap
+	// when the panel is hidden or motion is reduced so nothing tweens unseen.
+	function collapse(node: HTMLElement | undefined, open: boolean) {
+		if (!node) return;
+
+		const target = open ? { height: 'auto', opacity: 1 } : { height: 0, opacity: 0 };
+		gsap.killTweensOf(node);
+
+		if (node.offsetParent === null || prefersReducedMotion()) {
+			gsap.set(node, target);
+			return;
+		}
+
+		gsap.to(node, { ...target, duration: 0.5, ease: 'expo.out' });
+		return () => gsap.killTweensOf(node);
+	}
+
+	const soundOn = $derived(sfxState.enabled);
+	const renderOn = $derived(settings.quality !== 'off');
+
+	$effect(() => collapse(volumeRow, soundOn));
+	$effect(() => collapse(asciiRow, renderOn));
 
 	$effect(() => {
 		window.addEventListener('opensettings', openSettings);
@@ -284,22 +309,49 @@
 					onchange={(value) => setSfxEnabled(value === 'on')}
 				/>
 			</div>
-			<div class="header__setting">
-				<label class="header__setting-label" for="setting-volume">Volume</label>
-				<VolumeSlider id="setting-volume" />
+			<div
+				bind:this={volumeRow}
+				class="header__collapsible"
+				inert={!soundOn}
+				aria-hidden={!soundOn}
+			>
+				<div class="header__setting">
+					<label class="header__setting-label" for="setting-volume">Volume</label>
+					<VolumeSlider id="setting-volume" />
+				</div>
 			</div>
 			<div class="header__setting">
 				<div>
-					<p class="header__setting-label">ASCII effect</p>
-					<p class="header__setting-hint">Render the rose as text</p>
+					<p class="header__setting-label">3D quality</p>
+					<p class="header__setting-hint">Lower it if the page feels slow</p>
 				</div>
 				<SegmentedControl
-					name="setting-ascii"
-					label="ASCII effect"
-					options={onOffOptions}
-					value={settings.ascii ? 'on' : 'off'}
-					onchange={(value) => updateSetting('ascii', value === 'on')}
+					name="setting-quality"
+					label="3D quality"
+					options={qualityOptions}
+					value={settings.quality}
+					onchange={(value) => updateSetting('quality', value)}
 				/>
+			</div>
+			<div
+				bind:this={asciiRow}
+				class="header__collapsible"
+				inert={!renderOn}
+				aria-hidden={!renderOn}
+			>
+				<div class="header__setting">
+					<div>
+						<p class="header__setting-label">ASCII effect</p>
+						<p class="header__setting-hint">Render the rose as text</p>
+					</div>
+					<SegmentedControl
+						name="setting-ascii"
+						label="ASCII effect"
+						options={onOffOptions}
+						value={settings.ascii ? 'on' : 'off'}
+						onchange={(value) => updateSetting('ascii', value === 'on')}
+					/>
+				</div>
 			</div>
 			{#if finePointer.current}
 				<div class="header__setting">
@@ -327,19 +379,6 @@
 					options={motionOptions}
 					value={settings.motion}
 					onchange={(value) => updateSetting('motion', value)}
-				/>
-			</div>
-			<div class="header__setting">
-				<div>
-					<p class="header__setting-label">3D quality</p>
-					<p class="header__setting-hint">Lower it if the page feels slow</p>
-				</div>
-				<SegmentedControl
-					name="setting-quality"
-					label="3D quality"
-					options={qualityOptions}
-					value={settings.quality}
-					onchange={(value) => updateSetting('quality', value)}
 				/>
 			</div>
 			<div class="header__setting header__setting--stacked">
@@ -595,6 +634,10 @@
 		gap: 16px;
 		padding-block: 12px;
 		border-top: 1px solid color-mix(in srgb, var(--color-quaternary) 40%, transparent);
+	}
+
+	.header__collapsible {
+		overflow: hidden;
 	}
 
 	.header__setting--stacked {
