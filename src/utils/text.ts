@@ -48,3 +48,29 @@ export function escapeXml(value: string): string {
 		.replace(/"/g, '&quot;')
 		.replace(/'/g, '&apos;');
 }
+
+/** Shortens text to about `max` characters at a word boundary, adding an ellipsis when it cut anything. */
+export function truncateText(text: string, max: number): string {
+	if (text.length <= max) return text;
+
+	const cut = text.slice(0, max - 1);
+	const lastSpace = cut.lastIndexOf(' ');
+
+	return `${(lastSpace > max * 0.6 ? cut.slice(0, lastSpace) : cut).replace(/[\s.,;:–—-]+$/, '')}…`;
+}
+
+/**
+ * WordPress can emit `http://` media URLs, which browsers block or warn about on an HTTPS page
+ * (a blocked video simply doesn't play). Upgrades `src`, `srcset`, and `poster` attributes only,
+ * leaving ordinary links alone.
+ */
+export function upgradeMediaUrls(html: string): string {
+	return html
+		.replace(/(\s(?:src|poster)=["'])http:\/\//gi, '$1https://')
+		.replace(
+			/(\ssrcset=(["']))([^"']*)\2/gi,
+			(_match, start: string, quote: string, value: string) => {
+				return `${start}${value.replace(/http:\/\//gi, 'https://')}${quote}`;
+			}
+		);
+}

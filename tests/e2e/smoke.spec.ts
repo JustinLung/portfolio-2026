@@ -268,6 +268,8 @@ test.describe('writing', () => {
 
 test('sound uses the same On/Off control as the other settings', async ({ page }) => {
 	await page.goto('/');
+	// Wait for hydration: the settings button does nothing until its handler is attached.
+	await page.waitForLoadState('networkidle');
 	await page.locator('.footer__settings-button').click();
 
 	const sound = page.getByRole('radiogroup', { name: 'Sound' });
@@ -276,6 +278,32 @@ test('sound uses the same On/Off control as the other settings', async ({ page }
 	await expect(sound.getByRole('radio')).toHaveCount(2);
 	await expect(ascii.getByRole('radio')).toHaveCount(2);
 
-	await sound.getByText('Off').click();
+	// The native radio sits over its label, so click it directly.
+	await sound.getByRole('radio', { name: 'Off' }).click();
 	await expect(sound.getByRole('radio', { name: 'Off' })).toBeChecked();
+});
+
+test('pages have a canonical URL, a short description, and security headers', async ({ page }) => {
+	const response = await page.goto('/work');
+
+	await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /\/work$/);
+	const description = await page.locator('meta[name="description"]').getAttribute('content');
+	expect(description!.length).toBeLessThanOrEqual(160);
+
+	const headers = response!.headers();
+	expect(headers['x-content-type-options']).toBe('nosniff');
+	expect(headers['referrer-policy']).toBeTruthy();
+});
+
+test('case study media is not requested over plain http', async ({ page }) => {
+	await page.goto('/work');
+	const href = await page.locator('main a[href^="/work/"]').first().getAttribute('href');
+	await page.goto(href!);
+
+	const insecure = await page.evaluate(() =>
+		[...document.querySelectorAll('main [src], main [srcset], main [poster]')]
+			.flatMap((node) => ['src', 'srcset', 'poster'].map((attr) => node.getAttribute(attr) ?? ''))
+			.filter((value) => /(^|\s|,)http:\/\//.test(value))
+	);
+	expect(insecure).toEqual([]);
 });

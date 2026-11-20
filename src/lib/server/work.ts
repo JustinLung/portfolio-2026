@@ -1,5 +1,6 @@
 import type { WorkFieldsFragment } from '$lib/graphql/generated/graphql';
 import type { AdjacentWork, WorkItem } from '../../utils/types';
+import { upgradeMediaUrls } from '../../utils/text';
 import { toImageMeta } from './media';
 
 export function toWorkItem(work: WorkFieldsFragment): WorkItem {
@@ -23,7 +24,7 @@ export function toWorkItem(work: WorkFieldsFragment): WorkItem {
 		categories,
 		year: work.workFields?.year != null ? Math.trunc(work.workFields.year) : undefined,
 		date: work.date,
-		content: work.content ?? undefined,
+		content: work.content ? upgradeMediaUrls(work.content) : undefined,
 		excerpt: work.workFields?.excerpt ?? undefined,
 		siteUrl: work.workFields?.siteUrl ?? undefined,
 		githubUrl: work.workFields?.githubUrl ?? undefined,

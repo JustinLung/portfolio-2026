@@ -1,5 +1,6 @@
 import type { PostFieldsFragment } from '$lib/graphql/generated/graphql';
 import type { AdjacentPost, PostItem } from '../../utils/types';
+import { upgradeMediaUrls } from '../../utils/text';
 import { toImageMeta } from './media';
 
 export function toPostItem(post: PostFieldsFragment): PostItem {
@@ -13,7 +14,7 @@ export function toPostItem(post: PostFieldsFragment): PostItem {
 		title: post.title,
 		date: post.date,
 		category: post.categories?.nodes.find(({ name }) => Boolean(name))?.name ?? 'Writing',
-		content: post.content ?? undefined,
+		content: post.content ? upgradeMediaUrls(post.content) : undefined,
 		excerpt: post.excerpt ?? undefined,
 		image: post.featuredImage?.node.sourceUrl ?? undefined,
 		imageAlt: post.featuredImage?.node.altText || post.title,

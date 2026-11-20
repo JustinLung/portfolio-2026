@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { SITE_URL } from '../../../../utils/site';
-	import { htmlToText } from '../../../../utils/text';
+	import { htmlToText, truncateText } from '../../../../utils/text';
 	import type { SeoProps } from '../../../../utils/types';
 
 	let {
@@ -25,8 +25,9 @@
 	const documentTitle = $derived(`Portfolio | ${title}`);
 
 	// WordPress excerpts are HTML with entities (`&#8217;`) and a `[&hellip;]` read-more marker.
+	// Search results cut descriptions at about 160 characters, so a long excerpt is shortened here.
 	const plainDescription = $derived(
-		description ? htmlToText(description).replace(/\s*\[…\]$/, '…') : undefined
+		description ? truncateText(htmlToText(description).replace(/\s*\[…\]$/, '…'), 160) : undefined
 	);
 </script>
 
@@ -40,6 +41,7 @@
 	{#if plainDescription}
 		<meta name="description" content={plainDescription} />
 	{/if}
+	<link rel="canonical" href={pageUrl} />
 	<meta name="author" content={author} />
 	<meta name="robots" content={robots} />
 	<meta property="og:title" content={documentTitle} />
