@@ -286,10 +286,6 @@
 				margin-bottom: 128px;
 			}
 
-			.footer__heading {
-				max-width: 620px;
-			}
-
 			.footer__navigation {
 				grid-column: 1 / 3;
 				grid-row: 2;

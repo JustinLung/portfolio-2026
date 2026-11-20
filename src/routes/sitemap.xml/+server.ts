@@ -56,7 +56,7 @@ export const GET: RequestHandler = async ({ fetch }) => {
 	const urls = entries
 		.map(
 			({ path, lastmod }) => `	<url>
-		<loc>${escapeXml(path === '/' ? SITE_URL : `${SITE_URL}${path}`)}</loc>${
+		<loc>${escapeXml(`${SITE_URL}${path}`)}</loc>${
 			lastmod ? `\n\t\t<lastmod>${lastmod}</lastmod>` : ''
 		}
 	</url>`
