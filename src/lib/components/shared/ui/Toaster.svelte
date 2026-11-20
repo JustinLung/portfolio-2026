@@ -81,7 +81,7 @@
 		font-size: 0.9375rem;
 		line-height: 1.4;
 		pointer-events: auto;
-		box-shadow: 0 8px 24px color-mix(in srgb, var(--color-black) 40%, transparent);
+		box-shadow: 0 8px 24px rgb(0 0 0 / 25%);
 	}
 
 	.toast--error {

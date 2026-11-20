@@ -4,13 +4,17 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="text-scale" content="scale" />
-		<!-- Default (Ember) page background; theme.svelte.ts keeps it in sync with the theme picker. -->
+		<!-- Default (Ember) page background; theme.svelte.ts keeps it in sync with the theme and mode. -->
 		<meta name="theme-color" content="#181411" />
 		<link rel="manifest" href="/manifest.webmanifest" />
 		<script>
 			try {
 				var theme = localStorage.getItem('portfolio:theme');
 				if (theme && /^[a-z]+$/.test(theme)) document.documentElement.dataset.theme = theme;
+				var mode = localStorage.getItem('portfolio:mode');
+				if (mode === 'system')
+					mode = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+				if (mode === 'light' || mode === 'dark') document.documentElement.dataset.mode = mode;
 			} catch (error) {}
 		</script>
 		%sveltekit.head%

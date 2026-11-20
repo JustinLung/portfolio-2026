@@ -24,7 +24,6 @@
 			isPrevious ? 'post-pager__link--previous' : 'post-pager__link--next'
 		]}
 		href={resolve('/write/[slug]', { slug: post.slug })}
-		aria-label="{isPrevious ? 'Newer' : 'Older'} post: {post.title}"
 		data-uisfx-hover="hover"
 		data-uisfx={isPrevious ? 'back' : 'forward'}
 	>

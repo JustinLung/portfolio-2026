@@ -12,7 +12,10 @@
 		if (readReducedMotion()) return;
 
 		const header = gsap.utils.toArray<HTMLElement>('.work-page__header > *', section);
-		const filters = gsap.utils.toArray<HTMLElement>('.work-list-filter, .work-list-view-button', section);
+		const filters = gsap.utils.toArray<HTMLElement>(
+			'.work-list-filter, .work-list-view-button',
+			section
+		);
 		const items = gsap.utils.toArray<HTMLElement>('.work-list-item', section);
 		const targets = [...header, ...filters, ...items];
 

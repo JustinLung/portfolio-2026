@@ -49,3 +49,26 @@ test.fixme('text meets 4.5:1 contrast on /', async ({ page }) => {
 
 	expect(violations).toEqual([]);
 });
+
+// Every theme in light mode, including contrast, which the dark themes don't pass yet (see the fixme above).
+for (const theme of ['ember', 'midnight', 'forest', 'dusk', 'graphite']) {
+	for (const path of ['/', '/work', '/contact']) {
+		test(`light ${theme} has no WCAG A/AA violations on ${path}`, async ({ page }) => {
+			await page.addInitScript((id) => {
+				localStorage.setItem('portfolio:theme', id);
+				localStorage.setItem('portfolio:mode', 'light');
+			}, theme);
+			await page.goto(path);
+			await page.waitForLoadState('networkidle');
+
+			const { violations } = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
+
+			expect(
+				violations.map(({ id, nodes }) => ({
+					id,
+					targets: nodes.slice(0, 3).map((node) => node.target.join(' '))
+				}))
+			).toEqual([]);
+		});
+	}
+}

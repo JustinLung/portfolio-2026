@@ -272,3 +272,38 @@ and Three.js, which was in the main route bundle.
 
 Skipping the loader on repeat visits in a session (not done: needs an inline script to avoid a flash
 of the overlay). Removing the loader (a design decision, not made here).
+
+## ADR-011: Themes are hue families with a light and a dark mode
+
+- **Date:** 2026-11-20
+- **Status:** Accepted
+- **Related spec:** ADR-003
+
+### Context
+
+The five themes were all dark. A single extra "light theme" would have had one accent and no way to
+combine light with the visitor's favourite theme.
+
+### Decision
+
+Theme (`data-theme`: ember, midnight, forest, dusk, graphite) and mode (`data-mode`: light or dark)
+are independent. The Appearance control offers Light, Dark, and System; System follows the device
+and updates live. `data-mode` always holds the resolved value, and the stored choice is in
+`portfolio:mode`. The default is Dark. In `colors.css`, token names describe roles: in light mode
+`--color-white` is the ink and `--color-black` sits on ink fills. Each theme supplies a light block
+with its own surfaces and accent, and `quaternary` muted text keeps at least 4.5:1.
+
+### Consequences
+
+- A new theme needs both a dark block and a `[data-theme][data-mode='light']` block.
+- Anything blended with `mix-blend-mode: difference` (header bar, cursor) sets `--color-white: #fff`
+  locally, because the blend only inverts the page with true white.
+- Light mode has an automated axe check for every theme (including contrast); the dark themes do not
+  pass contrast yet.
+- New visitors get Dark even if their device prefers light, to keep the site's identity.
+
+### Alternatives considered
+
+A single "Daylight" theme (rejected: one accent, no choice). Defaulting to System (not done: it would
+change the first impression for every visitor on a light device; it is a one-line change in
+`theme.svelte.ts` and `app.html`).

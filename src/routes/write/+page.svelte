@@ -173,7 +173,10 @@
 	});
 </script>
 
-<Seo title="Writing" description="Notes, ideas and articles by Justin Lung on creative frontend development, motion, accessibility and building for the web." />
+<Seo
+	title="Writing"
+	description="Notes, ideas and articles by Justin Lung on creative frontend development, motion, accessibility and building for the web."
+/>
 
 <section class="write-page" {@attach animateWritePage}>
 	<header class="write-page__header">

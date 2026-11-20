@@ -8,7 +8,7 @@
 	import { lockScroll } from '$lib/scroll-lock';
 	import { playSfx, sfxState, toggleSfx } from '$lib/sfx.svelte';
 	import TerminalIcon from '$lib/assets/icons/terminal.svg?component';
-	import { setTheme, themes, themeState } from '$lib/theme.svelte';
+	import { modeState, modes, setMode, setTheme, themes, themeState } from '$lib/theme.svelte';
 	import { CONTACT_EMAIL, CV_URL, links, policyLinks, RSS_URL } from '../../../../utils/links';
 	import { trackEvent } from '$lib/analytics';
 	import { showToast } from '$lib/toast.svelte';
@@ -87,6 +87,27 @@
 					}
 
 					return current ? `${label} theme is already active` : `${label} theme applied`;
+				}
+			};
+		});
+
+		const modeCommands = modes.map<Command>(({ id, label }) => {
+			const current = modeState.id === id;
+
+			return {
+				id: `mode-${id}`,
+				group: 'Themes',
+				label: `Use ${label.toLowerCase()} mode`,
+				hint: current ? 'Current mode' : undefined,
+				keywords: 'mode appearance light dark day night bright system device auto automatic',
+				current,
+				run: () => {
+					if (!current) {
+						setMode(id);
+						playSfx('select');
+					}
+
+					return current ? `${label} mode is already active` : `${label} mode applied`;
 				}
 			};
 		});
@@ -174,6 +195,7 @@
 			...actions,
 			...content('Projects', searchIndex?.works ?? [], 'Project', '/work/[slug]'),
 			...content('Writing', searchIndex?.posts ?? [], 'Post', '/write/[slug]'),
+			...modeCommands,
 			...themeCommands,
 			sound
 		];
@@ -441,7 +463,12 @@
 						>
 							{#if command.swatch}
 								<!-- `data-theme` scopes this theme's tokens to the swatch so it previews the real colors. -->
-								<span class="palette__swatch" data-theme={command.swatch} aria-hidden="true"></span>
+								<span
+									class="palette__swatch"
+									data-theme={command.swatch}
+									data-mode={modeState.resolved}
+									aria-hidden="true"
+								></span>
 							{/if}
 							<span class="palette__label">{command.label}</span>
 							{#if command.hint}

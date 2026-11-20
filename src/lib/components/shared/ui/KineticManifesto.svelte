@@ -16,12 +16,17 @@
 	];
 
 	onMount(() => {
-		if (readReducedMotion()) return;
+		const words = gsap.utils.toArray<HTMLElement>('.manifesto__word');
+
+		// Without the scroll reveal the words would stay dim, so show them in full.
+		if (readReducedMotion()) {
+			gsap.set(words, { opacity: 1 });
+			return;
+		}
 
 		const context = gsap.context(() => {
-			const words = gsap.utils.toArray<HTMLElement>('.manifesto__word');
 			gsap.to(words, {
-				color: '#ffffff',
+				opacity: 1,
 				stagger: 0.08,
 				ease: 'none',
 				scrollTrigger: {
@@ -120,7 +125,7 @@
 		width: auto;
 		max-width: 100%;
 		margin: 0;
-		color: rgb(255 255 255 / 18%);
+		color: var(--color-white);
 		font-family: var(--font-family-heading);
 		font-size: clamp(2rem, 6.6vw, 6.5rem);
 		line-height: 1.05;
@@ -138,7 +143,8 @@
 
 	.manifesto__word {
 		display: inline-block;
-		will-change: color;
+		/* Dimmed until the scroll reveal fades it in. Opacity, not color, so it follows the theme. */
+		opacity: 0.18;
 	}
 
 	.manifesto__footer {

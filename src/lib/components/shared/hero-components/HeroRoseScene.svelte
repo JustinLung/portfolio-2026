@@ -18,7 +18,7 @@
 	import wobbleFragmentShader from './heroWobble.frag?raw';
 	import { createAsciiComposer } from './heroAscii';
 	import { settings } from '$lib/settings.svelte';
-	import { themeState } from '$lib/theme.svelte';
+	import { modeState, themeState } from '$lib/theme.svelte';
 
 	type Props = {
 		pointerX?: number;
@@ -93,6 +93,7 @@
 	// Follow the theme's accent, which lives in CSS custom properties.
 	$effect(() => {
 		void themeState.id;
+		void modeState.resolved;
 
 		const styles = getComputedStyle(document.documentElement);
 		const read = (name: string) => styles.getPropertyValue(name).trim();

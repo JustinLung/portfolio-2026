@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { playSfx } from '$lib/sfx.svelte';
-	import { setTheme, themes, themeState, type ThemeId } from '$lib/theme.svelte';
+	import { modeState, setTheme, themes, themeState, type ThemeId } from '$lib/theme.svelte';
 
 	function handleKeydown(event: KeyboardEvent, index: number) {
 		const step = { ArrowLeft: -1, ArrowUp: -1, ArrowRight: 1, ArrowDown: 1 }[event.key];
@@ -37,7 +37,12 @@
 			onkeydown={(event) => handleKeydown(event, index)}
 		>
 			<!-- `data-theme` scopes this theme's tokens to the swatch so it previews the real colors. -->
-			<span class="theme-picker__swatch" data-theme={id} aria-hidden="true"></span>
+			<span
+				class="theme-picker__swatch"
+				data-theme={id}
+				data-mode={modeState.resolved}
+				aria-hidden="true"
+			></span>
 		</button>
 	{/each}
 </div>

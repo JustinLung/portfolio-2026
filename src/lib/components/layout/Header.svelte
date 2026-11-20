@@ -20,7 +20,7 @@
 	import SettingsIcon from '$lib/assets/icons/settings.svg?component';
 	import BottomSheet from '../shared/ui/BottomSheet.svelte';
 	import CommandPalette from '../shared/ui/CommandPalette.svelte';
-	import { themes, themeState } from '$lib/theme.svelte';
+	import { modes, modeState, setMode, themes, themeState } from '$lib/theme.svelte';
 	import SegmentedControl from '../shared/ui/SegmentedControl.svelte';
 	import VolumeSlider from '../shared/ui/VolumeSlider.svelte';
 	import ThemePicker from '../shared/ui/ThemePicker.svelte';
@@ -381,6 +381,19 @@
 					onchange={(value) => updateSetting('motion', value)}
 				/>
 			</div>
+			<div class="header__setting">
+				<div>
+					<p class="header__setting-label">Appearance</p>
+					<p class="header__setting-hint">System follows your device</p>
+				</div>
+				<SegmentedControl
+					name="setting-mode"
+					label="Appearance"
+					options={modes}
+					value={modeState.id}
+					onchange={(value) => setMode(value)}
+				/>
+			</div>
 			<div class="header__setting header__setting--stacked">
 				<div class="header__setting-heading">
 					<p class="header__setting-label">Theme</p>
@@ -411,6 +424,8 @@
 
 		&.header--blend {
 			mix-blend-mode: difference;
+			/* A difference blend only reads as the page's inverse when the ink is true white, in every theme. */
+			--color-white: #ffffff;
 		}
 
 		&.header__controls {

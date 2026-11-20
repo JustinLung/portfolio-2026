@@ -307,3 +307,66 @@ test('case study media is not requested over plain http', async ({ page }) => {
 	);
 	expect(insecure).toEqual([]);
 });
+
+test.describe('light and dark mode', () => {
+	test('Appearance switches mode, keeps the theme, and persists', async ({ page }) => {
+		await page.addInitScript(() => {
+			if (!localStorage.getItem('portfolio:theme'))
+				localStorage.setItem('portfolio:theme', 'midnight');
+		});
+		await page.goto('/');
+		await page.waitForLoadState('networkidle');
+		await page.locator('.footer__settings-button').click();
+
+		const appearance = page.getByRole('radiogroup', { name: 'Appearance' });
+		await expect(appearance.getByRole('radio')).toHaveCount(3);
+		await expect(appearance.getByRole('radio', { name: 'Dark' })).toBeChecked();
+
+		await appearance.getByRole('radio', { name: 'Light' }).click();
+		const html = page.locator('html');
+		await expect(html).toHaveAttribute('data-mode', 'light');
+		await expect(html).toHaveAttribute('data-theme', 'midnight');
+		// Midnight's light page background.
+		await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute('content', '#eff2f7');
+
+		await page.reload();
+		await expect(html).toHaveAttribute('data-mode', 'light');
+		await expect(html).toHaveAttribute('data-theme', 'midnight');
+	});
+
+	test('the palette offers both modes', async ({ page }) => {
+		await page.goto('/');
+		await page.waitForLoadState('networkidle');
+		await page.keyboard.press('ControlOrMeta+k');
+		await page.getByRole('combobox', { name: 'Search commands' }).fill('light mode');
+		await page.keyboard.press('Enter');
+
+		await expect(page.locator('html')).toHaveAttribute('data-mode', 'light');
+		await expect(page.locator('.toast', { hasText: 'Light mode applied' })).toBeVisible();
+	});
+});
+
+test.describe('system mode', () => {
+	test.use({ colorScheme: 'light' });
+
+	test('System follows the device and updates when it changes', async ({ page }) => {
+		await page.goto('/');
+		await page.waitForLoadState('networkidle');
+		await page.locator('.footer__settings-button').click();
+
+		await page
+			.getByRole('radiogroup', { name: 'Appearance' })
+			.getByRole('radio', { name: 'System' })
+			.click();
+		const html = page.locator('html');
+		await expect(html).toHaveAttribute('data-mode', 'light');
+
+		await page.emulateMedia({ colorScheme: 'dark' });
+		await expect(html).toHaveAttribute('data-mode', 'dark');
+
+		// The choice, not the resolved mode, is what persists.
+		await page.reload();
+		await expect(html).toHaveAttribute('data-mode', 'dark');
+		expect(await page.evaluate(() => localStorage.getItem('portfolio:mode'))).toBe('system');
+	});
+});

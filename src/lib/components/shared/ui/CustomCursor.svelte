@@ -213,6 +213,8 @@
 		will-change: transform;
 		/* This is a stacking context, so the blend must sit here (not on the children) to reach the page. */
 		mix-blend-mode: difference;
+		/* True white, so the blend inverts the page in light themes too. */
+		--color-white: #ffffff;
 	}
 
 	.cursor--visible {
@@ -231,8 +233,8 @@
 	.cursor__ring {
 		width: 28px;
 		height: 28px;
-		border: 1px solid rgb(255 255 255 / 70%);
-		background-color: rgb(255 255 255 / 4%);
+		border: 1px solid color-mix(in srgb, var(--color-white) 70%, transparent);
+		background-color: color-mix(in srgb, var(--color-white) 4%, transparent);
 		transition:
 			width 220ms var(--easeOutExpo),
 			height 220ms var(--easeOutExpo),

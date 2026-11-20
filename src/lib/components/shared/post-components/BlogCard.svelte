@@ -74,7 +74,12 @@
 			display: grid;
 			place-items: center;
 			background:
-				linear-gradient(135deg, transparent 48%, rgb(255 255 255 / 8%) 48% 52%, transparent 52%),
+				linear-gradient(
+					135deg,
+					transparent 48%,
+					color-mix(in srgb, var(--color-white) 8%, transparent) 48% 52%,
+					transparent 52%
+				),
 				var(--color-primary);
 
 			span {

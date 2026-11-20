@@ -23,8 +23,8 @@ body {
 		background-size: 180px 180px;
 		content: '';
 		filter: contrast(180%) brightness(180%);
-		opacity: 0.35;
-		mix-blend-mode: screen;
+		opacity: var(--noise-opacity);
+		mix-blend-mode: var(--noise-blend);
 		pointer-events: none;
 		animation: hero-noise 180ms steps(2, end) infinite;
 	}

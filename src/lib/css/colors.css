@@ -20,11 +20,17 @@
 	--accent: #ff2c78;
 	--accent-light: #ffc1d8;
 	--accent-glow: #ff0b64;
+
+	/* Surface effects that depend on whether the theme is dark or light. */
+	--hero-scrim: rgb(12 5 7 / 0.35);
+	--noise-blend: screen;
+	--noise-opacity: 0.35;
 }
 
 /*
  * Themes override the tokens above. They match on any element, not just <html>,
- * so a swatch can preview a theme with `data-theme` on itself.
+ * so a swatch can preview a theme with `data-theme` (and `data-mode`) on itself.
+ * Each theme is a hue family with a dark and a light mode; the mode is `data-mode` on <html>.
  * Selection lives in src/lib/theme.svelte.ts.
  */
 [data-theme='midnight'] {
@@ -85,4 +91,105 @@
 	--accent: #ffa31a;
 	--accent-light: #ffe0a8;
 	--accent-glow: #ff8a00;
+}
+
+/*
+ * Light mode. Token names describe roles, not values, so here `--color-white` is the ink (text and
+ * fills) and `--color-black` is what sits on those fills. Surfaces still run from the page
+ * (`neutral-800`) to the deepest layer (`neutral-950`), and `quaternary` is muted text at 4.5:1 or
+ * better on every surface it is used on. The ink and status colors are shared by every theme; each
+ * theme below supplies its own surfaces and accent.
+ */
+[data-mode='light'] {
+	color-scheme: light;
+
+	--color-black: #f7f5f2;
+	--color-light-green: #25682f;
+	--color-dark-green: #b5dbb9;
+	--color-light-red: #b3261e;
+	--color-dark-red: #efb3ab;
+
+	--hero-scrim: rgb(244 242 238 / 0.6);
+	--noise-blend: multiply;
+	--noise-opacity: 0.1;
+}
+
+[data-theme='ember'][data-mode='light'] {
+	--color-primary: #ddd5c8;
+	--color-secondary: #cfc6b8;
+	--color-tertiary: #ece6dc;
+	--color-quaternary: #5f564c;
+	--color-neutral-800: #f4f0ea;
+	--color-neutral-900: #ebe5dc;
+	--color-neutral-950: #e2dacf;
+	--color-white: #1f1b17;
+
+	--accent-deep: #7a0a2e;
+	--accent: #c40f45;
+	--accent-light: #ff8fb3;
+	--accent-glow: #e0185a;
+}
+
+[data-theme='midnight'][data-mode='light'] {
+	--color-primary: #d3dbe7;
+	--color-secondary: #c4cedd;
+	--color-tertiary: #e8edf4;
+	--color-quaternary: #4f5a6b;
+	--color-neutral-800: #eff2f7;
+	--color-neutral-900: #e5eaf2;
+	--color-neutral-950: #dae1ec;
+	--color-white: #171b22;
+
+	--accent-deep: #0a2a6b;
+	--accent: #2a5bd7;
+	--accent-light: #9fbcff;
+	--accent-glow: #1f5cff;
+}
+
+[data-theme='forest'][data-mode='light'] {
+	--color-primary: #d0dcd3;
+	--color-secondary: #c1d0c5;
+	--color-tertiary: #e6eee8;
+	--color-quaternary: #4d5f52;
+	--color-neutral-800: #eef3ef;
+	--color-neutral-900: #e3ebe5;
+	--color-neutral-950: #d8e2db;
+	--color-white: #161c18;
+
+	--accent-deep: #0f3d22;
+	--accent: #167a44;
+	--accent-light: #8fe0b2;
+	--accent-glow: #12a35a;
+}
+
+[data-theme='dusk'][data-mode='light'] {
+	--color-primary: #d9d1e5;
+	--color-secondary: #cbc1da;
+	--color-tertiary: #ece8f2;
+	--color-quaternary: #5a5068;
+	--color-neutral-800: #f3f0f7;
+	--color-neutral-900: #eae5f1;
+	--color-neutral-950: #dfd8ea;
+	--color-white: #1c1824;
+
+	--accent-deep: #2a0f5c;
+	--accent: #7b3fe0;
+	--accent-light: #c7a8ff;
+	--accent-glow: #6a2ad6;
+}
+
+[data-theme='graphite'][data-mode='light'] {
+	--color-primary: #d9d9d9;
+	--color-secondary: #cbcbcb;
+	--color-tertiary: #ececec;
+	--color-quaternary: #555555;
+	--color-neutral-800: #f3f3f3;
+	--color-neutral-900: #eaeaea;
+	--color-neutral-950: #dfdfdf;
+	--color-white: #1b1b1b;
+
+	--accent-deep: #5a2a00;
+	--accent: #a85400;
+	--accent-light: #ffc366;
+	--accent-glow: #d96f00;
 }

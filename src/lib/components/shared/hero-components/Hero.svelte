@@ -227,7 +227,7 @@
 			&::after {
 				position: absolute;
 				inset: 0;
-				background: linear-gradient(90deg, rgb(12 5 7 / 0.35), transparent 42%);
+				background: linear-gradient(90deg, var(--hero-scrim), transparent 42%);
 				content: '';
 				pointer-events: none;
 			}
