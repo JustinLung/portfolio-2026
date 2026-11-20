@@ -9,6 +9,7 @@
 	import { playSfx } from '$lib/sfx.svelte';
 	import ListViewIcon from '$lib/assets/icons/list-view.svg?component';
 	import GridViewIcon from '$lib/assets/icons/grid-view.svg?component';
+	import ChevronDownIcon from '$lib/assets/icons/chevron-down.svg?component';
 
 	gsap.registerPlugin(Flip);
 
@@ -112,26 +113,21 @@
 -->
 <div class="work-list-filter-container">
 	<div class="work-list-filter">
-		<button
-			type="button"
-			class={selectedCategory === 'all' ? 'button button--secondary' : 'button'}
-			aria-pressed={selectedCategory === 'all'}
-			data-uisfx-hover="hover"
-			onclick={() => selectCategory('all')}
-		>
-			All
-		</button>
-		{#each categories as category (category)}
-			<button
-				type="button"
-				class={selectedCategory === category ? 'button button--secondary' : 'button'}
-				aria-pressed={selectedCategory === category}
+		<label class="visually-hidden" for="work-category">Filter by category</label>
+		<div class="work-list-select">
+			<select
+				id="work-category"
+				value={selectedCategory}
 				data-uisfx-hover="hover"
-				onclick={() => selectCategory(category)}
+				onchange={(event) => selectCategory(event.currentTarget.value)}
 			>
-				{category}
-			</button>
-		{/each}
+				<option value="all">All categories</option>
+				{#each categories as category (category)}
+					<option value={category}>{category}</option>
+				{/each}
+			</select>
+			<ChevronDownIcon aria-hidden="true" />
+		</div>
 	</div>
 
 	<div class="work-list-filter-grid-toggle">
@@ -176,10 +172,56 @@
 		justify-content: space-between;
 		margin-bottom: 24px;
 
-		.work-list-filter {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 8px;
+		.work-list-select {
+			position: relative;
+			display: inline-flex;
+			align-items: center;
+			border: 1px solid var(--color-primary);
+			border-radius: 4px;
+			background-color: var(--color-white);
+			color: var(--color-primary);
+			transition:
+				color 250ms var(--easeOutExpo),
+				background-color 250ms var(--easeOutExpo);
+
+			select {
+				appearance: none;
+				height: 32px;
+				padding-inline: 12px 36px;
+				border: 0;
+				background: none;
+				color: inherit;
+				font-family: inherit;
+				font-size: 0.75rem;
+				font-weight: 500;
+				cursor: pointer;
+
+				&:focus-visible {
+					outline: none;
+				}
+			}
+
+			/* Native dropdowns inherit the select's colors on some platforms. */
+			option {
+				background-color: var(--color-white);
+				color: var(--color-primary);
+			}
+
+			:global(svg) {
+				position: absolute;
+				right: 12px;
+				pointer-events: none;
+			}
+
+			&:has(select:focus-visible) {
+				outline: 2px solid var(--color-primary);
+				outline-offset: 2px;
+			}
+
+			&:hover {
+				background-color: var(--color-primary);
+				color: var(--color-white);
+			}
 		}
 
 		.work-list-filter-grid-toggle {
