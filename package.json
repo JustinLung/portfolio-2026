@@ -63,6 +63,7 @@
 		"rxjs": "^7.8.2",
 		"satori": "^0.63.2",
 		"sharp": "^0.35.5",
+		"shiki": "^4.6.0",
 		"three": "^0.185.1",
 		"three-custom-shader-material": "^6.4.0",
 		"uisfx": "^0.4.0"

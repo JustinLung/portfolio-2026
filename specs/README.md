@@ -19,7 +19,7 @@ be rewritten afterward merely to match the code.
 - [`04_workflows/feature-spec-template.md`](04_workflows/feature-spec-template.md) — copy this for
   each new feature.
 - [`05_project_memory/decision-log.md`](05_project_memory/decision-log.md) — durable architectural
-  and product decisions (ADR-001 through ADR-007).
+  and product decisions (ADR-001 through ADR-012).
 
 ## Working agreement
 

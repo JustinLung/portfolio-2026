@@ -6,6 +6,7 @@ import {
 } from '$lib/graphql/generated/graphql';
 import { createApolloClient } from '$lib/server/apollo';
 import { PAGE_CACHE_CONTROL } from '$lib/server/cache';
+import { highlightCodeBlocks } from '$lib/server/highlight';
 import { getAdjacentPosts, toPostItem } from '$lib/server/post';
 import type { AdjacentPost } from '../../../utils/types';
 import { addHeadingAnchors, getReadingMinutes } from '../../../utils/post-content';
@@ -58,7 +59,7 @@ export const load: PageServerLoad = async ({ fetch, params, setHeaders }) => {
 	}
 
 	const item = toPostItem(post);
-	const { html, toc } = addHeadingAnchors(item.content ?? '');
+	const { html, toc } = addHeadingAnchors(await highlightCodeBlocks(item.content ?? ''));
 
 	setHeaders({ 'cache-control': PAGE_CACHE_CONTROL });
 

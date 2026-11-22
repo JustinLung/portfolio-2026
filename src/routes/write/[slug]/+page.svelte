@@ -192,4 +192,13 @@
 		font-size: 0.85em;
 		line-height: 1.6;
 	}
+
+	/* Shiki renders both palettes as variables on each token; the active mode picks one. */
+	.post__content :global(.shiki span) {
+		color: var(--shiki-light);
+	}
+
+	:global([data-mode='dark']) .post__content :global(.shiki span) {
+		color: var(--shiki-dark);
+	}
 </style>

@@ -307,3 +307,45 @@ with its own surfaces and accent, and `quaternary` muted text keeps at least 4.5
 A single "Daylight" theme (rejected: one accent, no choice). Defaulting to System (not done: it would
 change the first impression for every visitor on a light device; it is a one-line change in
 `theme.svelte.ts` and `app.html`).
+
+## ADR-012: Code blocks are highlighted on the server with Shiki
+
+- **Date:** 2026-11-20
+- **Status:** Accepted
+- **Related spec:** ADR-001, ADR-011
+
+### Context
+
+Post code blocks had a copy button but no syntax colors. WordPress's default Code block emits
+`<pre class="wp-block-code"><code>` with no language, and every existing post block was like that.
+
+### Decision
+
+`highlightCodeBlocks` (`src/lib/server/highlight.ts`) replaces each code block in the post HTML with
+Shiki output during the `/write/[slug]` load, so there is no client JavaScript and no flash. Colors are
+the CSS variables `--shiki-light` and `--shiki-dark`, and the post page picks one from `data-mode`, so
+one render serves every theme in both modes. The JavaScript regex engine and a fixed language list
+(html, css, scss, js, ts, json, liquid, bash, yaml) keep the bundle small.
+
+The language comes from a `language-x` or `lang-x` class on the `<pre>` or `<code>` when an author sets
+one (the Code block's "Additional CSS class" field). Otherwise `guessLanguage`
+(`src/utils/code-language.ts`) infers it, and anything it can't place, such as file trees or prose,
+stays plain text. A declared language we don't bundle is also plain text, never guessed.
+
+The palettes are `github-light-high-contrast` and `github-dark-high-contrast`. The standard GitHub
+palettes failed 4.5:1 contrast on the tinted code background (red, green, orange, and grey were
+2.8-3.9:1 in light mode).
+
+### Consequences
+
+- Adding a language means adding its import in `highlight.ts` and an alias in `code-language.ts`.
+- The guesser is a heuristic. A block it misreads is fixed by giving it a `language-x` class in WordPress.
+- A highlighter failure falls back to the plain block rather than failing the page.
+- `tests/e2e/code-highlighting.spec.ts` checks contrast for all five themes in both modes, and needs at
+  least one published post with a code block.
+
+### Alternatives considered
+
+Highlighting in the browser (rejected: ships the grammar and flashes unstyled code). Bundling every
+Shiki language (rejected: server size for languages the blog doesn't use). Requiring an explicit
+language on every block (rejected: it would leave all current posts unhighlighted until edited).
