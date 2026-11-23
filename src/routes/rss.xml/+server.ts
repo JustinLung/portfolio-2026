@@ -1,6 +1,7 @@
 import { env } from '$env/dynamic/private';
 import { PostsDocument } from '$lib/graphql/generated/graphql';
 import { createApolloClient } from '$lib/server/apollo';
+import { CMS_CACHE_TAG } from '$lib/server/cache';
 import { toPostItem } from '$lib/server/post';
 import { error } from '@sveltejs/kit';
 import { RSS_DESCRIPTION, RSS_TITLE, SITE_URL } from '../../utils/site';
@@ -65,7 +66,8 @@ ${items}
 	return new Response(xml, {
 		headers: {
 			'content-type': 'application/rss+xml; charset=utf-8',
-			'cache-control': 'public, max-age=600, s-maxage=3600, stale-while-revalidate=86400'
+			'cache-control': 'public, max-age=600, s-maxage=3600, stale-while-revalidate=86400',
+			'vercel-cache-tag': CMS_CACHE_TAG
 		}
 	});
 };

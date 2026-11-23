@@ -1,7 +1,7 @@
 import { env } from '$env/dynamic/private';
 import { WorksDocument } from '$lib/graphql/generated/graphql';
 import { createApolloClient } from '$lib/server/apollo';
-import { PAGE_CACHE_CONTROL } from '$lib/server/cache';
+import { PAGE_CACHE_HEADERS } from '$lib/server/cache';
 import { sortWorksByYearDesc, toWorkItem } from '$lib/server/work';
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
@@ -33,7 +33,7 @@ export const load: PageServerLoad = async ({ fetch, setHeaders }) => {
 		error(502, 'Unable to load work from WordPress');
 	}
 
-	setHeaders({ 'cache-control': PAGE_CACHE_CONTROL });
+	setHeaders(PAGE_CACHE_HEADERS);
 
 	return { works };
 };

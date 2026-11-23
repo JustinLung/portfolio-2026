@@ -86,8 +86,9 @@ specs/                    # Product, architecture, and feature specs
 ### Caching
 
 Page loaders set `PAGE_CACHE_CONTROL` (`src/lib/server/cache.ts`) after a successful WordPress fetch,
-so a CDN serves pages without waiting on the CMS. CMS edits can take up to ~5 minutes to appear. See
-ADR-009 in `specs/05_project_memory/decision-log.md`.
+so a CDN serves pages without waiting on the CMS. They also carry a cache tag, and a WordPress
+webhook to `POST /api/revalidate` purges it so edits appear on the next visit (see below). Without
+the webhook, edits can take up to ~5 minutes. See ADR-009 and ADR-013 in `specs/05_project_memory/decision-log.md`.
 
 ### Data contract
 
@@ -124,6 +125,7 @@ WORDPRESS_GRAPHQL_URL=https://your-wordpress-site.com/graphql
 RESEND_API_KEY=re_your_api_key
 CONTACT_TO_EMAIL=you@example.com
 CONTACT_FROM_EMAIL=contact@your-domain.com
+REVALIDATE_SECRET=long-random-string
 ```
 
 These values are server-only (`$env/dynamic/private`). Never expose them to the client.
@@ -183,3 +185,15 @@ The color-contrast rule is tracked by a `fixme` test in `tests/e2e/a11y.spec.ts`
 
 GitHub Actions (`.github/workflows/ci.yml`) runs check, lint, and build on every PR and push to
 `main`. The Playwright job runs only when the repository variable `WORDPRESS_GRAPHQL_URL` is set.
+
+### Instant CMS updates
+
+`POST /api/revalidate` purges the CDN cache for all WordPress content. In WordPress, add a webhook
+(for example with the WP Webhooks plugin) on post/page create, update and delete:
+
+- URL: `https://your-domain.com/api/revalidate`, method `POST`
+- Header: `Authorization: Bearer <REVALIDATE_SECRET>`
+- Body: JSON (`Content-Type: application/json`)
+
+Set the same `REVALIDATE_SECRET` in Vercel. Purging only works on Vercel; elsewhere (including `pnpm dev`) the endpoint
+answers 200 but purges nothing, and pages refresh within the 5 minute cache.

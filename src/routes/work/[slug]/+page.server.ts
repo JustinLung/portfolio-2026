@@ -5,7 +5,7 @@ import {
 	type WorkFieldsFragment
 } from '$lib/graphql/generated/graphql';
 import { createApolloClient } from '$lib/server/apollo';
-import { PAGE_CACHE_CONTROL } from '$lib/server/cache';
+import { PAGE_CACHE_HEADERS } from '$lib/server/cache';
 import { getAdjacentWorks, sortWorksByYearDesc, toWorkItem } from '$lib/server/work';
 import { addHeadingAnchors } from '../../../utils/post-content';
 import { error } from '@sveltejs/kit';
@@ -51,7 +51,7 @@ export const load: PageServerLoad = async ({ fetch, params, setHeaders }) => {
 		error(404, 'Work not found');
 	}
 
-	setHeaders({ 'cache-control': PAGE_CACHE_CONTROL });
+	setHeaders(PAGE_CACHE_HEADERS);
 
 	const item = toWorkItem(work);
 

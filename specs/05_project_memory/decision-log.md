@@ -349,3 +349,36 @@ palettes failed 4.5:1 contrast on the tinted code background (red, green, orange
 Highlighting in the browser (rejected: ships the grammar and flashes unstyled code). Bundling every
 Shiki language (rejected: server size for languages the blog doesn't use). Requiring an explicit
 language on every block (rejected: it would leave all current posts unhighlighted until edited).
+
+## ADR-013: Purge the CDN cache when WordPress content changes
+
+- **Date:** 2026-11-23
+- **Status:** Accepted
+- **Related spec:** ADR-009
+
+### Context
+
+ADR-009 left CMS edits taking up to ~5 minutes to appear. An edit should show on the next visit.
+
+### Decision
+
+Every CDN-cached response built from WordPress content carries the `Vercel-Cache-Tag: wordpress`
+header (`PAGE_CACHE_HEADERS` in `src/lib/server/cache.ts`; RSS and the sitemap set it too). A
+WordPress webhook calls `POST /api/revalidate` with `Authorization: Bearer $REVALIDATE_SECRET`, which
+runs `dangerouslyDeleteByTag('wordpress')` from `@vercel/functions`. It deletes rather than
+invalidates so the next request renders fresh instead of serving one more stale copy.
+
+### Consequences
+
+- Edits appear on the next visit once the webhook fires. The 5 minute `s-maxage` remains the fallback
+  if a webhook is missed or fails.
+- One tag purges the whole site, which is fine at this size. Per-page tags can be added later.
+- Purging needs Vercel. Elsewhere (including local dev) the endpoint answers 200 but purges nothing, and pages fall back to the 5 minute cache.
+- `REVALIDATE_SECRET` must be set in the deployment environment, and the WordPress webhook must send
+  it as a bearer token with a JSON body.
+
+### Alternatives considered
+
+Invalidate instead of delete (rejected: the first visit after an edit still sees the old page).
+Prerendering with rebuilds on webhook (rejected: deploy plumbing, see ADR-009). A shorter
+`s-maxage` (rejected: still not immediate and more CMS load).
